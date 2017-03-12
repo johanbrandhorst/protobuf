@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package test;
+
+// Correct import path
+option go_package = "github.com/johanbrandhorst/protoc-gen-gopherjs-structs/test";
+
+message MyMessage {
+    string msg = 1;
+    uint32 num = 2;
+}
