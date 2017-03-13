@@ -30,19 +30,18 @@ func main() {
 		log.Fatalln("Could not unmarshal request: ", err)
 	}
 
-	// Remove useless source code data.
-	for _, inFile := range req.GetProtoFile() {
-		inFile.SourceCodeInfo = nil
-	}
-
 	resp := &plugin.CodeGeneratorResponse{}
 
 	for _, inFile := range req.GetProtoFile() {
-		outFile, err := processFile(inFile)
-		if err != nil {
-			log.Fatalln("Could not process file: ", err)
+		for _, reqFile := range req.GetFileToGenerate() {
+			if inFile.GetName() == reqFile {
+				outFile, err := processFile(inFile)
+				if err != nil {
+					log.Fatalln("Could not process file: ", err)
+				}
+				resp.File = append(resp.File, outFile)
+			}
 		}
-		resp.File = append(resp.File, outFile)
 	}
 
 	data, err = proto.Marshal(resp)
