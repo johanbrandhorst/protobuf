@@ -14,7 +14,7 @@ import (
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
 
-	"github.com/johanbrandhorst/protoc-gen-gopherjs-structs/filegenerator"
+	"github.com/johanbrandhorst/protoc-gen-gopherjs/filegenerator"
 )
 
 func main() {
