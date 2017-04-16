@@ -57,7 +57,7 @@ func main() {
 
 func processFile(inFile *descriptor.FileDescriptorProto) (*plugin.CodeGeneratorResponse_File, error) {
 	outFile := &plugin.CodeGeneratorResponse_File{}
-	outFile.Name = proto.String(strings.TrimSuffix(inFile.GetName(), ".proto") + ".gopherjs.pb.go")
+	outFile.Name = proto.String(strings.TrimSuffix(inFile.GetName(), ".proto") + ".pb.gopherjs.go")
 
 	b := &bytes.Buffer{}
 	fg := filegenerator.New(b)
