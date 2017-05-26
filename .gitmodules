@@ -1,3 +1,0 @@
-[submodule "include/grpc-web"]
-	path = grpcwebjs/grpc-web
-	url = https://github.com/improbable-eng/grpc-web/
