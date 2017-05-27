@@ -25,6 +25,7 @@ import (
 	"io"
 
 	"github.com/gopherjs/gopherjs/js"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 
 	"github.com/johanbrandhorst/gopherjs-improbable-grpc-web/status"
@@ -53,7 +54,7 @@ func (c Client) RPCCall(ctx context.Context, method string, req []byte, opts ...
 
 	onMsg := func(in []byte) { respChan <- in }
 	onEnd := func(s *status.Status) {
-		if s.Code != status.Ok {
+		if s.Code != codes.OK {
 			errChan <- s
 		} else {
 			errChan <- io.EOF
@@ -85,7 +86,7 @@ func (c Client) Stream(ctx context.Context, method string, req []byte, opts ...C
 
 	onMsg := func(in []byte) { srv.messages <- in }
 	onEnd := func(s *status.Status) {
-		if s.Code != status.Ok {
+		if s.Code != codes.OK {
 			srv.errors <- s
 		} else {
 			srv.errors <- io.EOF
@@ -106,7 +107,7 @@ func invoke(ctx context.Context, host, service, method string, req []byte, onMsg
 
 	md, _ := metadata.FromContext(ctx)
 	rawOnEnd := func(code int, msg string, headers *browserHeaders) {
-		s := status.New(status.Code(code), msg, headers.headers)
+		s := status.New(codes.Code(code), msg, headers.headers)
 		onEnd(s)
 	}
 	props := newProperties(host, false, newRequest(req), newBrowserHeaders(md), nil, onMsg, rawOnEnd)
