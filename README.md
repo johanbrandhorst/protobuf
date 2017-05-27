@@ -1,4 +1,4 @@
-# gopherjs-improbable-grpc-web
+# GopherJS bindings for Improbable's gRPC-web implementation
 
 [![GoDoc](https://godoc.org/github.com/johanbrandhorst/gopherjs-improbable-grpc-web?status.svg)](https://godoc.org/github.com/johanbrandhorst/gopherjs-improbable-grpc-web)
 
