@@ -27,3 +27,7 @@ import (
 	// Include JS file
 	_ "github.com/johanbrandhorst/gopherjs-improbable-grpc-web/grpcwebjs"
 )
+
+// GrpcWebPackageIsVersion1 is referenced from generated protocol buffer files
+// to assert that that code is compatible with this version of the proto package.
+const GrpcWebPackageIsVersion1 = true
