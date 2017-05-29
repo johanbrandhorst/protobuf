@@ -118,6 +118,7 @@ type Request struct {
 // This is a map field. It will generate map[int32]string.
 // This is a map field whose value type is a message.
 // This field should not conflict with any getters.
+// Imported type
 func NewRequest(key []int64, hue Request_Color, hat HatType, deadline float32, nameMapping map[int32]string, msgMapping map[int64]*Reply, reset int32, getKey string, multi *multitest2.Multi1) *Request {
 	m := &Request{
 		Object: js.Global.Get("proto").Get("my").Get("test").Get("Request").New([]interface{}{
@@ -259,6 +260,18 @@ func (m *Request) GetGetKey() string {
 // This field should not conflict with any getters.
 func (m *Request) SetGetKey(v string) {
 	m.Call("setGetKey", v)
+}
+
+// GetMulti gets the Multi of the Request.
+// Imported type
+func (m *Request) GetMulti() *multitest2.Multi1 {
+	return &multitest2.Multi1{Object: m.Call("getMulti")}
+}
+
+// SetMulti sets the Multi of the Request.
+// Imported type
+func (m *Request) SetMulti(v *multitest2.Multi1) {
+	m.Call("setMulti", v)
 }
 
 func (m *Request) serialize() (rawBytes []byte, err error) {
