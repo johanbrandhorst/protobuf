@@ -531,8 +531,8 @@ func (g *Generator) SetPackageNames() {
 	// Register the support package names. They might collide with the
 	// name of a package we import.
 	g.Pkg = map[string]string{
-		"js":      RegisterUniquePackageName("js", nil),
-		"grpcweb": RegisterUniquePackageName("grpcweb", nil),
+		"js":   RegisterUniquePackageName("js", nil),
+		"jspb": RegisterUniquePackageName("jspb", nil),
 	}
 
 AllFiles:
@@ -1041,7 +1041,7 @@ func (g *Generator) weak(i int32) bool {
 // Generate the imports
 func (g *Generator) generateImports() {
 	g.P("import ", g.Pkg["js"], " ", strconv.Quote(g.ImportPrefix+"github.com/gopherjs/gopherjs/js"))
-	g.P("import ", g.Pkg["grpcweb"], " ", strconv.Quote(g.ImportPrefix+"github.com/johanbrandhorst/gopherjs-improbable-grpc-web"))
+	g.P("import ", g.Pkg["jspb"], " ", strconv.Quote(g.ImportPrefix+"github.com/johanbrandhorst/jspb"))
 	for i, s := range g.file.Dependency {
 		fd := g.fileByName(s)
 		// Do not import our own package.
@@ -1726,7 +1726,7 @@ func (g *Generator) addMessageFactory(message *Descriptor, mapFieldTypes map[*de
 func (g *Generator) addSerialize(typeName string) {
 	g.P(`func (m *` + typeName + `) serialize() (rawBytes []byte, err error) {`)
 	g.In()
-	g.P(`return grpcweb.Serialize(m)`)
+	g.P(`return jspb.Serialize(m)`)
 	g.Out()
 	g.P(`}`)
 	g.P()
@@ -1736,7 +1736,7 @@ func (g *Generator) addDeserialize(typeName string) {
 	g.P(`func deserialize` + typeName + `(rawBytes []byte) (*` + typeName + `, error) {`)
 	g.In()
 
-	g.P(`obj, err := grpcweb.Deserialize(`, g.getMessageReference(typeName), `, rawBytes)`)
+	g.P(`obj, err := jspb.Deserialize(`, g.getMessageReference(typeName), `, rawBytes)`)
 	g.P(`if err != nil {`)
 	g.In()
 	g.P(`return nil, err`)
