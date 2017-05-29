@@ -1,0 +1,61 @@
+{
+	"comment": "test appengine github.com/gopherjs/gopherjs/js",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "qlPUeFabwF4RKAOF1H+yBFU1Veg=",
+			"path": "github.com/golang/protobuf/proto",
+			"revision": "9f174c986221c608fb5143bd623b6076a71feae3",
+			"revisionTime": "2017-05-26T16:57:56Z"
+		},
+		{
+			"checksumSHA1": "Z1gJ3PKzwBpOoPnTSEM5yd0zHYA=",
+			"path": "github.com/golang/protobuf/protoc-gen-go/descriptor",
+			"revision": "9f174c986221c608fb5143bd623b6076a71feae3",
+			"revisionTime": "2017-05-26T16:57:56Z"
+		},
+		{
+			"checksumSHA1": "8RePrdBuPdr7dY5w45FSQkTA2+0=",
+			"path": "github.com/golang/protobuf/protoc-gen-go/plugin",
+			"revision": "9f174c986221c608fb5143bd623b6076a71feae3",
+			"revisionTime": "2017-05-26T16:57:56Z"
+		},
+		{
+			"checksumSHA1": "G6JhzF6JUqnUl3H3t4f4VNWDJ84=",
+			"path": "github.com/johanbrandhorst/gopherjs-improbable-grpc-web",
+			"revision": "29d251a7010053421acd500c95f8e605d880ab13",
+			"revisionTime": "2017-05-29T16:38:38Z"
+		},
+		{
+			"checksumSHA1": "ovsPk4fLfWsCO5KBFYxrI23zMZc=",
+			"path": "github.com/johanbrandhorst/gopherjs-improbable-grpc-web/grpcwebjs",
+			"revision": "29d251a7010053421acd500c95f8e605d880ab13",
+			"revisionTime": "2017-05-29T16:38:38Z"
+		},
+		{
+			"checksumSHA1": "78G3pRIP/jWYC0mw/pkv+Fhoqi8=",
+			"path": "github.com/johanbrandhorst/gopherjs-improbable-grpc-web/status",
+			"revision": "29d251a7010053421acd500c95f8e605d880ab13",
+			"revisionTime": "2017-05-29T16:38:38Z"
+		},
+		{
+			"checksumSHA1": "Y+HGqEkYM15ir+J93MEaHdyFy0c=",
+			"path": "golang.org/x/net/context",
+			"revision": "48359f4f600b3a2d5cf657458e3f940021631a56",
+			"revisionTime": "2017-03-18T09:30:21Z"
+		},
+		{
+			"checksumSHA1": "xDFNvjW6gMsDQ+WRZ0t+8S/e4Qk=",
+			"path": "google.golang.org/grpc/codes",
+			"revision": "2739967807cc0e3199513569f58fda34252ad65e",
+			"revisionTime": "2017-05-26T15:26:41Z"
+		},
+		{
+			"checksumSHA1": "89fjWaU6NKVpmWI+0EoDION0dpE=",
+			"path": "google.golang.org/grpc/metadata",
+			"revision": "2739967807cc0e3199513569f58fda34252ad65e",
+			"revisionTime": "2017-05-26T15:26:41Z"
+		}
+	],
+	"rootPath": "github.com/johanbrandhorst/protoc-gen-gopherjs"
+}
