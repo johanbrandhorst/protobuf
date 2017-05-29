@@ -19,7 +19,7 @@
 package my_test
 
 import js "github.com/gopherjs/gopherjs/js"
-import grpcweb "github.com/johanbrandhorst/gopherjs-improbable-grpc-web"
+import jspb "github.com/johanbrandhorst/jspb"
 import multitest2 "github.com/johanbrandhorst/protoc-gen-gopherjs/testdata/multi"
 
 type HatType int
@@ -275,11 +275,11 @@ func (m *Request) SetMulti(v *multitest2.Multi1) {
 }
 
 func (m *Request) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeRequest(rawBytes []byte) (*Request, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Request"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Request"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -359,11 +359,11 @@ func (m *Reply) SetCompactKeys(v []int32) {
 }
 
 func (m *Reply) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeReply(rawBytes []byte) (*Reply, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Reply"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Reply"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -421,11 +421,11 @@ func (m *Reply_Entry) SetXMyFieldName_2(v int64) {
 }
 
 func (m *Reply_Entry) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeReply_Entry(rawBytes []byte) (*Reply_Entry, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Reply").Get("Entry"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Reply").Get("Entry"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -461,11 +461,11 @@ func (m *OtherBase) SetName(v string) {
 }
 
 func (m *OtherBase) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeOtherBase(rawBytes []byte) (*OtherBase, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("OtherBase"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("OtherBase"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -501,11 +501,11 @@ func (m *OtherReplyExtensions) SetKey(v int32) {
 }
 
 func (m *OtherReplyExtensions) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeOtherReplyExtensions(rawBytes []byte) (*OtherReplyExtensions, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("OtherReplyExtensions"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("OtherReplyExtensions"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -736,11 +736,11 @@ func (m *Communique) SetMsg(v *Reply) {
 }
 
 func (m *Communique) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeCommunique(rawBytes []byte) (*Communique, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Communique"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Communique"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -764,11 +764,11 @@ func NewCommunique_Delta() *Communique_Delta {
 }
 
 func (m *Communique_Delta) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeCommunique_Delta(rawBytes []byte) (*Communique_Delta, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Communique").Get("Delta"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Communique").Get("Delta"), rawBytes)
 	if err != nil {
 		return nil, err
 	}

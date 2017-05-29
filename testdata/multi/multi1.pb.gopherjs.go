@@ -17,7 +17,7 @@ It has these top-level messages:
 package multitest
 
 import js "github.com/gopherjs/gopherjs/js"
-import grpcweb "github.com/johanbrandhorst/gopherjs-improbable-grpc-web"
+import jspb "github.com/johanbrandhorst/jspb"
 
 type Multi1 struct {
 	*js.Object
@@ -67,11 +67,11 @@ func (m *Multi1) SetHatType(v Multi3_HatType) {
 }
 
 func (m *Multi1) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeMulti1(rawBytes []byte) (*Multi1, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("multitest").Get("Multi1"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("multitest").Get("Multi1"), rawBytes)
 	if err != nil {
 		return nil, err
 	}

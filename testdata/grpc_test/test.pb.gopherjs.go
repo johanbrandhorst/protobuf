@@ -17,13 +17,13 @@
 package my_test
 
 import js "github.com/gopherjs/gopherjs/js"
-import grpcweb "github.com/johanbrandhorst/gopherjs-improbable-grpc-web"
+import jspb "github.com/johanbrandhorst/jspb"
 import _ "github.com/johanbrandhorst/protoc-gen-gopherjs/testdata/multi"
 
 import (
 	context "context"
 
-	grpcweb1 "github.com/johanbrandhorst/gopherjs-improbable-grpc-web"
+	grpcweb "github.com/johanbrandhorst/gopherjs-improbable-grpc-web"
 )
 
 type HatType int
@@ -265,11 +265,11 @@ func (m *Request) SetGetKey(v string) {
 }
 
 func (m *Request) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeRequest(rawBytes []byte) (*Request, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Request"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Request"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -349,11 +349,11 @@ func (m *Reply) SetCompactKeys(v []int32) {
 }
 
 func (m *Reply) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeReply(rawBytes []byte) (*Reply, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Reply"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Reply"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -411,11 +411,11 @@ func (m *Reply_Entry) SetXMyFieldName_2(v int64) {
 }
 
 func (m *Reply_Entry) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeReply_Entry(rawBytes []byte) (*Reply_Entry, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Reply").Get("Entry"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Reply").Get("Entry"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -451,11 +451,11 @@ func (m *OtherBase) SetName(v string) {
 }
 
 func (m *OtherBase) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeOtherBase(rawBytes []byte) (*OtherBase, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("OtherBase"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("OtherBase"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -491,11 +491,11 @@ func (m *OtherReplyExtensions) SetKey(v int32) {
 }
 
 func (m *OtherReplyExtensions) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeOtherReplyExtensions(rawBytes []byte) (*OtherReplyExtensions, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("OtherReplyExtensions"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("OtherReplyExtensions"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -726,11 +726,11 @@ func (m *Communique) SetMsg(v *Reply) {
 }
 
 func (m *Communique) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeCommunique(rawBytes []byte) (*Communique, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Communique"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Communique"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -754,11 +754,11 @@ func NewCommunique_Delta() *Communique_Delta {
 }
 
 func (m *Communique_Delta) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeCommunique_Delta(rawBytes []byte) (*Communique_Delta, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Communique").Get("Delta"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Communique").Get("Delta"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -770,30 +770,30 @@ func deserializeCommunique_Delta(rawBytes []byte) (*Communique_Delta, error) {
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ context.Context
-var _ grpcweb1.Client
+var _ grpcweb.Client
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpcweb package it is being compiled against.
-const _ = grpcweb1.GrpcWebPackageIsVersion1
+const _ = grpcweb.GrpcWebPackageIsVersion1
 
 // Client API for TestService service
 
 type TestServiceClient interface {
-	Unary(ctx context.Context, in *Request, opts ...grpcweb1.CallOption) (*Reply, error)
-	ServerStreaming(ctx context.Context, in *Request, opts ...grpcweb1.CallOption) (TestService_ServerStreamingClient, error)
+	Unary(ctx context.Context, in *Request, opts ...grpcweb.CallOption) (*Reply, error)
+	ServerStreaming(ctx context.Context, in *Request, opts ...grpcweb.CallOption) (TestService_ServerStreamingClient, error)
 }
 
 type testServiceClient struct {
-	client *grpcweb1.Client
+	client *grpcweb.Client
 }
 
 func NewTestServiceClient(hostname string, opts ...grpcweb.DialOption) TestServiceClient {
 	return &testServiceClient{
-		client: grpcweb1.NewClient(hostname, "my.test.TestService", opts...),
+		client: grpcweb.NewClient(hostname, "my.test.TestService", opts...),
 	}
 }
 
-func (c *testServiceClient) Unary(ctx context.Context, in *Request, opts ...grpcweb1.CallOption) (*Reply, error) {
+func (c *testServiceClient) Unary(ctx context.Context, in *Request, opts ...grpcweb.CallOption) (*Reply, error) {
 	req, err := in.serialize()
 	if err != nil {
 		return nil, err
@@ -805,7 +805,7 @@ func (c *testServiceClient) Unary(ctx context.Context, in *Request, opts ...grpc
 	return deserializeReply(resp)
 }
 
-func (c *testServiceClient) ServerStreaming(ctx context.Context, in *Request, opts ...grpcweb1.CallOption) (TestService_ServerStreamingClient, error) {
+func (c *testServiceClient) ServerStreaming(ctx context.Context, in *Request, opts ...grpcweb.CallOption) (TestService_ServerStreamingClient, error) {
 	req, err := in.serialize()
 	if err != nil {
 		return nil, err
@@ -824,7 +824,7 @@ type TestService_ServerStreamingClient interface {
 }
 
 type testServiceServerStreamingClient struct {
-	stream *grpcweb1.StreamClient
+	stream *grpcweb.StreamClient
 }
 
 func (x *testServiceServerStreamingClient) Recv() (*Reply, error) {

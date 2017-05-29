@@ -4,7 +4,7 @@
 package multitest
 
 import js "github.com/gopherjs/gopherjs/js"
-import grpcweb "github.com/johanbrandhorst/gopherjs-improbable-grpc-web"
+import jspb "github.com/johanbrandhorst/jspb"
 
 type Multi2_Color int
 
@@ -66,11 +66,11 @@ func (m *Multi2) SetColor(v Multi2_Color) {
 }
 
 func (m *Multi2) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeMulti2(rawBytes []byte) (*Multi2, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("multitest").Get("Multi2"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("multitest").Get("Multi2"), rawBytes)
 	if err != nil {
 		return nil, err
 	}

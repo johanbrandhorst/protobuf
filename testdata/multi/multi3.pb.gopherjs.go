@@ -4,7 +4,7 @@
 package multitest
 
 import js "github.com/gopherjs/gopherjs/js"
-import grpcweb "github.com/johanbrandhorst/gopherjs-improbable-grpc-web"
+import jspb "github.com/johanbrandhorst/jspb"
 
 type Multi3_HatType int
 
@@ -52,11 +52,11 @@ func (m *Multi3) SetHatType(v Multi3_HatType) {
 }
 
 func (m *Multi3) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeMulti3(rawBytes []byte) (*Multi3, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("multitest").Get("Multi3"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("multitest").Get("Multi3"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
