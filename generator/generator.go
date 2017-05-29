@@ -1279,28 +1279,6 @@ var methodNames = [...]string{
 	"serialize",
 }
 
-// Names of messages in the `google.protobuf` package for which
-// we will generate XXX_WellKnownType methods.
-var wellKnownTypes = map[string]bool{
-	"Any":       true,
-	"Duration":  true,
-	"Empty":     true,
-	"Struct":    true,
-	"Timestamp": true,
-
-	"Value":       true,
-	"ListValue":   true,
-	"DoubleValue": true,
-	"FloatValue":  true,
-	"Int64Value":  true,
-	"UInt64Value": true,
-	"Int32Value":  true,
-	"UInt32Value": true,
-	"BoolValue":   true,
-	"StringValue": true,
-	"BytesValue":  true,
-}
-
 // Generate the type and default constant definitions for this Descriptor.
 func (g *Generator) generateMessage(message *Descriptor) {
 	// The full type name
@@ -1436,12 +1414,6 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		g.Buffer.Write(rem)
 	}
 
-	// TODO: Revisit the decision to use a XXX_WellKnownType method
-	// if we change proto.MessageName to work with multiple equivalents.
-	if message.file.GetPackage() == "google.protobuf" && wellKnownTypes[message.GetName()] {
-		g.P("func (*", ccTypeName, `) XXX_WellKnownType() string { return "`, message.GetName(), `" }`)
-	}
-
 	// Oneof per-field types, discriminants and getters.
 	//
 	// Generate unexported named types for the discriminant interfaces.
@@ -1508,146 +1480,125 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		getterName := fieldGetterNames[field]
 		setterName := fieldSetterNames[field]
 
-		// Only export getter symbols for basic types,
-		// and for messages and enums in the same package.
-		// Groups are not exported.
-		// Foreign types can't be hoisted through a public import because
-		// the importer may not already be importing the defining .proto.
-		// As an example, imagine we have an import tree like this:
-		//   A.proto -> B.proto -> C.proto
-		// If A publicly imports B, we need to generate the getters from B in A's output,
-		// but if one such getter returns something from C then we cannot do that
-		// because A is not importing C already.
-		var getterAndSetter bool
-		switch *field.Type {
-		case descriptor.FieldDescriptorProto_TYPE_MESSAGE, descriptor.FieldDescriptorProto_TYPE_ENUM:
-			// Only export getter and setter if its return type is in this package.
-			getterAndSetter = g.ObjectNamed(field.GetTypeName()).PackageName() == message.PackageName()
-		default:
-			getterAndSetter = true
+		// Generate Getter
+		typeFunc := g.GopherJSTypeFunc(message, field)
+		g.P(`// `, getterName, ` gets the `, fname, ` of the `, ccTypeName, `.`)
+		g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
+		if d := g.getMapDescriptor(field); isRepeated(field) && d == nil {
+			// Warning for slice getters only
+			g.P(`// Warning: mutating the returned slice will not be reflected in the message.`)
+			g.P(`// Use the setter to make changes to the slice in the message.`)
 		}
-
-		if getterAndSetter {
-			// Generate Getter
-			typeFunc := g.GopherJSTypeFunc(message, field)
-			g.P(`// `, getterName, ` gets the `, fname, ` of the `, ccTypeName, `.`)
-			g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
-			if d := g.getMapDescriptor(field); isRepeated(field) && d == nil {
-				// Warning for slice getters only
-				g.P(`// Warning: mutating the returned slice will not be reflected in the message.`)
-				g.P(`// Use the setter to make changes to the slice in the message.`)
+		g.P("func (m *", ccTypeName, ") ", getterName, "() ", typename, ` {`)
+		if d := g.getMapDescriptor(field); d != nil {
+			// Special case for maps
+			g.P(`x := `, mapFieldTypes[field], `{}`)
+			g.P(`mapFunc := func(value *js.Object, key *js.Object) {`)
+			g.In()
+			// Figure out the key and value types
+			keyField, valField := d.Field[0], d.Field[1]
+			keyType := g.GopherJSTypeFunc(message, keyField)
+			valType := g.GopherJSTypeFunc(message, valField)
+			switch *keyField.Type {
+			case descriptor.FieldDescriptorProto_TYPE_FLOAT:
+				keyType = fmt.Sprintf(`float32(key.%s)`, keyType)
+			case descriptor.FieldDescriptorProto_TYPE_INT32, descriptor.FieldDescriptorProto_TYPE_SFIXED32, descriptor.FieldDescriptorProto_TYPE_SINT32:
+				keyType = fmt.Sprintf(`int32(key.%s)`, keyType)
+			case descriptor.FieldDescriptorProto_TYPE_UINT32, descriptor.FieldDescriptorProto_TYPE_FIXED32:
+				keyType = fmt.Sprintf(`uint32(key.%s)`, keyType)
+			default:
+				// Note: cannot be message
+				keyType = fmt.Sprintf(`key.%s`, keyType)
 			}
-			g.P("func (m *", ccTypeName, ") ", getterName, "() ", typename, ` {`)
-			if d := g.getMapDescriptor(field); d != nil {
-				// Special case for maps
-				g.P(`x := `, mapFieldTypes[field], `{}`)
-				g.P(`mapFunc := func(value *js.Object, key *js.Object) {`)
-				g.In()
-				// Figure out the key and value types
-				keyField, valField := d.Field[0], d.Field[1]
-				keyType := g.GopherJSTypeFunc(message, keyField)
-				valType := g.GopherJSTypeFunc(message, valField)
-				switch *keyField.Type {
-				case descriptor.FieldDescriptorProto_TYPE_FLOAT:
-					keyType = fmt.Sprintf(`float32(key.%s)`, keyType)
-				case descriptor.FieldDescriptorProto_TYPE_INT32, descriptor.FieldDescriptorProto_TYPE_SFIXED32, descriptor.FieldDescriptorProto_TYPE_SINT32:
-					keyType = fmt.Sprintf(`int32(key.%s)`, keyType)
-				case descriptor.FieldDescriptorProto_TYPE_UINT32, descriptor.FieldDescriptorProto_TYPE_FIXED32:
-					keyType = fmt.Sprintf(`uint32(key.%s)`, keyType)
-				default:
-					// Note: cannot be message
-					keyType = fmt.Sprintf(`key.%s`, keyType)
-				}
-				switch *valField.Type {
-				case descriptor.FieldDescriptorProto_TYPE_ENUM:
-					valType = fmt.Sprintf(`%s(value.Int())`, valType)
-				case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-					valType = fmt.Sprintf(`&%s{ Object: value }`, valType)
-				case descriptor.FieldDescriptorProto_TYPE_FLOAT:
-					valType = fmt.Sprintf(`float32(value.%s)`, valType)
-				case descriptor.FieldDescriptorProto_TYPE_INT32, descriptor.FieldDescriptorProto_TYPE_SFIXED32, descriptor.FieldDescriptorProto_TYPE_SINT32:
-					valType = fmt.Sprintf(`int32(value.%s)`, valType)
-				case descriptor.FieldDescriptorProto_TYPE_UINT32, descriptor.FieldDescriptorProto_TYPE_FIXED32:
-					valType = fmt.Sprintf(`uint32(value.%s)`, valType)
-				default:
-					valType = fmt.Sprintf(`value.%s`, valType)
-				}
-				g.P(`x[`, keyType, `] = `, valType)
-				g.Out()
-				g.P(`}`)
-				g.P(`m.Call("get`, fname, `Map").Call("forEach", mapFunc)`)
-				g.P(`return x`)
-			} else if isRepeated(field) {
-				// Special handling for slices
-				var valueConversion string
-				switch *field.Type {
-				case descriptor.FieldDescriptorProto_TYPE_ENUM:
-					valueConversion = fmt.Sprintf(`%s(value.Int())`, typeFunc)
-				case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-					valueConversion = fmt.Sprintf(`&%s{ Object: value }`, typeFunc)
-				case descriptor.FieldDescriptorProto_TYPE_FLOAT:
-					valueConversion = fmt.Sprintf(`float32(value.%s)`, typeFunc)
-				case descriptor.FieldDescriptorProto_TYPE_INT32, descriptor.FieldDescriptorProto_TYPE_SFIXED32, descriptor.FieldDescriptorProto_TYPE_SINT32:
-					valueConversion = fmt.Sprintf(`int32(value.%s)`, typeFunc)
-				case descriptor.FieldDescriptorProto_TYPE_UINT32, descriptor.FieldDescriptorProto_TYPE_FIXED32:
-					valueConversion = fmt.Sprintf(`uint32(value.%s)`, typeFunc)
-				default:
-					valueConversion = fmt.Sprintf(`value.%s`, typeFunc)
-				}
-				g.P(`x := `, typename, `{}`)
-				g.P(`arrFunc := func(value *js.Object) {`)
-				g.In()
-				g.P(`x = append(x, `, valueConversion, `)`)
-				g.Out()
-				g.P(`}`)
-				g.P(`m.Call("get`, fname, `List").Call("forEach", arrFunc)`)
-				g.P(`return x`)
-			} else {
-				switch *field.Type {
-				case descriptor.FieldDescriptorProto_TYPE_ENUM:
-					g.P("return ", typeFunc, `(m.Call("get`+fname+`").Int())`)
-				case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-					g.P("return &", typeFunc, `{ Object: m.Call("get`+fname+`")}`)
-				case descriptor.FieldDescriptorProto_TYPE_FLOAT:
-					g.P(`return float32(m.Call("get`+fname+`").`+typeFunc, `)`)
-				case descriptor.FieldDescriptorProto_TYPE_INT32, descriptor.FieldDescriptorProto_TYPE_SFIXED32, descriptor.FieldDescriptorProto_TYPE_SINT32:
-					g.P(`return int32(m.Call("get`+fname+`").`+typeFunc, `)`)
-				case descriptor.FieldDescriptorProto_TYPE_UINT32, descriptor.FieldDescriptorProto_TYPE_FIXED32:
-					g.P(`return uint32(m.Call("get`+fname+`").`+typeFunc, `)`)
-				default:
-					g.P(`return m.Call("get` + fname + `").` + typeFunc)
-				}
+			switch *valField.Type {
+			case descriptor.FieldDescriptorProto_TYPE_ENUM:
+				valType = fmt.Sprintf(`%s(value.Int())`, valType)
+			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
+				valType = fmt.Sprintf(`&%s{ Object: value }`, valType)
+			case descriptor.FieldDescriptorProto_TYPE_FLOAT:
+				valType = fmt.Sprintf(`float32(value.%s)`, valType)
+			case descriptor.FieldDescriptorProto_TYPE_INT32, descriptor.FieldDescriptorProto_TYPE_SFIXED32, descriptor.FieldDescriptorProto_TYPE_SINT32:
+				valType = fmt.Sprintf(`int32(value.%s)`, valType)
+			case descriptor.FieldDescriptorProto_TYPE_UINT32, descriptor.FieldDescriptorProto_TYPE_FIXED32:
+				valType = fmt.Sprintf(`uint32(value.%s)`, valType)
+			default:
+				valType = fmt.Sprintf(`value.%s`, valType)
 			}
+			g.P(`x[`, keyType, `] = `, valType)
+			g.Out()
 			g.P(`}`)
-			g.P()
-
-			// Generate setter
-			g.P(`// `, setterName, ` sets the `, fname, ` of the `, ccTypeName, `.`)
-			g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
-			g.P(`func (m *` + ccTypeName + `) ` + setterName + `(v ` + typename + `) {`)
-			if d := g.getMapDescriptor(field); d != nil {
-				// Special handling for maps
-				g.P(`m.Call("clear`, fname, `Map")`)
-				g.P(`for key, value := range v {`)
-				g.In()
-				g.P(`m.Call("get`, fname, `Map").Call("set", key, value)`)
-				g.Out()
-				g.P(`}`)
-			} else if isRepeated(field) {
-				// Special handling for slices
-				g.P(`arr := js.Global.Get("Array").New(len(v))`)
-				g.P(`for i, value := range v {`)
-				g.In()
-				g.P(`arr.SetIndex(i, value)`)
-				g.Out()
-				g.P(`}`)
-				g.P(`m.Call("set`, fname, `List", arr)`)
-			} else {
-				g.P(`m.Call("set` + fname + `", v)`)
+			g.P(`m.Call("get`, fname, `Map").Call("forEach", mapFunc)`)
+			g.P(`return x`)
+		} else if isRepeated(field) {
+			// Special handling for slices
+			var valueConversion string
+			switch *field.Type {
+			case descriptor.FieldDescriptorProto_TYPE_ENUM:
+				valueConversion = fmt.Sprintf(`%s(value.Int())`, typeFunc)
+			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
+				valueConversion = fmt.Sprintf(`&%s{ Object: value }`, typeFunc)
+			case descriptor.FieldDescriptorProto_TYPE_FLOAT:
+				valueConversion = fmt.Sprintf(`float32(value.%s)`, typeFunc)
+			case descriptor.FieldDescriptorProto_TYPE_INT32, descriptor.FieldDescriptorProto_TYPE_SFIXED32, descriptor.FieldDescriptorProto_TYPE_SINT32:
+				valueConversion = fmt.Sprintf(`int32(value.%s)`, typeFunc)
+			case descriptor.FieldDescriptorProto_TYPE_UINT32, descriptor.FieldDescriptorProto_TYPE_FIXED32:
+				valueConversion = fmt.Sprintf(`uint32(value.%s)`, typeFunc)
+			default:
+				valueConversion = fmt.Sprintf(`value.%s`, typeFunc)
 			}
+			g.P(`x := `, typename, `{}`)
+			g.P(`arrFunc := func(value *js.Object) {`)
+			g.In()
+			g.P(`x = append(x, `, valueConversion, `)`)
+			g.Out()
 			g.P(`}`)
-			g.P()
+			g.P(`m.Call("get`, fname, `List").Call("forEach", arrFunc)`)
+			g.P(`return x`)
+		} else {
+			switch *field.Type {
+			case descriptor.FieldDescriptorProto_TYPE_ENUM:
+				g.P("return ", typeFunc, `(m.Call("get`+fname+`").Int())`)
+			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
+				g.P("return &", typeFunc, `{ Object: m.Call("get`+fname+`")}`)
+			case descriptor.FieldDescriptorProto_TYPE_FLOAT:
+				g.P(`return float32(m.Call("get`+fname+`").`+typeFunc, `)`)
+			case descriptor.FieldDescriptorProto_TYPE_INT32, descriptor.FieldDescriptorProto_TYPE_SFIXED32, descriptor.FieldDescriptorProto_TYPE_SINT32:
+				g.P(`return int32(m.Call("get`+fname+`").`+typeFunc, `)`)
+			case descriptor.FieldDescriptorProto_TYPE_UINT32, descriptor.FieldDescriptorProto_TYPE_FIXED32:
+				g.P(`return uint32(m.Call("get`+fname+`").`+typeFunc, `)`)
+			default:
+				g.P(`return m.Call("get` + fname + `").` + typeFunc)
+			}
 		}
+		g.P(`}`)
+		g.P()
+
+		// Generate setter
+		g.P(`// `, setterName, ` sets the `, fname, ` of the `, ccTypeName, `.`)
+		g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
+		g.P(`func (m *` + ccTypeName + `) ` + setterName + `(v ` + typename + `) {`)
+		if d := g.getMapDescriptor(field); d != nil {
+			// Special handling for maps
+			g.P(`m.Call("clear`, fname, `Map")`)
+			g.P(`for key, value := range v {`)
+			g.In()
+			g.P(`m.Call("get`, fname, `Map").Call("set", key, value)`)
+			g.Out()
+			g.P(`}`)
+		} else if isRepeated(field) {
+			// Special handling for slices
+			g.P(`arr := js.Global.Get("Array").New(len(v))`)
+			g.P(`for i, value := range v {`)
+			g.In()
+			g.P(`arr.SetIndex(i, value)`)
+			g.Out()
+			g.P(`}`)
+			g.P(`m.Call("set`, fname, `List", arr)`)
+		} else {
+			g.P(`m.Call("set` + fname + `", v)`)
+		}
+		g.P(`}`)
+		g.P()
 	}
 
 	g.addSerialize(ccTypeName)
