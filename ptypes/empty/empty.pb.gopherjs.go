@@ -13,7 +13,7 @@ It has these top-level messages:
 package empty
 
 import js "github.com/gopherjs/gopherjs/js"
-import grpcweb "github.com/johanbrandhorst/gopherjs-improbable-grpc-web"
+import jspb "github.com/johanbrandhorst/jspb"
 
 // A generic empty message that you can re-use to avoid defining duplicated
 // empty messages in your APIs. A typical example is to use it as the request
@@ -38,11 +38,11 @@ func NewEmpty() *Empty {
 }
 
 func (m *Empty) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeEmpty(rawBytes []byte) (*Empty, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Empty"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Empty"), rawBytes)
 	if err != nil {
 		return nil, err
 	}

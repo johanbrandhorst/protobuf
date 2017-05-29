@@ -13,7 +13,7 @@ It has these top-level messages:
 package any
 
 import js "github.com/gopherjs/gopherjs/js"
-import grpcweb "github.com/johanbrandhorst/gopherjs-improbable-grpc-web"
+import jspb "github.com/johanbrandhorst/jspb"
 
 // `Any` contains an arbitrary serialized protocol buffer message along with a
 // URL that describes the type of the serialized message.
@@ -191,11 +191,11 @@ func (m *Any) SetValue(v []byte) {
 }
 
 func (m *Any) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeAny(rawBytes []byte) (*Any, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Any"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Any"), rawBytes)
 	if err != nil {
 		return nil, err
 	}

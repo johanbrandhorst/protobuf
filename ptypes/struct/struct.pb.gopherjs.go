@@ -15,7 +15,7 @@
 package structpb
 
 import js "github.com/gopherjs/gopherjs/js"
-import grpcweb "github.com/johanbrandhorst/gopherjs-improbable-grpc-web"
+import jspb "github.com/johanbrandhorst/jspb"
 
 // `NullValue` is a singleton enumeration to represent the null value for the
 // `Value` type union.
@@ -88,11 +88,11 @@ func (m *Struct) SetFields(v map[string]*Value) {
 }
 
 func (m *Struct) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeStruct(rawBytes []byte) (*Struct, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Struct"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Struct"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -276,11 +276,11 @@ func (m *Value) SetListValue(v *ListValue) {
 }
 
 func (m *Value) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeValue(rawBytes []byte) (*Value, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Value"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Value"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -339,11 +339,11 @@ func (m *ListValue) SetValues(v []*Value) {
 }
 
 func (m *ListValue) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeListValue(rawBytes []byte) (*ListValue, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("ListValue"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("ListValue"), rawBytes)
 	if err != nil {
 		return nil, err
 	}

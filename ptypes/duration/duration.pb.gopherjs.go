@@ -13,7 +13,7 @@ It has these top-level messages:
 package duration
 
 import js "github.com/gopherjs/gopherjs/js"
-import grpcweb "github.com/johanbrandhorst/gopherjs-improbable-grpc-web"
+import jspb "github.com/johanbrandhorst/jspb"
 
 // A Duration represents a signed, fixed-length span of time represented
 // as a count of seconds and fractions of seconds at nanosecond
@@ -139,11 +139,11 @@ func (m *Duration) SetNanos(v int32) {
 }
 
 func (m *Duration) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeDuration(rawBytes []byte) (*Duration, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Duration"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Duration"), rawBytes)
 	if err != nil {
 		return nil, err
 	}

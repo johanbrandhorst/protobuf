@@ -21,7 +21,7 @@ It has these top-level messages:
 package wrappers
 
 import js "github.com/gopherjs/gopherjs/js"
-import grpcweb "github.com/johanbrandhorst/gopherjs-improbable-grpc-web"
+import jspb "github.com/johanbrandhorst/jspb"
 
 // Wrapper message for `double`.
 //
@@ -55,11 +55,11 @@ func (m *DoubleValue) SetValue(v float64) {
 }
 
 func (m *DoubleValue) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeDoubleValue(rawBytes []byte) (*DoubleValue, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("DoubleValue"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("DoubleValue"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -101,11 +101,11 @@ func (m *FloatValue) SetValue(v float32) {
 }
 
 func (m *FloatValue) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeFloatValue(rawBytes []byte) (*FloatValue, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("FloatValue"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("FloatValue"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -147,11 +147,11 @@ func (m *Int64Value) SetValue(v int64) {
 }
 
 func (m *Int64Value) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeInt64Value(rawBytes []byte) (*Int64Value, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Int64Value"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Int64Value"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -193,11 +193,11 @@ func (m *UInt64Value) SetValue(v uint64) {
 }
 
 func (m *UInt64Value) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeUInt64Value(rawBytes []byte) (*UInt64Value, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("UInt64Value"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("UInt64Value"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -239,11 +239,11 @@ func (m *Int32Value) SetValue(v int32) {
 }
 
 func (m *Int32Value) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeInt32Value(rawBytes []byte) (*Int32Value, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Int32Value"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Int32Value"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -285,11 +285,11 @@ func (m *UInt32Value) SetValue(v uint32) {
 }
 
 func (m *UInt32Value) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeUInt32Value(rawBytes []byte) (*UInt32Value, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("UInt32Value"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("UInt32Value"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -331,11 +331,11 @@ func (m *BoolValue) SetValue(v bool) {
 }
 
 func (m *BoolValue) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeBoolValue(rawBytes []byte) (*BoolValue, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("BoolValue"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("BoolValue"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -377,11 +377,11 @@ func (m *StringValue) SetValue(v string) {
 }
 
 func (m *StringValue) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeStringValue(rawBytes []byte) (*StringValue, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("StringValue"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("StringValue"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -423,11 +423,11 @@ func (m *BytesValue) SetValue(v []byte) {
 }
 
 func (m *BytesValue) serialize() (rawBytes []byte, err error) {
-	return grpcweb.Serialize(m)
+	return jspb.Serialize(m)
 }
 
 func deserializeBytesValue(rawBytes []byte) (*BytesValue, error) {
-	obj, err := grpcweb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("BytesValue"), rawBytes)
+	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("BytesValue"), rawBytes)
 	if err != nil {
 		return nil, err
 	}
