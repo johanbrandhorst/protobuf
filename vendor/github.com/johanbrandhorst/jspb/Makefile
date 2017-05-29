@@ -1,7 +1,7 @@
 all: checkout build
 
 checkout:
-	npm install google-protobuf grpc-web-client webpack
+	npm install google-protobuf webpack
 
 build:
 	./node_modules/.bin/webpack

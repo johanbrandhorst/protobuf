@@ -21,40 +21,10 @@
 			"revisionTime": "2017-05-26T16:57:56Z"
 		},
 		{
-			"checksumSHA1": "G6JhzF6JUqnUl3H3t4f4VNWDJ84=",
-			"path": "github.com/johanbrandhorst/gopherjs-improbable-grpc-web",
-			"revision": "29d251a7010053421acd500c95f8e605d880ab13",
-			"revisionTime": "2017-05-29T16:38:38Z"
-		},
-		{
-			"checksumSHA1": "ovsPk4fLfWsCO5KBFYxrI23zMZc=",
-			"path": "github.com/johanbrandhorst/gopherjs-improbable-grpc-web/grpcwebjs",
-			"revision": "29d251a7010053421acd500c95f8e605d880ab13",
-			"revisionTime": "2017-05-29T16:38:38Z"
-		},
-		{
-			"checksumSHA1": "78G3pRIP/jWYC0mw/pkv+Fhoqi8=",
-			"path": "github.com/johanbrandhorst/gopherjs-improbable-grpc-web/status",
-			"revision": "29d251a7010053421acd500c95f8e605d880ab13",
-			"revisionTime": "2017-05-29T16:38:38Z"
-		},
-		{
-			"checksumSHA1": "Y+HGqEkYM15ir+J93MEaHdyFy0c=",
-			"path": "golang.org/x/net/context",
-			"revision": "48359f4f600b3a2d5cf657458e3f940021631a56",
-			"revisionTime": "2017-03-18T09:30:21Z"
-		},
-		{
-			"checksumSHA1": "xDFNvjW6gMsDQ+WRZ0t+8S/e4Qk=",
-			"path": "google.golang.org/grpc/codes",
-			"revision": "2739967807cc0e3199513569f58fda34252ad65e",
-			"revisionTime": "2017-05-26T15:26:41Z"
-		},
-		{
-			"checksumSHA1": "89fjWaU6NKVpmWI+0EoDION0dpE=",
-			"path": "google.golang.org/grpc/metadata",
-			"revision": "2739967807cc0e3199513569f58fda34252ad65e",
-			"revisionTime": "2017-05-26T15:26:41Z"
+			"checksumSHA1": "paAg+4cI0XTq1D553EH6+Pzs5PQ=",
+			"path": "github.com/johanbrandhorst/jspb",
+			"revision": "ab8931a07a83e6fcef08420f10faa9b959eb647b",
+			"revisionTime": "2017-05-29T22:21:58Z"
 		}
 	],
 	"rootPath": "github.com/johanbrandhorst/protoc-gen-gopherjs"
