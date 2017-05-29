@@ -1,70 +1,94 @@
-// Copyright 2017 Johan Brandhorst. All Rights Reserved.
-// See LICENSE for licensing terms.
+// Go support for Protocol Buffers - Google's data interchange format
+//
+// Copyright 2010 The Go Authors.  All rights reserved.
+// https://github.com/golang/protobuf
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// protoc-gen-gopherjs is a plugin for the Google protocol buffer compiler to generate
+// GopherJS code.  Run it by building this program and putting it in your path with
+// the name
+// 	protoc-gen-gopherjs
+// That word 'gopherjs' at the end becomes part of the option string set for the
+// protocol compiler, so once the protocol compiler (protoc) is installed
+// you can run
+// 	protoc --gopherjs_out=output_directory input_directory/file.proto
+// to generate GopherJS bindings for the protocol defined by file.proto.
+//
+// The generated code is documented in the package comment for
+// the library.
 
 package main
 
 import (
-	"bytes"
 	"io/ioutil"
-	"log"
 	"os"
-	"strings"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
-	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
-
-	"github.com/johanbrandhorst/protoc-gen-gopherjs/filegenerator"
+	"github.com/johanbrandhorst/protoc-gen-gopherjs/generator"
 )
 
 func main() {
+	// Begin by allocating a generator. The request and response structures are stored there
+	// so we can do error handling easily - the response structure contains the field to
+	// report failure.
+	g := generator.New()
+
 	data, err := ioutil.ReadAll(os.Stdin)
 	if err != nil {
-		log.Fatalln("Could not read request from STDIN: ", err)
+		g.Error(err, "reading input")
 	}
 
-	req := &plugin.CodeGeneratorRequest{}
+	if err := proto.Unmarshal(data, g.Request); err != nil {
+		g.Error(err, "parsing input proto")
+	}
 
-	err = proto.Unmarshal(data, req)
+	if len(g.Request.FileToGenerate) == 0 {
+		g.Fail("no files to generate")
+	}
+
+	g.CommandLineParameters(g.Request.GetParameter())
+
+	// Create a wrapped version of the Descriptors and EnumDescriptors that
+	// point to the file that defines them.
+	g.WrapTypes()
+
+	g.SetPackageNames()
+	g.BuildTypeNameMap()
+
+	g.GenerateAllFiles()
+
+	// Send back the results.
+	data, err = proto.Marshal(g.Response)
 	if err != nil {
-		log.Fatalln("Could not unmarshal request: ", err)
+		g.Error(err, "failed to marshal output proto")
 	}
-
-	resp := &plugin.CodeGeneratorResponse{}
-
-	for _, inFile := range req.GetProtoFile() {
-		for _, reqFile := range req.GetFileToGenerate() {
-			if inFile.GetName() == reqFile {
-				outFile, err := processFile(inFile)
-				if err != nil {
-					log.Fatalln("Could not process file: ", err)
-				}
-				resp.File = append(resp.File, outFile)
-			}
-		}
-	}
-
-	data, err = proto.Marshal(resp)
-	if err != nil {
-		log.Fatalf("Could not marshal response: %v [%v]\n", err, resp)
-	}
-
 	_, err = os.Stdout.Write(data)
 	if err != nil {
-		log.Fatalln("Could not write response to STDOUT: ", err)
+		g.Error(err, "failed to write output proto")
 	}
-}
-
-func processFile(inFile *descriptor.FileDescriptorProto) (*plugin.CodeGeneratorResponse_File, error) {
-	outFile := &plugin.CodeGeneratorResponse_File{}
-	outFile.Name = proto.String(strings.TrimSuffix(inFile.GetName(), ".proto") + ".pb.gopherjs.go")
-
-	b := &bytes.Buffer{}
-	fg := filegenerator.New(b)
-
-	fg.Generate(inFile)
-
-	outFile.Content = proto.String(b.String())
-
-	return outFile, nil
 }
