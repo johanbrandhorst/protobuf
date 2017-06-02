@@ -51,11 +51,13 @@ func (m *Multi3) SetHatType(v Multi3_HatType) {
 	m.Call("setHatType", v)
 }
 
-func (m *Multi3) serialize() (rawBytes []byte, err error) {
+// Serialize marshals Multi3 to a slice of bytes.
+func (m *Multi3) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeMulti3(rawBytes []byte) (*Multi3, error) {
+// DeserializeMulti3 unmarshals a Multi3 from a slice of bytes.
+func DeserializeMulti3(rawBytes []byte) (*Multi3, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("multitest").Get("Multi3"), rawBytes)
 	if err != nil {
 		return nil, err

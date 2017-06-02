@@ -65,11 +65,13 @@ func (m *Multi2) SetColor(v Multi2_Color) {
 	m.Call("setColor", v)
 }
 
-func (m *Multi2) serialize() (rawBytes []byte, err error) {
+// Serialize marshals Multi2 to a slice of bytes.
+func (m *Multi2) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeMulti2(rawBytes []byte) (*Multi2, error) {
+// DeserializeMulti2 unmarshals a Multi2 from a slice of bytes.
+func DeserializeMulti2(rawBytes []byte) (*Multi2, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("multitest").Get("Multi2"), rawBytes)
 	if err != nil {
 		return nil, err

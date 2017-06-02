@@ -264,10 +264,12 @@ func (m *Request) SetGetKey(v string) {
 	m.Call("setGetKey", v)
 }
 
+// Serialize marshals Request to a slice of bytes.
 func (m *Request) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
+// DeserializeRequest unmarshals a Request from a slice of bytes.
 func DeserializeRequest(rawBytes []byte) (*Request, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Request"), rawBytes)
 	if err != nil {
@@ -348,10 +350,12 @@ func (m *Reply) SetCompactKeys(v []int32) {
 	m.Call("setCompactKeysList", arr)
 }
 
+// Serialize marshals Reply to a slice of bytes.
 func (m *Reply) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
+// DeserializeReply unmarshals a Reply from a slice of bytes.
 func DeserializeReply(rawBytes []byte) (*Reply, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Reply"), rawBytes)
 	if err != nil {
@@ -410,10 +414,12 @@ func (m *Reply_Entry) SetXMyFieldName_2(v int64) {
 	m.Call("setXMyFieldName_2", v)
 }
 
+// Serialize marshals Reply_Entry to a slice of bytes.
 func (m *Reply_Entry) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
+// DeserializeReply_Entry unmarshals a Reply_Entry from a slice of bytes.
 func DeserializeReply_Entry(rawBytes []byte) (*Reply_Entry, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Reply").Get("Entry"), rawBytes)
 	if err != nil {
@@ -450,10 +456,12 @@ func (m *OtherBase) SetName(v string) {
 	m.Call("setName", v)
 }
 
+// Serialize marshals OtherBase to a slice of bytes.
 func (m *OtherBase) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
+// DeserializeOtherBase unmarshals a OtherBase from a slice of bytes.
 func DeserializeOtherBase(rawBytes []byte) (*OtherBase, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("OtherBase"), rawBytes)
 	if err != nil {
@@ -490,10 +498,12 @@ func (m *OtherReplyExtensions) SetKey(v int32) {
 	m.Call("setKey", v)
 }
 
+// Serialize marshals OtherReplyExtensions to a slice of bytes.
 func (m *OtherReplyExtensions) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
+// DeserializeOtherReplyExtensions unmarshals a OtherReplyExtensions from a slice of bytes.
 func DeserializeOtherReplyExtensions(rawBytes []byte) (*OtherReplyExtensions, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("OtherReplyExtensions"), rawBytes)
 	if err != nil {
@@ -725,10 +735,12 @@ func (m *Communique) SetMsg(v *Reply) {
 	m.Call("setMsg", v)
 }
 
+// Serialize marshals Communique to a slice of bytes.
 func (m *Communique) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
+// DeserializeCommunique unmarshals a Communique from a slice of bytes.
 func DeserializeCommunique(rawBytes []byte) (*Communique, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Communique"), rawBytes)
 	if err != nil {
@@ -753,10 +765,12 @@ func NewCommunique_Delta() *Communique_Delta {
 	return m
 }
 
+// Serialize marshals Communique_Delta to a slice of bytes.
 func (m *Communique_Delta) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
+// DeserializeCommunique_Delta unmarshals a Communique_Delta from a slice of bytes.
 func DeserializeCommunique_Delta(rawBytes []byte) (*Communique_Delta, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Communique").Get("Delta"), rawBytes)
 	if err != nil {
