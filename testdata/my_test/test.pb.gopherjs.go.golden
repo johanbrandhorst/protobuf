@@ -119,7 +119,8 @@ type Request struct {
 // This is a map field whose value type is a message.
 // This field should not conflict with any getters.
 // Imported type
-func NewRequest(key []int64, hue Request_Color, hat HatType, deadline float32, nameMapping map[int32]string, msgMapping map[int64]*Reply, reset int32, getKey string, multi *multitest2.Multi1) *Request {
+// Property with name of Go keyword
+func NewRequest(key []int64, hue Request_Color, hat HatType, deadline float32, nameMapping map[int32]string, msgMapping map[int64]*Reply, reset int32, getKey string, multi *multitest2.Multi1, _fallthrough string) *Request {
 	m := &Request{
 		Object: js.Global.Get("proto").Get("my").Get("test").Get("Request").New([]interface{}{
 			js.Undefined,
@@ -131,6 +132,7 @@ func NewRequest(key []int64, hue Request_Color, hat HatType, deadline float32, n
 			reset,
 			getKey,
 			multi,
+			_fallthrough,
 		}),
 	}
 
@@ -272,6 +274,18 @@ func (m *Request) GetMulti() *multitest2.Multi1 {
 // Imported type
 func (m *Request) SetMulti(v *multitest2.Multi1) {
 	m.Call("setMulti", v)
+}
+
+// GetFallthrough gets the Fallthrough of the Request.
+// Property with name of Go keyword
+func (m *Request) GetFallthrough() string {
+	return m.Call("getFallthrough").String()
+}
+
+// SetFallthrough sets the Fallthrough of the Request.
+// Property with name of Go keyword
+func (m *Request) SetFallthrough(v string) {
+	m.Call("setFallthrough", v)
 }
 
 // Serialize marshals Request to a slice of bytes.

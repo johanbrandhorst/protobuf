@@ -72,6 +72,8 @@ message Request {
   string get_key = 16;
   // Imported type
   multitest.Multi1 multi = 17;
+  // Property with name of Go keyword
+  string fallthrough = 18;
 }
 
 message Reply {
