@@ -229,16 +229,16 @@ func (g *grpc) generateClientMethod(servName, fullServName, serviceDescVar strin
 	g.P("func (c *", unexport(servName), "Client) ", g.generateClientSignature(servName, method), "{")
 	switch {
 	case !method.GetServerStreaming() && !method.GetClientStreaming():
-		g.P("req, err := in.serialize()")
+		g.P("req, err := in.Serialize()")
 		g.P("if err != nil { return nil, err }")
 		g.P(`resp, err := c.client.RPCCall(ctx, "`, method.GetName(), `", req, opts...)`)
 		g.P("if err != nil { return nil, err }")
-		g.P("return deserialize", outType, "(resp)")
+		g.P("return Deserialize", outType, "(resp)")
 		g.P("}")
 		g.P()
 		return
 	case method.GetServerStreaming():
-		g.P("req, err := in.serialize()")
+		g.P("req, err := in.Serialize()")
 		g.P("if err != nil { return nil, err }")
 		g.P(`srv, err := c.client.Stream(ctx, "`, method.GetName(), `", req, opts...)`)
 		g.P("if err != nil { return nil, err }")
@@ -270,7 +270,7 @@ func (g *grpc) generateClientMethod(servName, fullServName, serviceDescVar strin
 		g.P("func (x *", streamType, ") Recv() (*", outType, ", error) {")
 		g.P("resp, err := x.stream.Recv()")
 		g.P("if err != nil { return nil, err }")
-		g.P("return deserialize", outType, "(resp)")
+		g.P("return Deserialize", outType, "(resp)")
 		g.P("}")
 		g.P()
 	}

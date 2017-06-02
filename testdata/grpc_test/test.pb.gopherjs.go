@@ -264,11 +264,11 @@ func (m *Request) SetGetKey(v string) {
 	m.Call("setGetKey", v)
 }
 
-func (m *Request) serialize() (rawBytes []byte, err error) {
+func (m *Request) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeRequest(rawBytes []byte) (*Request, error) {
+func DeserializeRequest(rawBytes []byte) (*Request, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Request"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -348,11 +348,11 @@ func (m *Reply) SetCompactKeys(v []int32) {
 	m.Call("setCompactKeysList", arr)
 }
 
-func (m *Reply) serialize() (rawBytes []byte, err error) {
+func (m *Reply) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeReply(rawBytes []byte) (*Reply, error) {
+func DeserializeReply(rawBytes []byte) (*Reply, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Reply"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -410,11 +410,11 @@ func (m *Reply_Entry) SetXMyFieldName_2(v int64) {
 	m.Call("setXMyFieldName_2", v)
 }
 
-func (m *Reply_Entry) serialize() (rawBytes []byte, err error) {
+func (m *Reply_Entry) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeReply_Entry(rawBytes []byte) (*Reply_Entry, error) {
+func DeserializeReply_Entry(rawBytes []byte) (*Reply_Entry, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Reply").Get("Entry"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -450,11 +450,11 @@ func (m *OtherBase) SetName(v string) {
 	m.Call("setName", v)
 }
 
-func (m *OtherBase) serialize() (rawBytes []byte, err error) {
+func (m *OtherBase) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeOtherBase(rawBytes []byte) (*OtherBase, error) {
+func DeserializeOtherBase(rawBytes []byte) (*OtherBase, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("OtherBase"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -490,11 +490,11 @@ func (m *OtherReplyExtensions) SetKey(v int32) {
 	m.Call("setKey", v)
 }
 
-func (m *OtherReplyExtensions) serialize() (rawBytes []byte, err error) {
+func (m *OtherReplyExtensions) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeOtherReplyExtensions(rawBytes []byte) (*OtherReplyExtensions, error) {
+func DeserializeOtherReplyExtensions(rawBytes []byte) (*OtherReplyExtensions, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("OtherReplyExtensions"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -725,11 +725,11 @@ func (m *Communique) SetMsg(v *Reply) {
 	m.Call("setMsg", v)
 }
 
-func (m *Communique) serialize() (rawBytes []byte, err error) {
+func (m *Communique) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeCommunique(rawBytes []byte) (*Communique, error) {
+func DeserializeCommunique(rawBytes []byte) (*Communique, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Communique"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -753,11 +753,11 @@ func NewCommunique_Delta() *Communique_Delta {
 	return m
 }
 
-func (m *Communique_Delta) serialize() (rawBytes []byte, err error) {
+func (m *Communique_Delta) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeCommunique_Delta(rawBytes []byte) (*Communique_Delta, error) {
+func DeserializeCommunique_Delta(rawBytes []byte) (*Communique_Delta, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Communique").Get("Delta"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -794,7 +794,7 @@ func NewTestServiceClient(hostname string, opts ...grpcweb.DialOption) TestServi
 }
 
 func (c *testServiceClient) Unary(ctx context.Context, in *Request, opts ...grpcweb.CallOption) (*Reply, error) {
-	req, err := in.serialize()
+	req, err := in.Serialize()
 	if err != nil {
 		return nil, err
 	}
@@ -802,11 +802,11 @@ func (c *testServiceClient) Unary(ctx context.Context, in *Request, opts ...grpc
 	if err != nil {
 		return nil, err
 	}
-	return deserializeReply(resp)
+	return DeserializeReply(resp)
 }
 
 func (c *testServiceClient) ServerStreaming(ctx context.Context, in *Request, opts ...grpcweb.CallOption) (TestService_ServerStreamingClient, error) {
-	req, err := in.serialize()
+	req, err := in.Serialize()
 	if err != nil {
 		return nil, err
 	}
@@ -832,5 +832,5 @@ func (x *testServiceServerStreamingClient) Recv() (*Reply, error) {
 	if err != nil {
 		return nil, err
 	}
-	return deserializeReply(resp)
+	return DeserializeReply(resp)
 }

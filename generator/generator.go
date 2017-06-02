@@ -1276,7 +1276,7 @@ func (g *Generator) RecordTypeUse(t string) {
 // underscore appended. Any change to this set is a potential incompatible
 // API change because it changes generated field names.
 var methodNames = [...]string{
-	"serialize",
+	"Serialize",
 }
 
 // Generate the type and default constant definitions for this Descriptor.
@@ -1724,7 +1724,7 @@ func (g *Generator) addMessageFactory(message *Descriptor, mapFieldTypes map[*de
 }
 
 func (g *Generator) addSerialize(typeName string) {
-	g.P(`func (m *` + typeName + `) serialize() (rawBytes []byte, err error) {`)
+	g.P(`func (m *` + typeName + `) Serialize() (rawBytes []byte, err error) {`)
 	g.In()
 	g.P(`return jspb.Serialize(m)`)
 	g.Out()
@@ -1733,7 +1733,7 @@ func (g *Generator) addSerialize(typeName string) {
 }
 
 func (g *Generator) addDeserialize(typeName string) {
-	g.P(`func deserialize` + typeName + `(rawBytes []byte) (*` + typeName + `, error) {`)
+	g.P(`func Deserialize` + typeName + `(rawBytes []byte) (*` + typeName + `, error) {`)
 	g.In()
 
 	g.P(`obj, err := jspb.Deserialize(`, g.getMessageReference(typeName), `, rawBytes)`)
