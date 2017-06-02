@@ -461,6 +461,19 @@ var isGoKeyword = map[string]bool{
 	"var":         true,
 }
 
+func sanitiseIdentifier(i string) string {
+	// Identifier must not be keyword: insert _.
+	if isGoKeyword[i] {
+		i = "_" + i
+	}
+	// Identifier must not begin with digit: insert _.
+	if r, _ := utf8.DecodeRuneInString(i); unicode.IsDigit(r) {
+		i = "_" + i
+	}
+
+	return i
+}
+
 // defaultGoPackage returns the package name to use,
 // derived from the import path of the package we're building code for.
 func (g *Generator) defaultGoPackage() string {
@@ -472,16 +485,7 @@ func (g *Generator) defaultGoPackage() string {
 		return ""
 	}
 
-	p = strings.Map(badToUnderscore, p)
-	// Identifier must not be keyword: insert _.
-	if isGoKeyword[p] {
-		p = "_" + p
-	}
-	// Identifier must not begin with digit: insert _.
-	if r, _ := utf8.DecodeRuneInString(p); unicode.IsDigit(r) {
-		p = "_" + p
-	}
-	return p
+	return sanitiseIdentifier(strings.Map(badToUnderscore, p))
 }
 
 // SetPackageNames sets the package name for this run.
@@ -1665,7 +1669,7 @@ func (g *Generator) addMessageFactory(message *Descriptor, mapFieldTypes map[*de
 		}
 
 		g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
-		args = append(args, fmt.Sprintf(`%s %s`, field.GetJsonName(), argType))
+		args = append(args, fmt.Sprintf(`%s %s`, sanitiseIdentifier(field.GetJsonName()), argType))
 	}
 
 	g.P(`func New`, ccTypeName, `(`, strings.Join(args, ", "), `) *`, ccTypeName, ` {`)
@@ -1685,7 +1689,7 @@ func (g *Generator) addMessageFactory(message *Descriptor, mapFieldTypes map[*de
 			// Handle slice values separately
 			g.P(`js.Undefined,`)
 		} else {
-			g.P(field.GetJsonName(), `,`)
+			g.P(sanitiseIdentifier(field.GetJsonName()), `,`)
 		}
 	}
 	g.Out()
@@ -1697,7 +1701,7 @@ func (g *Generator) addMessageFactory(message *Descriptor, mapFieldTypes map[*de
 	usedNames := make(map[string]bool)
 	for _, field := range message.GetField() {
 		if d := g.getMapDescriptor(field); d != nil {
-			g.P(`for key, value := range `, field.GetJsonName(), ` {`)
+			g.P(`for key, value := range `, sanitiseIdentifier(field.GetJsonName()), ` {`)
 			g.In()
 			g.P(`m.Call("get`, CamelCase(field.GetName()), `Map").Call("set", key, value)`)
 			g.Out()
@@ -1708,8 +1712,8 @@ func (g *Generator) addMessageFactory(message *Descriptor, mapFieldTypes map[*de
 				varName += "_"
 			}
 			usedNames[varName] = true
-			g.P(varName, ` := js.Global.Get("Array").New(len(`, field.GetJsonName(), `))`)
-			g.P(`for i, value := range `, field.GetJsonName(), ` {`)
+			g.P(varName, ` := js.Global.Get("Array").New(len(`, sanitiseIdentifier(field.GetJsonName()), `))`)
+			g.P(`for i, value := range `, sanitiseIdentifier(field.GetJsonName()), ` {`)
 			g.In()
 			g.P(varName, `.SetIndex(i, value)`)
 			g.P(`m.Call("set`, CamelCase(field.GetName()), `List", `, varName, `)`)
