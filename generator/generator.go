@@ -1724,6 +1724,7 @@ func (g *Generator) addMessageFactory(message *Descriptor, mapFieldTypes map[*de
 }
 
 func (g *Generator) addSerialize(typeName string) {
+	g.P(`// Serialize marshals `, typeName, ` to a slice of bytes.`)
 	g.P(`func (m *` + typeName + `) Serialize() (rawBytes []byte, err error) {`)
 	g.In()
 	g.P(`return jspb.Serialize(m)`)
@@ -1733,6 +1734,7 @@ func (g *Generator) addSerialize(typeName string) {
 }
 
 func (g *Generator) addDeserialize(typeName string) {
+	g.P(`// Deserialize`, typeName, ` unmarshals a `, typeName, ` from a slice of bytes.`)
 	g.P(`func Deserialize` + typeName + `(rawBytes []byte) (*` + typeName + `, error) {`)
 	g.In()
 
