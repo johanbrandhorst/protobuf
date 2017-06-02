@@ -54,7 +54,7 @@ const generatedCodeVersion = 1
 // relative to the import_prefix of the generator.Generator.
 const (
 	contextPkgPath = "context"
-	grpcPkgPath    = "github.com/johanbrandhorst/gopherjs-improbable-grpc-web"
+	grpcPkgPath    = "github.com/johanbrandhorst/grpcweb"
 )
 
 func init() {

@@ -23,7 +23,7 @@ import _ "github.com/johanbrandhorst/protoc-gen-gopherjs/testdata/multi"
 import (
 	context "context"
 
-	grpcweb "github.com/johanbrandhorst/gopherjs-improbable-grpc-web"
+	grpcweb "github.com/johanbrandhorst/grpcweb"
 )
 
 type HatType int
