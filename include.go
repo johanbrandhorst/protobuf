@@ -25,7 +25,7 @@ package grpcweb
 
 import (
 	// Include JS files
-	_ "github.com/johanbrandhorst/gopherjs-improbable-grpc-web/grpcwebjs"
+	_ "github.com/johanbrandhorst/grpcweb/grpcwebjs"
 	_ "github.com/johanbrandhorst/jspb"
 )
 

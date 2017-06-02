@@ -28,7 +28,7 @@ import (
 	"google.golang.org/grpc/metadata"
 
 	// Include gRPC-web JS objects
-	_ "github.com/johanbrandhorst/gopherjs-improbable-grpc-web/grpcwebjs"
+	_ "github.com/johanbrandhorst/grpcweb/grpcwebjs"
 )
 
 // Status is a gRPC-web Status.
