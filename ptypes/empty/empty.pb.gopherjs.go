@@ -28,20 +28,22 @@ type Empty struct {
 	*js.Object
 }
 
-// NewEmpty creates a new Empty.
-func NewEmpty() *Empty {
-	m := &Empty{
+// New creates a new Empty.
+func (m *Empty) New() *Empty {
+	m = &Empty{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Empty").New([]interface{}{}),
 	}
 
 	return m
 }
 
-func (m *Empty) serialize() (rawBytes []byte, err error) {
+// Serialize marshals Empty to a slice of bytes.
+func (m *Empty) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeEmpty(rawBytes []byte) (*Empty, error) {
+// Deserialize unmarshals a Empty from a slice of bytes.
+func (m *Empty) Deserialize(rawBytes []byte) (*Empty, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Empty"), rawBytes)
 	if err != nil {
 		return nil, err

@@ -79,7 +79,7 @@ type Duration struct {
 	*js.Object
 }
 
-// NewDuration creates a new Duration.
+// New creates a new Duration.
 // Signed seconds of the span of time. Must be from -315,576,000,000
 // to +315,576,000,000 inclusive. Note: these bounds are computed from:
 // 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
@@ -89,8 +89,8 @@ type Duration struct {
 // of one second or more, a non-zero value for the `nanos` field must be
 // of the same sign as the `seconds` field. Must be from -999,999,999
 // to +999,999,999 inclusive.
-func NewDuration(seconds int64, nanos int32) *Duration {
-	m := &Duration{
+func (m *Duration) New(seconds int64, nanos int32) *Duration {
+	m = &Duration{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Duration").New([]interface{}{
 			seconds,
 			nanos,
@@ -138,11 +138,13 @@ func (m *Duration) SetNanos(v int32) {
 	m.Call("setNanos", v)
 }
 
-func (m *Duration) serialize() (rawBytes []byte, err error) {
+// Serialize marshals Duration to a slice of bytes.
+func (m *Duration) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeDuration(rawBytes []byte) (*Duration, error) {
+// Deserialize unmarshals a Duration from a slice of bytes.
+func (m *Duration) Deserialize(rawBytes []byte) (*Duration, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Duration"), rawBytes)
 	if err != nil {
 		return nil, err

@@ -89,7 +89,7 @@ type Any struct {
 	*js.Object
 }
 
-// NewAny creates a new Any.
+// New creates a new Any.
 // A URL/resource name whose content describes the type of the
 // serialized protocol buffer message.
 //
@@ -113,8 +113,8 @@ type Any struct {
 // used with implementation specific semantics.
 //
 // Must be a valid serialized protocol buffer of the above specified type.
-func NewAny(typeUrl string, value []byte) *Any {
-	m := &Any{
+func (m *Any) New(typeUrl string, value []byte) *Any {
+	m = &Any{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Any").New([]interface{}{
 			typeUrl,
 			value,
@@ -190,11 +190,13 @@ func (m *Any) SetValue(v []byte) {
 	m.Call("setValue", v)
 }
 
-func (m *Any) serialize() (rawBytes []byte, err error) {
+// Serialize marshals Any to a slice of bytes.
+func (m *Any) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeAny(rawBytes []byte) (*Any, error) {
+// Deserialize unmarshals a Any from a slice of bytes.
+func (m *Any) Deserialize(rawBytes []byte) (*Any, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Any"), rawBytes)
 	if err != nil {
 		return nil, err

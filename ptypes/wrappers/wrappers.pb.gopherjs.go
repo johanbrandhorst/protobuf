@@ -30,10 +30,10 @@ type DoubleValue struct {
 	*js.Object
 }
 
-// NewDoubleValue creates a new DoubleValue.
+// New creates a new DoubleValue.
 // The double value.
-func NewDoubleValue(value float64) *DoubleValue {
-	m := &DoubleValue{
+func (m *DoubleValue) New(value float64) *DoubleValue {
+	m = &DoubleValue{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("DoubleValue").New([]interface{}{
 			value,
 		}),
@@ -54,11 +54,13 @@ func (m *DoubleValue) SetValue(v float64) {
 	m.Call("setValue", v)
 }
 
-func (m *DoubleValue) serialize() (rawBytes []byte, err error) {
+// Serialize marshals DoubleValue to a slice of bytes.
+func (m *DoubleValue) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeDoubleValue(rawBytes []byte) (*DoubleValue, error) {
+// Deserialize unmarshals a DoubleValue from a slice of bytes.
+func (m *DoubleValue) Deserialize(rawBytes []byte) (*DoubleValue, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("DoubleValue"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -76,10 +78,10 @@ type FloatValue struct {
 	*js.Object
 }
 
-// NewFloatValue creates a new FloatValue.
+// New creates a new FloatValue.
 // The float value.
-func NewFloatValue(value float32) *FloatValue {
-	m := &FloatValue{
+func (m *FloatValue) New(value float32) *FloatValue {
+	m = &FloatValue{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("FloatValue").New([]interface{}{
 			value,
 		}),
@@ -100,11 +102,13 @@ func (m *FloatValue) SetValue(v float32) {
 	m.Call("setValue", v)
 }
 
-func (m *FloatValue) serialize() (rawBytes []byte, err error) {
+// Serialize marshals FloatValue to a slice of bytes.
+func (m *FloatValue) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeFloatValue(rawBytes []byte) (*FloatValue, error) {
+// Deserialize unmarshals a FloatValue from a slice of bytes.
+func (m *FloatValue) Deserialize(rawBytes []byte) (*FloatValue, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("FloatValue"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -122,10 +126,10 @@ type Int64Value struct {
 	*js.Object
 }
 
-// NewInt64Value creates a new Int64Value.
+// New creates a new Int64Value.
 // The int64 value.
-func NewInt64Value(value int64) *Int64Value {
-	m := &Int64Value{
+func (m *Int64Value) New(value int64) *Int64Value {
+	m = &Int64Value{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Int64Value").New([]interface{}{
 			value,
 		}),
@@ -146,11 +150,13 @@ func (m *Int64Value) SetValue(v int64) {
 	m.Call("setValue", v)
 }
 
-func (m *Int64Value) serialize() (rawBytes []byte, err error) {
+// Serialize marshals Int64Value to a slice of bytes.
+func (m *Int64Value) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeInt64Value(rawBytes []byte) (*Int64Value, error) {
+// Deserialize unmarshals a Int64Value from a slice of bytes.
+func (m *Int64Value) Deserialize(rawBytes []byte) (*Int64Value, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Int64Value"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -168,10 +174,10 @@ type UInt64Value struct {
 	*js.Object
 }
 
-// NewUInt64Value creates a new UInt64Value.
+// New creates a new UInt64Value.
 // The uint64 value.
-func NewUInt64Value(value uint64) *UInt64Value {
-	m := &UInt64Value{
+func (m *UInt64Value) New(value uint64) *UInt64Value {
+	m = &UInt64Value{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("UInt64Value").New([]interface{}{
 			value,
 		}),
@@ -192,11 +198,13 @@ func (m *UInt64Value) SetValue(v uint64) {
 	m.Call("setValue", v)
 }
 
-func (m *UInt64Value) serialize() (rawBytes []byte, err error) {
+// Serialize marshals UInt64Value to a slice of bytes.
+func (m *UInt64Value) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeUInt64Value(rawBytes []byte) (*UInt64Value, error) {
+// Deserialize unmarshals a UInt64Value from a slice of bytes.
+func (m *UInt64Value) Deserialize(rawBytes []byte) (*UInt64Value, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("UInt64Value"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -214,10 +222,10 @@ type Int32Value struct {
 	*js.Object
 }
 
-// NewInt32Value creates a new Int32Value.
+// New creates a new Int32Value.
 // The int32 value.
-func NewInt32Value(value int32) *Int32Value {
-	m := &Int32Value{
+func (m *Int32Value) New(value int32) *Int32Value {
+	m = &Int32Value{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Int32Value").New([]interface{}{
 			value,
 		}),
@@ -238,11 +246,13 @@ func (m *Int32Value) SetValue(v int32) {
 	m.Call("setValue", v)
 }
 
-func (m *Int32Value) serialize() (rawBytes []byte, err error) {
+// Serialize marshals Int32Value to a slice of bytes.
+func (m *Int32Value) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeInt32Value(rawBytes []byte) (*Int32Value, error) {
+// Deserialize unmarshals a Int32Value from a slice of bytes.
+func (m *Int32Value) Deserialize(rawBytes []byte) (*Int32Value, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Int32Value"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -260,10 +270,10 @@ type UInt32Value struct {
 	*js.Object
 }
 
-// NewUInt32Value creates a new UInt32Value.
+// New creates a new UInt32Value.
 // The uint32 value.
-func NewUInt32Value(value uint32) *UInt32Value {
-	m := &UInt32Value{
+func (m *UInt32Value) New(value uint32) *UInt32Value {
+	m = &UInt32Value{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("UInt32Value").New([]interface{}{
 			value,
 		}),
@@ -284,11 +294,13 @@ func (m *UInt32Value) SetValue(v uint32) {
 	m.Call("setValue", v)
 }
 
-func (m *UInt32Value) serialize() (rawBytes []byte, err error) {
+// Serialize marshals UInt32Value to a slice of bytes.
+func (m *UInt32Value) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeUInt32Value(rawBytes []byte) (*UInt32Value, error) {
+// Deserialize unmarshals a UInt32Value from a slice of bytes.
+func (m *UInt32Value) Deserialize(rawBytes []byte) (*UInt32Value, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("UInt32Value"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -306,10 +318,10 @@ type BoolValue struct {
 	*js.Object
 }
 
-// NewBoolValue creates a new BoolValue.
+// New creates a new BoolValue.
 // The bool value.
-func NewBoolValue(value bool) *BoolValue {
-	m := &BoolValue{
+func (m *BoolValue) New(value bool) *BoolValue {
+	m = &BoolValue{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("BoolValue").New([]interface{}{
 			value,
 		}),
@@ -330,11 +342,13 @@ func (m *BoolValue) SetValue(v bool) {
 	m.Call("setValue", v)
 }
 
-func (m *BoolValue) serialize() (rawBytes []byte, err error) {
+// Serialize marshals BoolValue to a slice of bytes.
+func (m *BoolValue) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeBoolValue(rawBytes []byte) (*BoolValue, error) {
+// Deserialize unmarshals a BoolValue from a slice of bytes.
+func (m *BoolValue) Deserialize(rawBytes []byte) (*BoolValue, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("BoolValue"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -352,10 +366,10 @@ type StringValue struct {
 	*js.Object
 }
 
-// NewStringValue creates a new StringValue.
+// New creates a new StringValue.
 // The string value.
-func NewStringValue(value string) *StringValue {
-	m := &StringValue{
+func (m *StringValue) New(value string) *StringValue {
+	m = &StringValue{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("StringValue").New([]interface{}{
 			value,
 		}),
@@ -376,11 +390,13 @@ func (m *StringValue) SetValue(v string) {
 	m.Call("setValue", v)
 }
 
-func (m *StringValue) serialize() (rawBytes []byte, err error) {
+// Serialize marshals StringValue to a slice of bytes.
+func (m *StringValue) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeStringValue(rawBytes []byte) (*StringValue, error) {
+// Deserialize unmarshals a StringValue from a slice of bytes.
+func (m *StringValue) Deserialize(rawBytes []byte) (*StringValue, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("StringValue"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -398,10 +414,10 @@ type BytesValue struct {
 	*js.Object
 }
 
-// NewBytesValue creates a new BytesValue.
+// New creates a new BytesValue.
 // The bytes value.
-func NewBytesValue(value []byte) *BytesValue {
-	m := &BytesValue{
+func (m *BytesValue) New(value []byte) *BytesValue {
+	m = &BytesValue{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("BytesValue").New([]interface{}{
 			value,
 		}),
@@ -422,11 +438,13 @@ func (m *BytesValue) SetValue(v []byte) {
 	m.Call("setValue", v)
 }
 
-func (m *BytesValue) serialize() (rawBytes []byte, err error) {
+// Serialize marshals BytesValue to a slice of bytes.
+func (m *BytesValue) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeBytesValue(rawBytes []byte) (*BytesValue, error) {
+// Deserialize unmarshals a BytesValue from a slice of bytes.
+func (m *BytesValue) Deserialize(rawBytes []byte) (*BytesValue, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("BytesValue"), rawBytes)
 	if err != nil {
 		return nil, err

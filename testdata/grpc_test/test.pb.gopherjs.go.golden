@@ -118,12 +118,12 @@ type Request struct {
 	*js.Object
 }
 
-// NewRequest creates a new Request.
+// New creates a new Request.
 // This is a map field. It will generate map[int32]string.
 // This is a map field whose value type is a message.
 // This field should not conflict with any getters.
-func NewRequest(key []int64, hue Request_Color, hat HatType, deadline float32, nameMapping map[int32]string, msgMapping map[int64]*Reply, reset int32, getKey string) *Request {
-	m := &Request{
+func (m *Request) New(key []int64, hue Request_Color, hat HatType, deadline float32, nameMapping map[int32]string, msgMapping map[int64]*Reply, reset int32, getKey string) *Request {
+	m = &Request{
 		Object: js.Global.Get("proto").Get("my").Get("test").Get("Request").New([]interface{}{
 			js.Undefined,
 			hue,
@@ -265,12 +265,12 @@ func (m *Request) SetGetKey(v string) {
 }
 
 // Serialize marshals Request to a slice of bytes.
-func (m *Request) Serialize() (rawBytes []byte, err error) {
+func (m *Request) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-// DeserializeRequest unmarshals a Request from a slice of bytes.
-func DeserializeRequest(rawBytes []byte) (*Request, error) {
+// Deserialize unmarshals a Request from a slice of bytes.
+func (m *Request) Deserialize(rawBytes []byte) (*Request, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Request"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -285,9 +285,9 @@ type Reply struct {
 	*js.Object
 }
 
-// NewReply creates a new Reply.
-func NewReply(found []*Reply_Entry, compactKeys []int32) *Reply {
-	m := &Reply{
+// New creates a new Reply.
+func (m *Reply) New(found []*Reply_Entry, compactKeys []int32) *Reply {
+	m = &Reply{
 		Object: js.Global.Get("proto").Get("my").Get("test").Get("Reply").New([]interface{}{
 			js.Undefined,
 			js.Undefined,
@@ -351,12 +351,12 @@ func (m *Reply) SetCompactKeys(v []int32) {
 }
 
 // Serialize marshals Reply to a slice of bytes.
-func (m *Reply) Serialize() (rawBytes []byte, err error) {
+func (m *Reply) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-// DeserializeReply unmarshals a Reply from a slice of bytes.
-func DeserializeReply(rawBytes []byte) (*Reply, error) {
+// Deserialize unmarshals a Reply from a slice of bytes.
+func (m *Reply) Deserialize(rawBytes []byte) (*Reply, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Reply"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -371,9 +371,9 @@ type Reply_Entry struct {
 	*js.Object
 }
 
-// NewReply_Entry creates a new Reply_Entry.
-func NewReply_Entry(keyThatNeeds1234camelCasIng int64, value int64, MyFieldName2 int64) *Reply_Entry {
-	m := &Reply_Entry{
+// New creates a new Reply_Entry.
+func (m *Reply_Entry) New(keyThatNeeds1234camelCasIng int64, value int64, MyFieldName2 int64) *Reply_Entry {
+	m = &Reply_Entry{
 		Object: js.Global.Get("proto").Get("my").Get("test").Get("Reply").Get("Entry").New([]interface{}{
 			keyThatNeeds1234camelCasIng,
 			value,
@@ -415,12 +415,12 @@ func (m *Reply_Entry) SetXMyFieldName_2(v int64) {
 }
 
 // Serialize marshals Reply_Entry to a slice of bytes.
-func (m *Reply_Entry) Serialize() (rawBytes []byte, err error) {
+func (m *Reply_Entry) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-// DeserializeReply_Entry unmarshals a Reply_Entry from a slice of bytes.
-func DeserializeReply_Entry(rawBytes []byte) (*Reply_Entry, error) {
+// Deserialize unmarshals a Reply_Entry from a slice of bytes.
+func (m *Reply_Entry) Deserialize(rawBytes []byte) (*Reply_Entry, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Reply").Get("Entry"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -435,9 +435,9 @@ type OtherBase struct {
 	*js.Object
 }
 
-// NewOtherBase creates a new OtherBase.
-func NewOtherBase(name string) *OtherBase {
-	m := &OtherBase{
+// New creates a new OtherBase.
+func (m *OtherBase) New(name string) *OtherBase {
+	m = &OtherBase{
 		Object: js.Global.Get("proto").Get("my").Get("test").Get("OtherBase").New([]interface{}{
 			name,
 		}),
@@ -457,12 +457,12 @@ func (m *OtherBase) SetName(v string) {
 }
 
 // Serialize marshals OtherBase to a slice of bytes.
-func (m *OtherBase) Serialize() (rawBytes []byte, err error) {
+func (m *OtherBase) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-// DeserializeOtherBase unmarshals a OtherBase from a slice of bytes.
-func DeserializeOtherBase(rawBytes []byte) (*OtherBase, error) {
+// Deserialize unmarshals a OtherBase from a slice of bytes.
+func (m *OtherBase) Deserialize(rawBytes []byte) (*OtherBase, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("OtherBase"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -477,9 +477,9 @@ type OtherReplyExtensions struct {
 	*js.Object
 }
 
-// NewOtherReplyExtensions creates a new OtherReplyExtensions.
-func NewOtherReplyExtensions(key int32) *OtherReplyExtensions {
-	m := &OtherReplyExtensions{
+// New creates a new OtherReplyExtensions.
+func (m *OtherReplyExtensions) New(key int32) *OtherReplyExtensions {
+	m = &OtherReplyExtensions{
 		Object: js.Global.Get("proto").Get("my").Get("test").Get("OtherReplyExtensions").New([]interface{}{
 			key,
 		}),
@@ -499,12 +499,12 @@ func (m *OtherReplyExtensions) SetKey(v int32) {
 }
 
 // Serialize marshals OtherReplyExtensions to a slice of bytes.
-func (m *OtherReplyExtensions) Serialize() (rawBytes []byte, err error) {
+func (m *OtherReplyExtensions) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-// DeserializeOtherReplyExtensions unmarshals a OtherReplyExtensions from a slice of bytes.
-func DeserializeOtherReplyExtensions(rawBytes []byte) (*OtherReplyExtensions, error) {
+// Deserialize unmarshals a OtherReplyExtensions from a slice of bytes.
+func (m *OtherReplyExtensions) Deserialize(rawBytes []byte) (*OtherReplyExtensions, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("OtherReplyExtensions"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -519,9 +519,9 @@ type Communique struct {
 	*js.Object
 }
 
-// NewCommunique creates a new Communique.
-func NewCommunique(makeMeCry bool) *Communique {
-	m := &Communique{
+// New creates a new Communique.
+func (m *Communique) New(makeMeCry bool) *Communique {
+	m = &Communique{
 		Object: js.Global.Get("proto").Get("my").Get("test").Get("Communique").New([]interface{}{
 			makeMeCry,
 			js.Undefined,
@@ -736,12 +736,12 @@ func (m *Communique) SetMsg(v *Reply) {
 }
 
 // Serialize marshals Communique to a slice of bytes.
-func (m *Communique) Serialize() (rawBytes []byte, err error) {
+func (m *Communique) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-// DeserializeCommunique unmarshals a Communique from a slice of bytes.
-func DeserializeCommunique(rawBytes []byte) (*Communique, error) {
+// Deserialize unmarshals a Communique from a slice of bytes.
+func (m *Communique) Deserialize(rawBytes []byte) (*Communique, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Communique"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -756,9 +756,9 @@ type Communique_Delta struct {
 	*js.Object
 }
 
-// NewCommunique_Delta creates a new Communique_Delta.
-func NewCommunique_Delta() *Communique_Delta {
-	m := &Communique_Delta{
+// New creates a new Communique_Delta.
+func (m *Communique_Delta) New() *Communique_Delta {
+	m = &Communique_Delta{
 		Object: js.Global.Get("proto").Get("my").Get("test").Get("Communique").Get("Delta").New([]interface{}{}),
 	}
 
@@ -766,12 +766,12 @@ func NewCommunique_Delta() *Communique_Delta {
 }
 
 // Serialize marshals Communique_Delta to a slice of bytes.
-func (m *Communique_Delta) Serialize() (rawBytes []byte, err error) {
+func (m *Communique_Delta) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-// DeserializeCommunique_Delta unmarshals a Communique_Delta from a slice of bytes.
-func DeserializeCommunique_Delta(rawBytes []byte) (*Communique_Delta, error) {
+// Deserialize unmarshals a Communique_Delta from a slice of bytes.
+func (m *Communique_Delta) Deserialize(rawBytes []byte) (*Communique_Delta, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("my").Get("test").Get("Communique").Get("Delta"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -792,6 +792,7 @@ const _ = grpcweb.GrpcWebPackageIsVersion1
 
 // Client API for TestService service
 
+// This is a TestService
 type TestServiceClient interface {
 	Unary(ctx context.Context, in *Request, opts ...grpcweb.CallOption) (*Reply, error)
 	ServerStreaming(ctx context.Context, in *Request, opts ...grpcweb.CallOption) (TestService_ServerStreamingClient, error)
@@ -801,6 +802,7 @@ type testServiceClient struct {
 	client *grpcweb.Client
 }
 
+// NewTestServiceClient creates a new gRPC-Web client.
 func NewTestServiceClient(hostname string, opts ...grpcweb.DialOption) TestServiceClient {
 	return &testServiceClient{
 		client: grpcweb.NewClient(hostname, "my.test.TestService", opts...),
@@ -812,11 +814,13 @@ func (c *testServiceClient) Unary(ctx context.Context, in *Request, opts ...grpc
 	if err != nil {
 		return nil, err
 	}
+
 	resp, err := c.client.RPCCall(ctx, "Unary", req, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return DeserializeReply(resp)
+
+	return new(Reply).Deserialize(resp)
 }
 
 func (c *testServiceClient) ServerStreaming(ctx context.Context, in *Request, opts ...grpcweb.CallOption) (TestService_ServerStreamingClient, error) {
@@ -824,10 +828,12 @@ func (c *testServiceClient) ServerStreaming(ctx context.Context, in *Request, op
 	if err != nil {
 		return nil, err
 	}
+
 	srv, err := c.client.Stream(ctx, "ServerStreaming", req, opts...)
 	if err != nil {
 		return nil, err
 	}
+
 	return &testServiceServerStreamingClient{
 		stream: srv,
 	}, nil
@@ -846,5 +852,6 @@ func (x *testServiceServerStreamingClient) Recv() (*Reply, error) {
 	if err != nil {
 		return nil, err
 	}
-	return DeserializeReply(resp)
+
+	return new(Reply).Deserialize(resp)
 }

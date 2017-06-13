@@ -51,10 +51,10 @@ type Struct struct {
 	*js.Object
 }
 
-// NewStruct creates a new Struct.
+// New creates a new Struct.
 // Unordered map of dynamically typed values.
-func NewStruct(fields map[string]*Value) *Struct {
-	m := &Struct{
+func (m *Struct) New(fields map[string]*Value) *Struct {
+	m = &Struct{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Struct").New([]interface{}{
 			js.Undefined,
 		}),
@@ -87,11 +87,13 @@ func (m *Struct) SetFields(v map[string]*Value) {
 	}
 }
 
-func (m *Struct) serialize() (rawBytes []byte, err error) {
+// Serialize marshals Struct to a slice of bytes.
+func (m *Struct) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeStruct(rawBytes []byte) (*Struct, error) {
+// Deserialize unmarshals a Struct from a slice of bytes.
+func (m *Struct) Deserialize(rawBytes []byte) (*Struct, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Struct"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -112,9 +114,9 @@ type Value struct {
 	*js.Object
 }
 
-// NewValue creates a new Value.
-func NewValue() *Value {
-	m := &Value{
+// New creates a new Value.
+func (m *Value) New() *Value {
+	m = &Value{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Value").New([]interface{}{
 			js.Undefined,
 			js.Undefined,
@@ -275,11 +277,13 @@ func (m *Value) SetListValue(v *ListValue) {
 	m.Call("setListValue", v)
 }
 
-func (m *Value) serialize() (rawBytes []byte, err error) {
+// Serialize marshals Value to a slice of bytes.
+func (m *Value) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeValue(rawBytes []byte) (*Value, error) {
+// Deserialize unmarshals a Value from a slice of bytes.
+func (m *Value) Deserialize(rawBytes []byte) (*Value, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("Value"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -297,10 +301,10 @@ type ListValue struct {
 	*js.Object
 }
 
-// NewListValue creates a new ListValue.
+// New creates a new ListValue.
 // Repeated field of dynamically typed values.
-func NewListValue(values []*Value) *ListValue {
-	m := &ListValue{
+func (m *ListValue) New(values []*Value) *ListValue {
+	m = &ListValue{
 		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("ListValue").New([]interface{}{
 			js.Undefined,
 		}),
@@ -338,11 +342,13 @@ func (m *ListValue) SetValues(v []*Value) {
 	m.Call("setValuesList", arr)
 }
 
-func (m *ListValue) serialize() (rawBytes []byte, err error) {
+// Serialize marshals ListValue to a slice of bytes.
+func (m *ListValue) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-func deserializeListValue(rawBytes []byte) (*ListValue, error) {
+// Deserialize unmarshals a ListValue from a slice of bytes.
+func (m *ListValue) Deserialize(rawBytes []byte) (*ListValue, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("google").Get("protobuf").Get("ListValue"), rawBytes)
 	if err != nil {
 		return nil, err

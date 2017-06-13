@@ -23,9 +23,9 @@ type Multi1 struct {
 	*js.Object
 }
 
-// NewMulti1 creates a new Multi1.
-func NewMulti1(multi2 *Multi2, color Multi2_Color, hatType Multi3_HatType) *Multi1 {
-	m := &Multi1{
+// New creates a new Multi1.
+func (m *Multi1) New(multi2 *Multi2, color Multi2_Color, hatType Multi3_HatType) *Multi1 {
+	m = &Multi1{
 		Object: js.Global.Get("proto").Get("multitest").Get("Multi1").New([]interface{}{
 			multi2,
 			color,
@@ -67,12 +67,12 @@ func (m *Multi1) SetHatType(v Multi3_HatType) {
 }
 
 // Serialize marshals Multi1 to a slice of bytes.
-func (m *Multi1) Serialize() (rawBytes []byte, err error) {
+func (m *Multi1) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-// DeserializeMulti1 unmarshals a Multi1 from a slice of bytes.
-func DeserializeMulti1(rawBytes []byte) (*Multi1, error) {
+// Deserialize unmarshals a Multi1 from a slice of bytes.
+func (m *Multi1) Deserialize(rawBytes []byte) (*Multi1, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("multitest").Get("Multi1"), rawBytes)
 	if err != nil {
 		return nil, err

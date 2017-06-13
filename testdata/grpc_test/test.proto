@@ -82,6 +82,7 @@ message Communique {
   message Delta {}
 }
 
+// This is a TestService
 service TestService {
   rpc Unary(Request) returns (Reply) {}
   rpc ServerStreaming(Request) returns (stream Reply) {}

@@ -33,9 +33,9 @@ type Multi2 struct {
 	*js.Object
 }
 
-// NewMulti2 creates a new Multi2.
-func NewMulti2(requiredValue int32, color Multi2_Color) *Multi2 {
-	m := &Multi2{
+// New creates a new Multi2.
+func (m *Multi2) New(requiredValue int32, color Multi2_Color) *Multi2 {
+	m = &Multi2{
 		Object: js.Global.Get("proto").Get("multitest").Get("Multi2").New([]interface{}{
 			requiredValue,
 			color,
@@ -66,12 +66,12 @@ func (m *Multi2) SetColor(v Multi2_Color) {
 }
 
 // Serialize marshals Multi2 to a slice of bytes.
-func (m *Multi2) Serialize() (rawBytes []byte, err error) {
+func (m *Multi2) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-// DeserializeMulti2 unmarshals a Multi2 from a slice of bytes.
-func DeserializeMulti2(rawBytes []byte) (*Multi2, error) {
+// Deserialize unmarshals a Multi2 from a slice of bytes.
+func (m *Multi2) Deserialize(rawBytes []byte) (*Multi2, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("multitest").Get("Multi2"), rawBytes)
 	if err != nil {
 		return nil, err

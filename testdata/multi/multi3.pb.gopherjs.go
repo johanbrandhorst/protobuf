@@ -30,9 +30,9 @@ type Multi3 struct {
 	*js.Object
 }
 
-// NewMulti3 creates a new Multi3.
-func NewMulti3(hatType Multi3_HatType) *Multi3 {
-	m := &Multi3{
+// New creates a new Multi3.
+func (m *Multi3) New(hatType Multi3_HatType) *Multi3 {
+	m = &Multi3{
 		Object: js.Global.Get("proto").Get("multitest").Get("Multi3").New([]interface{}{
 			hatType,
 		}),
@@ -52,12 +52,12 @@ func (m *Multi3) SetHatType(v Multi3_HatType) {
 }
 
 // Serialize marshals Multi3 to a slice of bytes.
-func (m *Multi3) Serialize() (rawBytes []byte, err error) {
+func (m *Multi3) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
 }
 
-// DeserializeMulti3 unmarshals a Multi3 from a slice of bytes.
-func DeserializeMulti3(rawBytes []byte) (*Multi3, error) {
+// Deserialize unmarshals a Multi3 from a slice of bytes.
+func (m *Multi3) Deserialize(rawBytes []byte) (*Multi3, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("multitest").Get("Multi3"), rawBytes)
 	if err != nil {
 		return nil, err
