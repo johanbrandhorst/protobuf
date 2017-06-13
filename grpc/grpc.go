@@ -160,6 +160,7 @@ func (g *grpc) generateService(file *generator.FileDescriptor, service *pb.Servi
 	g.P()
 
 	// Client interface.
+	g.gen.PrintComments(path)
 	g.P("type ", servName, "Client interface {")
 	for i, method := range service.Method {
 		g.gen.PrintComments(fmt.Sprintf("%s,2,%d", path, i)) // 2 means method in a service.
@@ -175,6 +176,7 @@ func (g *grpc) generateService(file *generator.FileDescriptor, service *pb.Servi
 	g.P()
 
 	// NewClient factory.
+	g.P("// New", servName, "Client creates a new gRPC-Web client.")
 	g.P("func New", servName, "Client (hostname string, opts ...grpcweb.DialOption) ", servName, "Client {")
 	g.P("return &", unexport(servName), "Client{")
 	g.P("client: ", grpcPkg, `.NewClient(hostname, "`, fullServName, `", opts...),`)
@@ -188,7 +190,7 @@ func (g *grpc) generateService(file *generator.FileDescriptor, service *pb.Servi
 	for _, method := range service.Method {
 		var descExpr string
 		if method.GetClientStreaming() {
-			g.gen.Fail("Client streaming is not supported by gRPC Web yet")
+			g.gen.Fail("Client streaming is not supported by gRPC-Web yet")
 		}
 		if !method.GetServerStreaming() && !method.GetClientStreaming() {
 			// Unary RPC method
@@ -231,17 +233,21 @@ func (g *grpc) generateClientMethod(servName, fullServName, serviceDescVar strin
 	case !method.GetServerStreaming() && !method.GetClientStreaming():
 		g.P("req, err := in.Serialize()")
 		g.P("if err != nil { return nil, err }")
+		g.P()
 		g.P(`resp, err := c.client.RPCCall(ctx, "`, method.GetName(), `", req, opts...)`)
 		g.P("if err != nil { return nil, err }")
-		g.P("return Deserialize", outType, "(resp)")
+		g.P()
+		g.P("return new(", outType, ").Deserialize(resp)")
 		g.P("}")
 		g.P()
 		return
 	case method.GetServerStreaming():
 		g.P("req, err := in.Serialize()")
 		g.P("if err != nil { return nil, err }")
+		g.P()
 		g.P(`srv, err := c.client.Stream(ctx, "`, method.GetName(), `", req, opts...)`)
 		g.P("if err != nil { return nil, err }")
+		g.P()
 		g.P("return &", streamType, "{")
 		g.P("stream: srv,")
 		g.P("}, nil")
@@ -270,7 +276,8 @@ func (g *grpc) generateClientMethod(servName, fullServName, serviceDescVar strin
 		g.P("func (x *", streamType, ") Recv() (*", outType, ", error) {")
 		g.P("resp, err := x.stream.Recv()")
 		g.P("if err != nil { return nil, err }")
-		g.P("return Deserialize", outType, "(resp)")
+		g.P()
+		g.P("return new(", outType, ").Deserialize(resp)")
 		g.P("}")
 		g.P()
 	}

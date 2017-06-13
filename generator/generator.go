@@ -1281,6 +1281,8 @@ func (g *Generator) RecordTypeUse(t string) {
 // API change because it changes generated field names.
 var methodNames = [...]string{
 	"Serialize",
+	"Deserialize",
+	"New",
 }
 
 // Generate the type and default constant definitions for this Descriptor.
@@ -1633,7 +1635,7 @@ func (g *Generator) getMessageReference(typeName string) string {
 func (g *Generator) addMessageFactory(message *Descriptor, mapFieldTypes map[*descriptor.FieldDescriptorProto]string) {
 	ccTypeName := CamelCaseSlice(message.TypeName())
 
-	g.P("// New", ccTypeName, " creates a new ", ccTypeName, ".")
+	g.P("// New", " creates a new ", ccTypeName, ".")
 	var args []string
 	for i, field := range message.GetField() {
 		g.RecordTypeUse(field.GetTypeName())
@@ -1672,9 +1674,9 @@ func (g *Generator) addMessageFactory(message *Descriptor, mapFieldTypes map[*de
 		args = append(args, fmt.Sprintf(`%s %s`, sanitiseIdentifier(field.GetJsonName()), argType))
 	}
 
-	g.P(`func New`, ccTypeName, `(`, strings.Join(args, ", "), `) *`, ccTypeName, ` {`)
+	g.P(`func (m *`, ccTypeName, `) New`, `(`, strings.Join(args, ", "), `) *`, ccTypeName, ` {`)
 	g.In()
-	g.P(`m := &`, ccTypeName, `{`)
+	g.P(`m = &`, ccTypeName, `{`)
 	g.In()
 	g.P(`Object: `, g.getMessageReference(ccTypeName), `.New([]interface{}{`)
 	g.In()
@@ -1729,7 +1731,7 @@ func (g *Generator) addMessageFactory(message *Descriptor, mapFieldTypes map[*de
 
 func (g *Generator) addSerialize(typeName string) {
 	g.P(`// Serialize marshals `, typeName, ` to a slice of bytes.`)
-	g.P(`func (m *` + typeName + `) Serialize() (rawBytes []byte, err error) {`)
+	g.P(`func (m *` + typeName + `) Serialize() ([]byte, error) {`)
 	g.In()
 	g.P(`return jspb.Serialize(m)`)
 	g.Out()
@@ -1738,8 +1740,8 @@ func (g *Generator) addSerialize(typeName string) {
 }
 
 func (g *Generator) addDeserialize(typeName string) {
-	g.P(`// Deserialize`, typeName, ` unmarshals a `, typeName, ` from a slice of bytes.`)
-	g.P(`func Deserialize` + typeName + `(rawBytes []byte) (*` + typeName + `, error) {`)
+	g.P(`// Deserialize unmarshals a `, typeName, ` from a slice of bytes.`)
+	g.P(`func (m *` + typeName + `) Deserialize(rawBytes []byte) (*` + typeName + `, error) {`)
 	g.In()
 
 	g.P(`obj, err := jspb.Deserialize(`, g.getMessageReference(typeName), `, rawBytes)`)
