@@ -112,8 +112,8 @@ type Test struct {
 	*js.Object
 }
 
-// NewTest creates a new Test.
-func NewTest(label string, _type int32, reps int64) *Test {
+// New creates a new Test.
+func (m *Test) New(label string, _type int32, reps int64) *Test {
 	m := &Test{
 		Object: js.Global.Get("proto").Get("example").Get("Test").New([]interface{}{
 			label,
@@ -133,8 +133,8 @@ func (m *Test) Serialize() (rawBytes []byte, err error) {
 	return jspb.Serialize(m)
 }
 
-// DeserializeTest unmarshals a Test from a slice of bytes.
-func DeserializeTest(rawBytes []byte) (*Test, error) {
+// Deserialize unmarshals a Test from a slice of bytes.
+func (m *Test) Deserialize(rawBytes []byte) (*Test, error) {
 	obj, err := jspb.Deserialize(js.Global.Get("proto").Get("example").Get("Test"), rawBytes)
 	if err != nil {
 		return nil, err
@@ -154,13 +154,13 @@ package main
 import "github.com/youruser/yourrepo/example"
 
 func main() {
-  t := example.NewTest("Label", 1234, 5678)
+  t := new(example.Test).New("Label", 1234, 5678)
   rawBytes, err := t.Serialize()
   if err != nil {
     panic(err)
   }
 
-  t1, err := example.DeserializeTest(rawBytes)
+  t1, err := new(example.Test).Deserialize(rawBytes)
   if err != nil {
     panic(err)
   }
