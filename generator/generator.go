@@ -1690,6 +1690,9 @@ func (g *Generator) addMessageFactory(message *Descriptor, mapFieldTypes map[*de
 		} else if isRepeated(field) {
 			// Handle slice values separately
 			g.P(`js.Undefined,`)
+		} else if *field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
+			// Convert messages to array type
+			g.P(sanitiseIdentifier(field.GetJsonName()), `.Call("toArray"),`)
 		} else {
 			g.P(sanitiseIdentifier(field.GetJsonName()), `,`)
 		}
