@@ -131,7 +131,7 @@ func (m *Request) New(key []int64, hue Request_Color, hat HatType, deadline floa
 			js.Undefined,
 			reset,
 			getKey,
-			multi,
+			multi.Call("toArray"),
 			_fallthrough,
 		}),
 	}

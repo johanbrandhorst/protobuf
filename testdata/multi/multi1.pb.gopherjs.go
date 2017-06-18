@@ -27,7 +27,7 @@ type Multi1 struct {
 func (m *Multi1) New(multi2 *Multi2, color Multi2_Color, hatType Multi3_HatType) *Multi1 {
 	m = &Multi1{
 		Object: js.Global.Get("proto").Get("multitest").Get("Multi1").New([]interface{}{
-			multi2,
+			multi2.Call("toArray"),
 			color,
 			hatType,
 		}),
