@@ -41,7 +41,7 @@ import (
 	"strings"
 
 	pb "github.com/golang/protobuf/protoc-gen-go/descriptor"
-	"github.com/johanbrandhorst/protoc-gen-gopherjs/generator"
+	"github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/generator"
 )
 
 // generatedCodeVersion indicates a version of the generated code.
@@ -54,7 +54,7 @@ const generatedCodeVersion = 1
 // relative to the import_prefix of the generator.Generator.
 const (
 	contextPkgPath = "context"
-	grpcPkgPath    = "github.com/johanbrandhorst/grpcweb"
+	grpcPkgPath    = "github.com/johanbrandhorst/protobuf/grpcweb"
 )
 
 func init() {

@@ -21,7 +21,7 @@ It has these top-level messages:
 package wrappers
 
 import js "github.com/gopherjs/gopherjs/js"
-import jspb "github.com/johanbrandhorst/jspb"
+import jspb "github.com/johanbrandhorst/protobuf/jspb"
 
 // Wrapper message for `double`.
 //

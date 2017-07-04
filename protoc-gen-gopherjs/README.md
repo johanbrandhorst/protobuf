@@ -18,7 +18,7 @@ To use this software, you must:
 - Grab the code from the repository and install the proto package.
 
   ```bash
-  $ go get -u github.com/johanbrandhorst/protoc-gen-gopherjs
+  $ go get -u github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs
   ```
 
   The compiler plugin, `protoc-gen-gopherjs`, will be installed in `$GOBIN`,
@@ -26,7 +26,7 @@ To use this software, you must:
   compiler, `protoc`, to find it.
 
 This package generates files that import the
-[GopherJS ProtobufJS bindings](https://github.com/johanbrandhorst/jspb). The
+[GopherJS ProtobufJS bindings](https://github.com/johanbrandhorst/protobuf/jspb). The
 generated interface is designed to be as similar as possible to that of files
 generated with `protoc-gen-go`, with a few differences:
 
@@ -106,7 +106,7 @@ This generates the following client code (abbreviated):
 package example
 
 import js "github.com/gopherjs/gopherjs/js"
-import jspb "github.com/johanbrandhorst/jspb"
+import jspb "github.com/johanbrandhorst/protobuf/jspb"
 
 type Test struct {
 	*js.Object
@@ -189,7 +189,7 @@ associated with Go package `quux/shme`.  This is subject to the
 
 ## Generate gRPC-Web bindings
 If a proto file specifies RPC services, `protoc-gen-gopherjs` can be instructed to
-generate code compatible with the [GopherJS gRPC-Web bindings](https://github.com/johanbrandhorst/grpcweb).
+generate code compatible with the [GopherJS gRPC-Web bindings](https://github.com/johanbrandhorst/protobuf/grpcweb).
 To do this, pass the `plugins` parameter to `protoc-gen-gopherjs`:
 
 ```bash

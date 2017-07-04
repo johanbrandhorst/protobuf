@@ -36,7 +36,7 @@ import (
 	"os"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/johanbrandhorst/protoc-gen-gopherjs/generator"
+	"github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/generator"
 )
 
 func main() {

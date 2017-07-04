@@ -8,12 +8,12 @@ update:
 	wget ${URL}/duration.proto -O duration/duration.proto
 	wget ${URL}/wrappers.proto -O wrappers/wrappers.proto
 
-	sed -i "s;golang/protobuf;johanbrandhorst/protoc-gen-gopherjs;g" empty/empty.proto
-	sed -i "s;golang/protobuf;johanbrandhorst/protoc-gen-gopherjs;g" timestamp/timestamp.proto
-	sed -i "s;golang/protobuf;johanbrandhorst/protoc-gen-gopherjs;g" struct/struct.proto
-	sed -i "s;golang/protobuf;johanbrandhorst/protoc-gen-gopherjs;g" any/any.proto
-	sed -i "s;golang/protobuf;johanbrandhorst/protoc-gen-gopherjs;g" duration/duration.proto
-	sed -i "s;golang/protobuf;johanbrandhorst/protoc-gen-gopherjs;g" wrappers/wrappers.proto
+	sed -i "s;golang/protobuf;johanbrandhorst/protobuf/protoc-gen-gopherjs;g" empty/empty.proto
+	sed -i "s;golang/protobuf;johanbrandhorst/protobuf/protoc-gen-gopherjs;g" timestamp/timestamp.proto
+	sed -i "s;golang/protobuf;johanbrandhorst/protobuf/protoc-gen-gopherjs;g" struct/struct.proto
+	sed -i "s;golang/protobuf;johanbrandhorst/protobuf/protoc-gen-gopherjs;g" any/any.proto
+	sed -i "s;golang/protobuf;johanbrandhorst/protobuf/protoc-gen-gopherjs;g" duration/duration.proto
+	sed -i "s;golang/protobuf;johanbrandhorst/protobuf/protoc-gen-gopherjs;g" wrappers/wrappers.proto
 
 regenerate:
 

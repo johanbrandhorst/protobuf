@@ -13,7 +13,7 @@ It has these top-level messages:
 package duration
 
 import js "github.com/gopherjs/gopherjs/js"
-import jspb "github.com/johanbrandhorst/jspb"
+import jspb "github.com/johanbrandhorst/protobuf/jspb"
 
 // A Duration represents a signed, fixed-length span of time represented
 // as a count of seconds and fractions of seconds at nanosecond

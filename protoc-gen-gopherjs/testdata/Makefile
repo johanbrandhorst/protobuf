@@ -35,10 +35,10 @@ all:
 test:	golden testbuild
 
 grpc_test/test.pb.gopherjs.go: grpc_test/test.proto
-	protoc --gopherjs_out=plugins=grpc,Mmulti/multi1.proto=github.com/johanbrandhorst/protoc-gen-gopherjs/testdata/multi:. $<
+	protoc --gopherjs_out=plugins=grpc,Mmulti/multi1.proto=github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/testdata/multi:. $<
 
 my_test/test.pb.gopherjs.go: my_test/test.proto
-	protoc --gopherjs_out=Mmulti/multi1.proto=github.com/johanbrandhorst/protoc-gen-gopherjs/testdata/multi:. $<
+	protoc --gopherjs_out=Mmulti/multi1.proto=github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/testdata/multi:. $<
 
 golden:
 	make -B my_test/test.pb.gopherjs.go

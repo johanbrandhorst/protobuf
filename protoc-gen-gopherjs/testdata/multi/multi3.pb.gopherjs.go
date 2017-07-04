@@ -4,7 +4,7 @@
 package multitest
 
 import js "github.com/gopherjs/gopherjs/js"
-import jspb "github.com/johanbrandhorst/jspb"
+import jspb "github.com/johanbrandhorst/protobuf/jspb"
 
 type Multi3_HatType int
 

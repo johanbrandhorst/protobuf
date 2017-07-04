@@ -13,7 +13,7 @@ It has these top-level messages:
 package empty
 
 import js "github.com/gopherjs/gopherjs/js"
-import jspb "github.com/johanbrandhorst/jspb"
+import jspb "github.com/johanbrandhorst/protobuf/jspb"
 
 // A generic empty message that you can re-use to avoid defining duplicated
 // empty messages in your APIs. A typical example is to use it as the request

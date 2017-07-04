@@ -25,8 +25,8 @@ package grpcweb
 
 import (
 	// Include JS files
-	_ "github.com/johanbrandhorst/grpcweb/grpcwebjs"
-	_ "github.com/johanbrandhorst/jspb"
+	_ "github.com/johanbrandhorst/protobuf/grpcweb/grpcwebjs"
+	_ "github.com/johanbrandhorst/protobuf/jspb"
 )
 
 // GrpcWebPackageIsVersion1 is referenced from generated protocol buffer files

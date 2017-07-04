@@ -1045,7 +1045,7 @@ func (g *Generator) weak(i int32) bool {
 // Generate the imports
 func (g *Generator) generateImports() {
 	g.P("import ", g.Pkg["js"], " ", strconv.Quote(g.ImportPrefix+"github.com/gopherjs/gopherjs/js"))
-	g.P("import ", g.Pkg["jspb"], " ", strconv.Quote(g.ImportPrefix+"github.com/johanbrandhorst/jspb"))
+	g.P("import ", g.Pkg["jspb"], " ", strconv.Quote(g.ImportPrefix+"github.com/johanbrandhorst/protobuf/jspb"))
 	for i, s := range g.file.Dependency {
 		fd := g.fileByName(s)
 		// Do not import our own package.

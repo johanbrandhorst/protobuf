@@ -17,13 +17,13 @@
 package my_test
 
 import js "github.com/gopherjs/gopherjs/js"
-import jspb "github.com/johanbrandhorst/jspb"
-import _ "github.com/johanbrandhorst/protoc-gen-gopherjs/testdata/multi"
+import jspb "github.com/johanbrandhorst/protobuf/jspb"
+import _ "github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/testdata/multi"
 
 import (
 	context "context"
 
-	grpcweb "github.com/johanbrandhorst/grpcweb"
+	grpcweb "github.com/johanbrandhorst/protobuf/grpcweb"
 )
 
 type HatType int

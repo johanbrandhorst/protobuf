@@ -13,7 +13,7 @@ It has these top-level messages:
 package any
 
 import js "github.com/gopherjs/gopherjs/js"
-import jspb "github.com/johanbrandhorst/jspb"
+import jspb "github.com/johanbrandhorst/protobuf/jspb"
 
 // `Any` contains an arbitrary serialized protocol buffer message along with a
 // URL that describes the type of the serialized message.

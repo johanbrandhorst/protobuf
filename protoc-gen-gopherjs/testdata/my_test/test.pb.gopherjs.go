@@ -19,8 +19,8 @@
 package my_test
 
 import js "github.com/gopherjs/gopherjs/js"
-import jspb "github.com/johanbrandhorst/jspb"
-import multitest2 "github.com/johanbrandhorst/protoc-gen-gopherjs/testdata/multi"
+import jspb "github.com/johanbrandhorst/protobuf/jspb"
+import multitest2 "github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/testdata/multi"
 
 type HatType int
 

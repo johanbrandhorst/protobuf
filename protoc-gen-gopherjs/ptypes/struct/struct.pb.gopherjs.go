@@ -15,7 +15,7 @@
 package structpb
 
 import js "github.com/gopherjs/gopherjs/js"
-import jspb "github.com/johanbrandhorst/jspb"
+import jspb "github.com/johanbrandhorst/protobuf/jspb"
 
 // `NullValue` is a singleton enumeration to represent the null value for the
 // `Value` type union.

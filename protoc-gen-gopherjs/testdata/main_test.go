@@ -37,7 +37,7 @@ import (
 	"testing"
 
 	mytestpb "./my_test"
-	multipb "github.com/johanbrandhorst/protoc-gen-gopherjs/testdata/multi"
+	multipb "github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/testdata/multi"
 )
 
 func TestLink(t *testing.T) {
