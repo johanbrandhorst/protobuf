@@ -262,7 +262,7 @@ func (m *Value) GetStructValue() *Struct {
 // SetStructValue sets the StructValue of the Value.
 // Represents a structured value.
 func (m *Value) SetStructValue(v *Struct) {
-	m.Call("setStructValue", v)
+	m.Call("setStructValue", v.Call("toArray"))
 }
 
 // GetListValue gets the ListValue of the Value.
@@ -274,7 +274,7 @@ func (m *Value) GetListValue() *ListValue {
 // SetListValue sets the ListValue of the Value.
 // Represents a repeated `Value`.
 func (m *Value) SetListValue(v *ListValue) {
-	m.Call("setListValue", v)
+	m.Call("setListValue", v.Call("toArray"))
 }
 
 // Serialize marshals Value to a slice of bytes.
