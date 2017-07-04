@@ -1,0 +1,31 @@
+{
+	"comment": "test appengine github.com/gopherjs/gopherjs/js",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "qlPUeFabwF4RKAOF1H+yBFU1Veg=",
+			"path": "github.com/golang/protobuf/proto",
+			"revision": "9f174c986221c608fb5143bd623b6076a71feae3",
+			"revisionTime": "2017-05-26T16:57:56Z"
+		},
+		{
+			"checksumSHA1": "Z1gJ3PKzwBpOoPnTSEM5yd0zHYA=",
+			"path": "github.com/golang/protobuf/protoc-gen-go/descriptor",
+			"revision": "9f174c986221c608fb5143bd623b6076a71feae3",
+			"revisionTime": "2017-05-26T16:57:56Z"
+		},
+		{
+			"checksumSHA1": "8RePrdBuPdr7dY5w45FSQkTA2+0=",
+			"path": "github.com/golang/protobuf/protoc-gen-go/plugin",
+			"revision": "9f174c986221c608fb5143bd623b6076a71feae3",
+			"revisionTime": "2017-05-26T16:57:56Z"
+		},
+		{
+			"checksumSHA1": "paAg+4cI0XTq1D553EH6+Pzs5PQ=",
+			"path": "github.com/johanbrandhorst/jspb",
+			"revision": "ab8931a07a83e6fcef08420f10faa9b959eb647b",
+			"revisionTime": "2017-05-29T22:21:58Z"
+		}
+	],
+	"rootPath": "github.com/johanbrandhorst/protoc-gen-gopherjs"
+}
