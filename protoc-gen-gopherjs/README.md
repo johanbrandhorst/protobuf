@@ -36,7 +36,7 @@ and setters instead of nested objects.
   1. "Factory functions" for initializing new message structs.
 This is mostly as a convenience to the user. Oneof fields still
 have to be set separately and will default to unset.
-  1. `Serialize` and `DeserializeX` methods for each type.
+  1. `Serialize` and `Deserialize` methods for each type.
 Instead of `proto.Marshal` and `proto.Unmarshal`, these are used
 to serialize to and from binary.
 
