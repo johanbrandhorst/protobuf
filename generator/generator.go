@@ -1600,6 +1600,8 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			g.Out()
 			g.P(`}`)
 			g.P(`m.Call("set`, fname, `List", arr)`)
+		} else if *field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
+			g.P(`m.Call("set` + fname + `", v.Call("toArray"))`)
 		} else {
 			g.P(`m.Call("set` + fname + `", v)`)
 		}

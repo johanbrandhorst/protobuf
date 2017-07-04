@@ -732,7 +732,7 @@ func (m *Communique) GetMsg() *Reply {
 
 // SetMsg sets the Msg of the Communique.
 func (m *Communique) SetMsg(v *Reply) {
-	m.Call("setMsg", v)
+	m.Call("setMsg", v.Call("toArray"))
 }
 
 // Serialize marshals Communique to a slice of bytes.
