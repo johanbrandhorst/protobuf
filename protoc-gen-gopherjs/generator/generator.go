@@ -1504,6 +1504,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		argName := odp.GetName()
 		setter := allocNames("Set" + fname)
 		g.P("// ", setter[0], " sets the ", fname, " of the", ccTypeName, ".")
+		g.P("// If the input is nil, ", setter[0], " does nothing.")
 		g.P("func (m *", ccTypeName, ") ", setter[0], "(", argName, " ", oneofDisc[int32(oi)], ") {")
 		g.In()
 		g.P("switch x := ", argName, ".(type) {")
@@ -1516,10 +1517,6 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			g.P(`m.`, fieldSetterNames[field], `(x.`, CamelCase(*field.Name), ")")
 			g.Out()
 		}
-		g.P("default:")
-		g.In()
-		g.P(`panic("unsupported oneof type")`)
-		g.Out()
 		g.P("}")
 		g.Out()
 		g.P("}")
