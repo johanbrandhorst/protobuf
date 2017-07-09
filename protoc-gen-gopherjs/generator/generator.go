@@ -1298,6 +1298,8 @@ func (g *Generator) generateMessage(message *Descriptor) {
 	}
 	fieldGetterNames := make(map[*descriptor.FieldDescriptorProto]string)
 	fieldSetterNames := make(map[*descriptor.FieldDescriptorProto]string)
+	fieldHaserNames := make(map[*descriptor.FieldDescriptorProto]string)
+	fieldClearerNames := make(map[*descriptor.FieldDescriptorProto]string)
 	fieldTypes := make(map[*descriptor.FieldDescriptorProto]string)
 	mapFieldTypes := make(map[*descriptor.FieldDescriptorProto]string)
 
@@ -1347,6 +1349,20 @@ func (g *Generator) generateMessage(message *Descriptor) {
 
 		fieldGetterNames[field] = fieldGetterName
 		fieldSetterNames[field] = fieldSetterName
+
+		haser := field.OneofIndex != nil ||
+			*field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE
+		if haser {
+			fieldHaserNames[field] = allocNames("Has" + base)[0]
+		}
+
+		clearer := (field.OneofIndex != nil ||
+			*field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE ||
+			isRepeated(field) ||
+			g.getMapDescriptor(field) != nil)
+		if clearer {
+			fieldClearerNames[field] = allocNames("Clear" + base)[0]
+		}
 
 		oneof := field.OneofIndex != nil
 		if oneof && oneofFieldName[*field.OneofIndex] == "" {
@@ -1628,7 +1644,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		g.P(`}`)
 		g.P()
 
-		// Generate setter
+		// Generate Setter
 		g.P(`// `, setterName, ` sets the `, fname, ` of the `, ccTypeName, `.`)
 		g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
 		g.P(`func (m *` + ccTypeName + `) ` + setterName + `(v ` + typename + `) {`)
@@ -1659,6 +1675,40 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		g.Out()
 		g.P(`}`)
 		g.P()
+
+		// Generate Haser (Only for oneof and message fields)
+		if field.OneofIndex != nil || *field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
+			haserName := fieldHaserNames[field]
+			g.P(`// `, haserName, ` indicates whether the `, fname, ` of the `, ccTypeName, ` is set.`)
+			g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
+			g.P(`func (m *` + ccTypeName + `) ` + haserName + `() bool {`)
+			g.In()
+			g.P(`return m.Call("has`, fname, `").Bool()`)
+			g.Out()
+			g.P(`}`)
+			g.P()
+		}
+
+		// Generate Clearer (Only for oneof, message, repeated and map fields)
+		if field.OneofIndex != nil ||
+			*field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE ||
+			isRepeated(field) || g.getMapDescriptor(field) != nil {
+			clearerName := fieldClearerNames[field]
+			g.P(`// `, clearerName, ` clears the `, fname, ` of the `, ccTypeName, `.`)
+			g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
+			g.P(`func (m *` + ccTypeName + `) ` + clearerName + `() {`)
+			g.In()
+			if d := g.getMapDescriptor(field); d != nil {
+				g.P(`m.Call("clear`, fname, `Map")`)
+			} else if isRepeated(field) {
+				g.P(`m.Call("clear`, fname, `List")`)
+			} else {
+				g.P(`m.Call("clear`, fname, `")`)
+			}
+			g.Out()
+			g.P(`}`)
+			g.P()
+		}
 	}
 
 	g.P("// New", " creates a new ", ccTypeName, ".")
