@@ -66,8 +66,9 @@ func (m *Struct) GetFields() map[string]*Value {
 // Unordered map of dynamically typed values.
 func (m *Struct) SetFields(v map[string]*Value) {
 	m.Call("clearFieldsMap")
+	mp := m.Call("getFieldsMap")
 	for key, value := range v {
-		m.Call("getFieldsMap").Call("set", key, value)
+		mp.Call("set", key, value)
 	}
 }
 
