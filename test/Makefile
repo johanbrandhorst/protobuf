@@ -17,3 +17,6 @@ regenerate:
 
 	# Generate GopherJS files
 	go generate ./client/...
+
+test:
+	go run main.go
