@@ -1313,8 +1313,6 @@ func (g *Generator) generateMessage(message *Descriptor) {
 	g.Out()
 	g.P("}")
 
-	g.addMessageFactory(message, mapFieldTypes)
-
 	// allocNames finds a conflict-free variation of the given strings,
 	// consistently mutating their suffixes.
 	// It returns the same number of strings.
@@ -1369,6 +1367,30 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			dname := "is" + ccTypeName + "_" + fname
 			oneofFieldName[*field.OneofIndex] = fname
 			oneofDisc[*field.OneofIndex] = dname
+		}
+
+		if d := g.getMapDescriptor(field); d != nil {
+			// Figure out the Go types and tags for the key and value types.
+			keyField, valField := d.Field[0], d.Field[1]
+			keyType, _ := g.GoType(d, keyField)
+			valType, _ := g.GoType(d, valField)
+
+			// We don't use stars, except for message-typed values.
+			// Message and enum types are the only two possibly foreign types used in maps,
+			// so record their use. They are not permitted as map keys.
+			keyType = strings.TrimPrefix(keyType, "*")
+			switch *valField.Type {
+			case descriptor.FieldDescriptorProto_TYPE_ENUM:
+				valType = strings.TrimPrefix(valType, "*")
+				g.RecordTypeUse(valField.GetTypeName())
+			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
+				g.RecordTypeUse(valField.GetTypeName())
+			default:
+				valType = strings.TrimPrefix(valType, "*")
+			}
+
+			argType := fmt.Sprintf("map[%s]%s", keyType, valType)
+			mapFieldTypes[field] = argType // record for the getter and setter generation
 		}
 
 		fieldTypes[field] = typename
@@ -1452,9 +1474,11 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		g.P("func (*", oneofTypeName[field], ") ", oneofDisc[*field.OneofIndex], "() {}")
 	}
 	g.P()
-	for oi := range message.OneofDecl {
+	for oi, odp := range message.OneofDecl {
 		fname := oneofFieldName[int32(oi)]
-		g.P("func (m *", ccTypeName, ") Get", fname, "() (x ", oneofDisc[int32(oi)], ") {")
+		getter := allocNames("Get" + fname)
+		g.P("// ", getter[0], " gets the ", fname, " of the ", ccTypeName, ".")
+		g.P("func (m *", ccTypeName, ") ", getter[0], "() (x ", oneofDisc[int32(oi)], ") {")
 		g.In()
 		g.P(`switch m.Call("get`, fname, `Case").Int() {`)
 		for _, field := range message.Field {
@@ -1468,9 +1492,35 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			g.P(CamelCase(*field.Name), ": m.", fieldGetterNames[field], "(),")
 			g.Out()
 			g.P(`}`)
+			g.Out()
 		}
 		g.P("}")
+		g.P()
 		g.P("return x")
+		g.Out()
+		g.P("}")
+		g.P()
+
+		argName := odp.GetName()
+		setter := allocNames("Set" + fname)
+		g.P("// ", setter[0], " sets the ", fname, " of the", ccTypeName, ".")
+		g.P("func (m *", ccTypeName, ") ", setter[0], "(", argName, " ", oneofDisc[int32(oi)], ") {")
+		g.In()
+		g.P("switch x := ", argName, ".(type) {")
+		for _, field := range message.GetField() {
+			if field.OneofIndex == nil || int(field.GetOneofIndex()) != oi {
+				continue
+			}
+			g.P("case *", oneofTypeName[field], ":")
+			g.In()
+			g.P(`m.`, fieldSetterNames[field], `(x.`, CamelCase(*field.Name), ")")
+			g.Out()
+		}
+		g.P("default:")
+		g.In()
+		g.P(`panic("unsupported oneof type")`)
+		g.Out()
+		g.P("}")
 		g.Out()
 		g.P("}")
 	}
@@ -1496,6 +1546,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			g.P(`// Use the setter to make changes to the slice in the message.`)
 		}
 		g.P("func (m *", ccTypeName, ") ", getterName, "() ", typename, ` {`)
+		g.In()
 		if d := g.getMapDescriptor(field); d != nil {
 			// Special case for maps
 			g.P(`x := `, mapFieldTypes[field], `{}`)
@@ -1520,7 +1571,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			case descriptor.FieldDescriptorProto_TYPE_ENUM:
 				valType = fmt.Sprintf(`%s(value.Int())`, valType)
 			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-				valType = fmt.Sprintf(`&%s{ Object: value }`, valType)
+				valType = fmt.Sprintf(`&%s{Object: value }`, valType)
 			case descriptor.FieldDescriptorProto_TYPE_FLOAT:
 				valType = fmt.Sprintf(`float32(value.%s)`, valType)
 			case descriptor.FieldDescriptorProto_TYPE_INT32, descriptor.FieldDescriptorProto_TYPE_SFIXED32, descriptor.FieldDescriptorProto_TYPE_SINT32:
@@ -1542,7 +1593,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			case descriptor.FieldDescriptorProto_TYPE_ENUM:
 				valueConversion = fmt.Sprintf(`%s(value.Int())`, typeFunc)
 			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-				valueConversion = fmt.Sprintf(`&%s{ Object: value }`, typeFunc)
+				valueConversion = fmt.Sprintf(`&%s{Object: value }`, typeFunc)
 			case descriptor.FieldDescriptorProto_TYPE_FLOAT:
 				valueConversion = fmt.Sprintf(`float32(value.%s)`, typeFunc)
 			case descriptor.FieldDescriptorProto_TYPE_INT32, descriptor.FieldDescriptorProto_TYPE_SFIXED32, descriptor.FieldDescriptorProto_TYPE_SINT32:
@@ -1565,7 +1616,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			case descriptor.FieldDescriptorProto_TYPE_ENUM:
 				g.P("return ", typeFunc, `(m.Call("get`+fname+`").Int())`)
 			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-				g.P("return &", typeFunc, `{ Object: m.Call("get`+fname+`")}`)
+				g.P("return &", typeFunc, `{Object: m.Call("get`+fname+`")}`)
 			case descriptor.FieldDescriptorProto_TYPE_FLOAT:
 				g.P(`return float32(m.Call("get`+fname+`").`+typeFunc, `)`)
 			case descriptor.FieldDescriptorProto_TYPE_INT32, descriptor.FieldDescriptorProto_TYPE_SFIXED32, descriptor.FieldDescriptorProto_TYPE_SINT32:
@@ -1576,6 +1627,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 				g.P(`return m.Call("get` + fname + `").` + typeFunc)
 			}
 		}
+		g.Out()
 		g.P(`}`)
 		g.P()
 
@@ -1583,6 +1635,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		g.P(`// `, setterName, ` sets the `, fname, ` of the `, ccTypeName, `.`)
 		g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
 		g.P(`func (m *` + ccTypeName + `) ` + setterName + `(v ` + typename + `) {`)
+		g.In()
 		if d := g.getMapDescriptor(field); d != nil {
 			// Special handling for maps
 			g.P(`m.Call("clear`, fname, `Map")`)
@@ -1605,75 +1658,36 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		} else {
 			g.P(`m.Call("set` + fname + `", v)`)
 		}
+		g.Out()
 		g.P(`}`)
 		g.P()
 	}
 
-	g.addSerialize(ccTypeName)
-	g.addDeserialize(ccTypeName)
-}
-
-func (g *Generator) getMapDescriptor(field *descriptor.FieldDescriptorProto) *Descriptor {
-	if *field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
-		desc := g.ObjectNamed(field.GetTypeName())
-		if d, ok := desc.(*Descriptor); ok && d.GetOptions().GetMapEntry() {
-			return d
-		}
-	}
-
-	return nil
-}
-
-func (g *Generator) getMessageReference(typeName string) string {
-	pkg := g.file.GetPackage()
-	namespaces := strings.Split(typeName, `_`)
-	if pkg != "" {
-		namespaces = append(strings.Split(pkg, `.`), namespaces...)
-	}
-
-	return `js.Global.Get("proto").Get("` + strings.Join(namespaces, `").Get("`) + `")`
-}
-
-func (g *Generator) addMessageFactory(message *Descriptor, mapFieldTypes map[*descriptor.FieldDescriptorProto]string) {
-	ccTypeName := CamelCaseSlice(message.TypeName())
-
 	g.P("// New", " creates a new ", ccTypeName, ".")
 	var args []string
+	// Track oneof args seen
+	seenOneOfs := map[int32]bool{}
 	for i, field := range message.GetField() {
 		g.RecordTypeUse(field.GetTypeName())
-		// Skip oneof fields from factory function,
-		// since otherwise we'd have to handle only
-		// being able to set one of them.
-		if field.OneofIndex != nil {
-			continue
-		}
 		argType, _ := g.GoType(message, field)
-		if d := g.getMapDescriptor(field); d != nil {
-			// Figure out the Go types and tags for the key and value types.
-			keyField, valField := d.Field[0], d.Field[1]
-			keyType, _ := g.GoType(d, keyField)
-			valType, _ := g.GoType(d, valField)
+		argName := field.GetJsonName()
 
-			// We don't use stars, except for message-typed values.
-			// Message and enum types are the only two possibly foreign types used in maps,
-			// so record their use. They are not permitted as map keys.
-			keyType = strings.TrimPrefix(keyType, "*")
-			switch *valField.Type {
-			case descriptor.FieldDescriptorProto_TYPE_ENUM:
-				valType = strings.TrimPrefix(valType, "*")
-				g.RecordTypeUse(valField.GetTypeName())
-			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-				g.RecordTypeUse(valField.GetTypeName())
-			default:
-				valType = strings.TrimPrefix(valType, "*")
+		if field.OneofIndex != nil {
+			if seenOneOfs[*field.OneofIndex] {
+				// Skip seen oneof arguments
+				continue
 			}
 
-			argType = fmt.Sprintf("map[%s]%s", keyType, valType)
-			mapFieldTypes[field] = argType // record for the getter and setter generation
+			odp := message.OneofDecl[int(*field.OneofIndex)]
+			argType = oneofDisc[*field.OneofIndex]
+			argName = odp.GetName() // this is inconsistent, but it'll have to do
+			seenOneOfs[*field.OneofIndex] = true
+		} else if d := g.getMapDescriptor(field); d != nil {
+			argType = mapFieldTypes[field]
 		}
 
 		g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
-		args = append(args, fmt.Sprintf(`%s %s`, sanitiseIdentifier(field.GetJsonName()), argType))
+		args = append(args, fmt.Sprintf(`%s %s`, sanitiseIdentifier(argName), argType))
 	}
 
 	g.P(`func (m *`, ccTypeName, `) New`, `(`, strings.Join(args, ", "), `) *`, ccTypeName, ` {`)
@@ -1704,34 +1718,75 @@ func (g *Generator) addMessageFactory(message *Descriptor, mapFieldTypes map[*de
 	g.Out()
 	g.P(`}`)
 	g.P()
+
+	// Special handling for oneof fields
+	for i := range seenOneOfs {
+		odp := message.OneofDecl[int(i)]
+		argName := odp.GetName()
+		g.P("m.Set", oneofFieldName[i], "(", argName, ")")
+		g.P()
+	}
+
 	// Special handling for map and slice fields
-	usedNames := make(map[string]bool)
+	locallyUsedNames := make(map[string]bool)
 	for _, field := range message.GetField() {
 		if d := g.getMapDescriptor(field); d != nil {
-			g.P(`for key, value := range `, sanitiseIdentifier(field.GetJsonName()), ` {`)
-			g.In()
-			g.P(`m.Call("get`, CamelCase(field.GetName()), `Map").Call("set", key, value)`)
-			g.Out()
-			g.P(`}`)
-		} else if isRepeated(field) {
-			varName := "arr"
-			for usedNames[varName] {
+			varName := "mp"
+			for locallyUsedNames[varName] {
 				varName += "_"
 			}
-			usedNames[varName] = true
+			locallyUsedNames[varName] = true
+			g.P(varName, ` := m.Call("get`, CamelCase(field.GetName()), `Map")`)
+			g.P(`for key, value := range `, sanitiseIdentifier(field.GetJsonName()), ` {`)
+			g.In()
+			g.P(varName, `.Call("set", key, value)`)
+			g.Out()
+			g.P(`}`)
+			g.P()
+		} else if isRepeated(field) {
+			varName := "arr"
+			for locallyUsedNames[varName] {
+				varName += "_"
+			}
+			locallyUsedNames[varName] = true
 			g.P(varName, ` := js.Global.Get("Array").New(len(`, sanitiseIdentifier(field.GetJsonName()), `))`)
 			g.P(`for i, value := range `, sanitiseIdentifier(field.GetJsonName()), ` {`)
 			g.In()
 			g.P(varName, `.SetIndex(i, value)`)
-			g.P(`m.Call("set`, CamelCase(field.GetName()), `List", `, varName, `)`)
+			g.Out()
 			g.P(`}`)
+			g.P(`m.Call("set`, CamelCase(field.GetName()), `List", `, varName, `)`)
+			g.P()
 		}
 	}
-	g.P()
 	g.P(`return m`)
 	g.Out()
 	g.P(`}`)
 	g.P()
+
+	g.addSerialize(ccTypeName)
+	g.addDeserialize(ccTypeName)
+}
+
+func (g *Generator) getMapDescriptor(field *descriptor.FieldDescriptorProto) *Descriptor {
+	if *field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
+		desc := g.ObjectNamed(field.GetTypeName())
+		if d, ok := desc.(*Descriptor); ok && d.GetOptions().GetMapEntry() {
+			return d
+		}
+	}
+
+	return nil
+}
+
+func (g *Generator) getMessageReference(typeName string) string {
+	pkg := g.file.GetPackage()
+	namespaces := strings.Split(typeName, `_`)
+	if pkg != "" {
+		namespaces = append(strings.Split(pkg, `.`), namespaces...)
+	}
+
+	return `js.Global.Get("proto").Get("` + strings.Join(namespaces, `").Get("`) + `")`
 }
 
 func (g *Generator) addSerialize(typeName string) {
