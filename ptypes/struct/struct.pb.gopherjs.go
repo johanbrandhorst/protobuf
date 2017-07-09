@@ -2,15 +2,15 @@
 // source: struct/struct.proto
 
 /*
-	Package structpb is a generated protocol buffer package.
+Package structpb is a generated protocol buffer package.
 
-	It is generated from these files:
-		struct/struct.proto
+It is generated from these files:
+	struct/struct.proto
 
-	It has these top-level messages:
-		Struct
-		Value
-		ListValue
+It has these top-level messages:
+	Struct
+	Value
+	ListValue
 */
 package structpb
 
@@ -51,22 +51,6 @@ type Struct struct {
 	*js.Object
 }
 
-// New creates a new Struct.
-// Unordered map of dynamically typed values.
-func (m *Struct) New(fields map[string]*Value) *Struct {
-	m = &Struct{
-		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Struct").New([]interface{}{
-			js.Undefined,
-		}),
-	}
-
-	for key, value := range fields {
-		m.Call("getFieldsMap").Call("set", key, value)
-	}
-
-	return m
-}
-
 // GetFields gets the Fields of the Struct.
 // Unordered map of dynamically typed values.
 func (m *Struct) GetFields() map[string]*Value {
@@ -85,6 +69,23 @@ func (m *Struct) SetFields(v map[string]*Value) {
 	for key, value := range v {
 		m.Call("getFieldsMap").Call("set", key, value)
 	}
+}
+
+// New creates a new Struct.
+// Unordered map of dynamically typed values.
+func (m *Struct) New(fields map[string]*Value) *Struct {
+	m = &Struct{
+		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Struct").New([]interface{}{
+			js.Undefined,
+		}),
+	}
+
+	mp := m.Call("getFieldsMap")
+	for key, value := range fields {
+		mp.Call("set", key, value)
+	}
+
+	return m
 }
 
 // Serialize marshals Struct to a slice of bytes.
@@ -112,22 +113,6 @@ func (m *Struct) Deserialize(rawBytes []byte) (*Struct, error) {
 // The JSON representation for `Value` is JSON value.
 type Value struct {
 	*js.Object
-}
-
-// New creates a new Value.
-func (m *Value) New() *Value {
-	m = &Value{
-		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Value").New([]interface{}{
-			js.Undefined,
-			js.Undefined,
-			js.Undefined,
-			js.Undefined,
-			js.Undefined,
-			js.Undefined,
-		}),
-	}
-
-	return m
 }
 
 // The kind of value.
@@ -175,6 +160,7 @@ func (*Value_BoolValue) isValue_Kind()   {}
 func (*Value_StructValue) isValue_Kind() {}
 func (*Value_ListValue) isValue_Kind()   {}
 
+// GetKind gets the Kind of the Value.
 func (m *Value) GetKind() (x isValue_Kind) {
 	switch m.Call("getKindCase").Int() {
 	case 1:
@@ -202,7 +188,28 @@ func (m *Value) GetKind() (x isValue_Kind) {
 			ListValue: m.GetListValue(),
 		}
 	}
+
 	return x
+}
+
+// SetKind sets the Kind of theValue.
+func (m *Value) SetKind(kind isValue_Kind) {
+	switch x := kind.(type) {
+	case *Value_NullValue:
+		m.SetNullValue(x.NullValue)
+	case *Value_NumberValue:
+		m.SetNumberValue(x.NumberValue)
+	case *Value_StringValue:
+		m.SetStringValue(x.StringValue)
+	case *Value_BoolValue:
+		m.SetBoolValue(x.BoolValue)
+	case *Value_StructValue:
+		m.SetStructValue(x.StructValue)
+	case *Value_ListValue:
+		m.SetListValue(x.ListValue)
+	default:
+		panic("unsupported oneof type")
+	}
 }
 
 // GetNullValue gets the NullValue of the Value.
@@ -277,6 +284,25 @@ func (m *Value) SetListValue(v *ListValue) {
 	m.Call("setListValue", v.Call("toArray"))
 }
 
+// New creates a new Value.
+// Represents a null value.
+func (m *Value) New(kind isValue_Kind) *Value {
+	m = &Value{
+		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Value").New([]interface{}{
+			js.Undefined,
+			js.Undefined,
+			js.Undefined,
+			js.Undefined,
+			js.Undefined,
+			js.Undefined,
+		}),
+	}
+
+	m.SetKind(kind)
+
+	return m
+}
+
 // Serialize marshals Value to a slice of bytes.
 func (m *Value) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
@@ -301,24 +327,6 @@ type ListValue struct {
 	*js.Object
 }
 
-// New creates a new ListValue.
-// Repeated field of dynamically typed values.
-func (m *ListValue) New(values []*Value) *ListValue {
-	m = &ListValue{
-		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("ListValue").New([]interface{}{
-			js.Undefined,
-		}),
-	}
-
-	arr := js.Global.Get("Array").New(len(values))
-	for i, value := range values {
-		arr.SetIndex(i, value)
-		m.Call("setValuesList", arr)
-	}
-
-	return m
-}
-
 // GetValues gets the Values of the ListValue.
 // Repeated field of dynamically typed values.
 // Warning: mutating the returned slice will not be reflected in the message.
@@ -340,6 +348,24 @@ func (m *ListValue) SetValues(v []*Value) {
 		arr.SetIndex(i, value)
 	}
 	m.Call("setValuesList", arr)
+}
+
+// New creates a new ListValue.
+// Repeated field of dynamically typed values.
+func (m *ListValue) New(values []*Value) *ListValue {
+	m = &ListValue{
+		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("ListValue").New([]interface{}{
+			js.Undefined,
+		}),
+	}
+
+	arr := js.Global.Get("Array").New(len(values))
+	for i, value := range values {
+		arr.SetIndex(i, value)
+	}
+	m.Call("setValuesList", arr)
+
+	return m
 }
 
 // Serialize marshals ListValue to a slice of bytes.

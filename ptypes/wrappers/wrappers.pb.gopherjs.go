@@ -30,18 +30,6 @@ type DoubleValue struct {
 	*js.Object
 }
 
-// New creates a new DoubleValue.
-// The double value.
-func (m *DoubleValue) New(value float64) *DoubleValue {
-	m = &DoubleValue{
-		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("DoubleValue").New([]interface{}{
-			value,
-		}),
-	}
-
-	return m
-}
-
 // GetValue gets the Value of the DoubleValue.
 // The double value.
 func (m *DoubleValue) GetValue() float64 {
@@ -52,6 +40,18 @@ func (m *DoubleValue) GetValue() float64 {
 // The double value.
 func (m *DoubleValue) SetValue(v float64) {
 	m.Call("setValue", v)
+}
+
+// New creates a new DoubleValue.
+// The double value.
+func (m *DoubleValue) New(value float64) *DoubleValue {
+	m = &DoubleValue{
+		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("DoubleValue").New([]interface{}{
+			value,
+		}),
+	}
+
+	return m
 }
 
 // Serialize marshals DoubleValue to a slice of bytes.
@@ -78,18 +78,6 @@ type FloatValue struct {
 	*js.Object
 }
 
-// New creates a new FloatValue.
-// The float value.
-func (m *FloatValue) New(value float32) *FloatValue {
-	m = &FloatValue{
-		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("FloatValue").New([]interface{}{
-			value,
-		}),
-	}
-
-	return m
-}
-
 // GetValue gets the Value of the FloatValue.
 // The float value.
 func (m *FloatValue) GetValue() float32 {
@@ -100,6 +88,18 @@ func (m *FloatValue) GetValue() float32 {
 // The float value.
 func (m *FloatValue) SetValue(v float32) {
 	m.Call("setValue", v)
+}
+
+// New creates a new FloatValue.
+// The float value.
+func (m *FloatValue) New(value float32) *FloatValue {
+	m = &FloatValue{
+		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("FloatValue").New([]interface{}{
+			value,
+		}),
+	}
+
+	return m
 }
 
 // Serialize marshals FloatValue to a slice of bytes.
@@ -126,18 +126,6 @@ type Int64Value struct {
 	*js.Object
 }
 
-// New creates a new Int64Value.
-// The int64 value.
-func (m *Int64Value) New(value int64) *Int64Value {
-	m = &Int64Value{
-		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Int64Value").New([]interface{}{
-			value,
-		}),
-	}
-
-	return m
-}
-
 // GetValue gets the Value of the Int64Value.
 // The int64 value.
 func (m *Int64Value) GetValue() int64 {
@@ -148,6 +136,18 @@ func (m *Int64Value) GetValue() int64 {
 // The int64 value.
 func (m *Int64Value) SetValue(v int64) {
 	m.Call("setValue", v)
+}
+
+// New creates a new Int64Value.
+// The int64 value.
+func (m *Int64Value) New(value int64) *Int64Value {
+	m = &Int64Value{
+		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Int64Value").New([]interface{}{
+			value,
+		}),
+	}
+
+	return m
 }
 
 // Serialize marshals Int64Value to a slice of bytes.
@@ -174,18 +174,6 @@ type UInt64Value struct {
 	*js.Object
 }
 
-// New creates a new UInt64Value.
-// The uint64 value.
-func (m *UInt64Value) New(value uint64) *UInt64Value {
-	m = &UInt64Value{
-		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("UInt64Value").New([]interface{}{
-			value,
-		}),
-	}
-
-	return m
-}
-
 // GetValue gets the Value of the UInt64Value.
 // The uint64 value.
 func (m *UInt64Value) GetValue() uint64 {
@@ -196,6 +184,18 @@ func (m *UInt64Value) GetValue() uint64 {
 // The uint64 value.
 func (m *UInt64Value) SetValue(v uint64) {
 	m.Call("setValue", v)
+}
+
+// New creates a new UInt64Value.
+// The uint64 value.
+func (m *UInt64Value) New(value uint64) *UInt64Value {
+	m = &UInt64Value{
+		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("UInt64Value").New([]interface{}{
+			value,
+		}),
+	}
+
+	return m
 }
 
 // Serialize marshals UInt64Value to a slice of bytes.
@@ -222,18 +222,6 @@ type Int32Value struct {
 	*js.Object
 }
 
-// New creates a new Int32Value.
-// The int32 value.
-func (m *Int32Value) New(value int32) *Int32Value {
-	m = &Int32Value{
-		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Int32Value").New([]interface{}{
-			value,
-		}),
-	}
-
-	return m
-}
-
 // GetValue gets the Value of the Int32Value.
 // The int32 value.
 func (m *Int32Value) GetValue() int32 {
@@ -244,6 +232,18 @@ func (m *Int32Value) GetValue() int32 {
 // The int32 value.
 func (m *Int32Value) SetValue(v int32) {
 	m.Call("setValue", v)
+}
+
+// New creates a new Int32Value.
+// The int32 value.
+func (m *Int32Value) New(value int32) *Int32Value {
+	m = &Int32Value{
+		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("Int32Value").New([]interface{}{
+			value,
+		}),
+	}
+
+	return m
 }
 
 // Serialize marshals Int32Value to a slice of bytes.
@@ -270,18 +270,6 @@ type UInt32Value struct {
 	*js.Object
 }
 
-// New creates a new UInt32Value.
-// The uint32 value.
-func (m *UInt32Value) New(value uint32) *UInt32Value {
-	m = &UInt32Value{
-		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("UInt32Value").New([]interface{}{
-			value,
-		}),
-	}
-
-	return m
-}
-
 // GetValue gets the Value of the UInt32Value.
 // The uint32 value.
 func (m *UInt32Value) GetValue() uint32 {
@@ -292,6 +280,18 @@ func (m *UInt32Value) GetValue() uint32 {
 // The uint32 value.
 func (m *UInt32Value) SetValue(v uint32) {
 	m.Call("setValue", v)
+}
+
+// New creates a new UInt32Value.
+// The uint32 value.
+func (m *UInt32Value) New(value uint32) *UInt32Value {
+	m = &UInt32Value{
+		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("UInt32Value").New([]interface{}{
+			value,
+		}),
+	}
+
+	return m
 }
 
 // Serialize marshals UInt32Value to a slice of bytes.
@@ -318,18 +318,6 @@ type BoolValue struct {
 	*js.Object
 }
 
-// New creates a new BoolValue.
-// The bool value.
-func (m *BoolValue) New(value bool) *BoolValue {
-	m = &BoolValue{
-		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("BoolValue").New([]interface{}{
-			value,
-		}),
-	}
-
-	return m
-}
-
 // GetValue gets the Value of the BoolValue.
 // The bool value.
 func (m *BoolValue) GetValue() bool {
@@ -340,6 +328,18 @@ func (m *BoolValue) GetValue() bool {
 // The bool value.
 func (m *BoolValue) SetValue(v bool) {
 	m.Call("setValue", v)
+}
+
+// New creates a new BoolValue.
+// The bool value.
+func (m *BoolValue) New(value bool) *BoolValue {
+	m = &BoolValue{
+		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("BoolValue").New([]interface{}{
+			value,
+		}),
+	}
+
+	return m
 }
 
 // Serialize marshals BoolValue to a slice of bytes.
@@ -366,18 +366,6 @@ type StringValue struct {
 	*js.Object
 }
 
-// New creates a new StringValue.
-// The string value.
-func (m *StringValue) New(value string) *StringValue {
-	m = &StringValue{
-		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("StringValue").New([]interface{}{
-			value,
-		}),
-	}
-
-	return m
-}
-
 // GetValue gets the Value of the StringValue.
 // The string value.
 func (m *StringValue) GetValue() string {
@@ -388,6 +376,18 @@ func (m *StringValue) GetValue() string {
 // The string value.
 func (m *StringValue) SetValue(v string) {
 	m.Call("setValue", v)
+}
+
+// New creates a new StringValue.
+// The string value.
+func (m *StringValue) New(value string) *StringValue {
+	m = &StringValue{
+		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("StringValue").New([]interface{}{
+			value,
+		}),
+	}
+
+	return m
 }
 
 // Serialize marshals StringValue to a slice of bytes.
@@ -414,18 +414,6 @@ type BytesValue struct {
 	*js.Object
 }
 
-// New creates a new BytesValue.
-// The bytes value.
-func (m *BytesValue) New(value []byte) *BytesValue {
-	m = &BytesValue{
-		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("BytesValue").New([]interface{}{
-			value,
-		}),
-	}
-
-	return m
-}
-
 // GetValue gets the Value of the BytesValue.
 // The bytes value.
 func (m *BytesValue) GetValue() []byte {
@@ -436,6 +424,18 @@ func (m *BytesValue) GetValue() []byte {
 // The bytes value.
 func (m *BytesValue) SetValue(v []byte) {
 	m.Call("setValue", v)
+}
+
+// New creates a new BytesValue.
+// The bytes value.
+func (m *BytesValue) New(value []byte) *BytesValue {
+	m = &BytesValue{
+		Object: js.Global.Get("proto").Get("google").Get("protobuf").Get("BytesValue").New([]interface{}{
+			value,
+		}),
+	}
+
+	return m
 }
 
 // Serialize marshals BytesValue to a slice of bytes.
