@@ -193,6 +193,7 @@ func (m *Value) GetKind() (x isValue_Kind) {
 }
 
 // SetKind sets the Kind of theValue.
+// If the input is nil, SetKind does nothing.
 func (m *Value) SetKind(kind isValue_Kind) {
 	switch x := kind.(type) {
 	case *Value_NullValue:
@@ -207,8 +208,6 @@ func (m *Value) SetKind(kind isValue_Kind) {
 		m.SetStructValue(x.StructValue)
 	case *Value_ListValue:
 		m.SetListValue(x.ListValue)
-	default:
-		panic("unsupported oneof type")
 	}
 }
 
