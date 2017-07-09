@@ -647,6 +647,7 @@ func (m *Communique) GetUnion() (x isCommunique_Union) {
 }
 
 // SetUnion sets the Union of theCommunique.
+// If the input is nil, SetUnion does nothing.
 func (m *Communique) SetUnion(union isCommunique_Union) {
 	switch x := union.(type) {
 	case *Communique_Number:
@@ -667,8 +668,6 @@ func (m *Communique) SetUnion(union isCommunique_Union) {
 		m.SetDelta(x.Delta)
 	case *Communique_Msg:
 		m.SetMsg(x.Msg)
-	default:
-		panic("unsupported oneof type")
 	}
 }
 

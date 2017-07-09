@@ -623,6 +623,7 @@ func (m *Communique) GetUnionThing() (x isCommunique_UnionThing) {
 }
 
 // SetUnionThing sets the UnionThing of theCommunique.
+// If the input is nil, SetUnionThing does nothing.
 func (m *Communique) SetUnionThing(union_thing isCommunique_UnionThing) {
 	switch x := union_thing.(type) {
 	case *Communique_Number:
@@ -643,8 +644,6 @@ func (m *Communique) SetUnionThing(union_thing isCommunique_UnionThing) {
 		m.SetDelta(x.Delta)
 	case *Communique_Msg:
 		m.SetMsg(x.Msg)
-	default:
-		panic("unsupported oneof type")
 	}
 }
 
