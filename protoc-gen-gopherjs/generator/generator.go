@@ -1636,9 +1636,10 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		if d := g.getMapDescriptor(field); d != nil {
 			// Special handling for maps
 			g.P(`m.Call("clear`, fname, `Map")`)
+			g.P(`mp := m.Call("get`, fname, `Map")`)
 			g.P(`for key, value := range v {`)
 			g.In()
-			g.P(`m.Call("get`, fname, `Map").Call("set", key, value)`)
+			g.P(`mp.Call("set", key, value)`)
 			g.Out()
 			g.P(`}`)
 		} else if isRepeated(field) {
