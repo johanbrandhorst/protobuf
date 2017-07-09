@@ -1677,7 +1677,8 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		g.P()
 
 		// Generate Haser (Only for oneof and message fields)
-		if field.OneofIndex != nil || *field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
+		if field.OneofIndex != nil ||
+			(*field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE && g.getMapDescriptor(field) == nil) {
 			haserName := fieldHaserNames[field]
 			g.P(`// `, haserName, ` indicates whether the `, fname, ` of the `, ccTypeName, ` is set.`)
 			g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
