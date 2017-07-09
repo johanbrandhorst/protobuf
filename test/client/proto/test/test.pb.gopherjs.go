@@ -85,14 +85,13 @@ func (m *ExtraStuff) GetTitle() (x isExtraStuff_Title) {
 }
 
 // SetTitle sets the Title of theExtraStuff.
+// If the input is nil, SetTitle does nothing.
 func (m *ExtraStuff) SetTitle(title isExtraStuff_Title) {
 	switch x := title.(type) {
 	case *ExtraStuff_FirstName:
 		m.SetFirstName(x.FirstName)
 	case *ExtraStuff_IdNumber:
 		m.SetIdNumber(x.IdNumber)
-	default:
-		panic("unsupported oneof type")
 	}
 }
 
@@ -109,9 +108,15 @@ func (m *ExtraStuff) GetAddresses() map[int32]string {
 // SetAddresses sets the Addresses of the ExtraStuff.
 func (m *ExtraStuff) SetAddresses(v map[int32]string) {
 	m.Call("clearAddressesMap")
+	mp := m.Call("getAddressesMap")
 	for key, value := range v {
-		m.Call("getAddressesMap").Call("set", key, value)
+		mp.Call("set", key, value)
 	}
+}
+
+// ClearAddresses clears the Addresses of the ExtraStuff.
+func (m *ExtraStuff) ClearAddresses() {
+	m.Call("clearAddressesMap")
 }
 
 // GetFirstName gets the FirstName of the ExtraStuff.
@@ -124,6 +129,16 @@ func (m *ExtraStuff) SetFirstName(v string) {
 	m.Call("setFirstName", v)
 }
 
+// HasFirstName indicates whether the FirstName of the ExtraStuff is set.
+func (m *ExtraStuff) HasFirstName() bool {
+	return m.Call("hasFirstName").Bool()
+}
+
+// ClearFirstName clears the FirstName of the ExtraStuff.
+func (m *ExtraStuff) ClearFirstName() {
+	m.Call("clearFirstName")
+}
+
 // GetIdNumber gets the IdNumber of the ExtraStuff.
 func (m *ExtraStuff) GetIdNumber() int32 {
 	return int32(m.Call("getIdNumber").Int())
@@ -132,6 +147,16 @@ func (m *ExtraStuff) GetIdNumber() int32 {
 // SetIdNumber sets the IdNumber of the ExtraStuff.
 func (m *ExtraStuff) SetIdNumber(v int32) {
 	m.Call("setIdNumber", v)
+}
+
+// HasIdNumber indicates whether the IdNumber of the ExtraStuff is set.
+func (m *ExtraStuff) HasIdNumber() bool {
+	return m.Call("hasIdNumber").Bool()
+}
+
+// ClearIdNumber clears the IdNumber of the ExtraStuff.
+func (m *ExtraStuff) ClearIdNumber() {
+	m.Call("clearIdNumber")
 }
 
 // GetCardNumbers gets the CardNumbers of the ExtraStuff.
@@ -153,6 +178,11 @@ func (m *ExtraStuff) SetCardNumbers(v []uint32) {
 		arr.SetIndex(i, value)
 	}
 	m.Call("setCardNumbersList", arr)
+}
+
+// ClearCardNumbers clears the CardNumbers of the ExtraStuff.
+func (m *ExtraStuff) ClearCardNumbers() {
+	m.Call("clearCardNumbersList")
 }
 
 // New creates a new ExtraStuff.

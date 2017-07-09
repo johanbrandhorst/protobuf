@@ -33,6 +33,16 @@ func (m *Multi1) SetMulti2(v *Multi2) {
 	m.Call("setMulti2", v.Call("toArray"))
 }
 
+// HasMulti2 indicates whether the Multi2 of the Multi1 is set.
+func (m *Multi1) HasMulti2() bool {
+	return m.Call("hasMulti2").Bool()
+}
+
+// ClearMulti2 clears the Multi2 of the Multi1.
+func (m *Multi1) ClearMulti2() {
+	m.Call("clearMulti2")
+}
+
 // GetColor gets the Color of the Multi1.
 func (m *Multi1) GetColor() Multi2_Color {
 	return Multi2_Color(m.Call("getColor").Int())

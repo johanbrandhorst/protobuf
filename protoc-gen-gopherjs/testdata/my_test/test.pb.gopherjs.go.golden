@@ -135,6 +135,11 @@ func (m *Request) SetKey(v []int64) {
 	m.Call("setKeyList", arr)
 }
 
+// ClearKey clears the Key of the Request.
+func (m *Request) ClearKey() {
+	m.Call("clearKeyList")
+}
+
 // GetHue gets the Hue of the Request.
 func (m *Request) GetHue() Request_Color {
 	return Request_Color(m.Call("getHue").Int())
@@ -180,9 +185,16 @@ func (m *Request) GetNameMapping() map[int32]string {
 // This is a map field. It will generate map[int32]string.
 func (m *Request) SetNameMapping(v map[int32]string) {
 	m.Call("clearNameMappingMap")
+	mp := m.Call("getNameMappingMap")
 	for key, value := range v {
-		m.Call("getNameMappingMap").Call("set", key, value)
+		mp.Call("set", key, value)
 	}
+}
+
+// ClearNameMapping clears the NameMapping of the Request.
+// This is a map field. It will generate map[int32]string.
+func (m *Request) ClearNameMapping() {
+	m.Call("clearNameMappingMap")
 }
 
 // GetMsgMapping gets the MsgMapping of the Request.
@@ -200,9 +212,16 @@ func (m *Request) GetMsgMapping() map[int64]*Reply {
 // This is a map field whose value type is a message.
 func (m *Request) SetMsgMapping(v map[int64]*Reply) {
 	m.Call("clearMsgMappingMap")
+	mp := m.Call("getMsgMappingMap")
 	for key, value := range v {
-		m.Call("getMsgMappingMap").Call("set", key, value)
+		mp.Call("set", key, value)
 	}
+}
+
+// ClearMsgMapping clears the MsgMapping of the Request.
+// This is a map field whose value type is a message.
+func (m *Request) ClearMsgMapping() {
+	m.Call("clearMsgMappingMap")
 }
 
 // GetReset gets the Reset of the Request.
@@ -237,6 +256,18 @@ func (m *Request) GetMulti() *multitest2.Multi1 {
 // Imported type
 func (m *Request) SetMulti(v *multitest2.Multi1) {
 	m.Call("setMulti", v.Call("toArray"))
+}
+
+// HasMulti indicates whether the Multi of the Request is set.
+// Imported type
+func (m *Request) HasMulti() bool {
+	return m.Call("hasMulti").Bool()
+}
+
+// ClearMulti clears the Multi of the Request.
+// Imported type
+func (m *Request) ClearMulti() {
+	m.Call("clearMulti")
 }
 
 // GetFallthrough gets the Fallthrough of the Request.
@@ -334,6 +365,16 @@ func (m *Reply) SetFound(v []*Reply_Entry) {
 	m.Call("setFoundList", arr)
 }
 
+// HasFound indicates whether the Found of the Reply is set.
+func (m *Reply) HasFound() bool {
+	return m.Call("hasFound").Bool()
+}
+
+// ClearFound clears the Found of the Reply.
+func (m *Reply) ClearFound() {
+	m.Call("clearFoundList")
+}
+
 // GetCompactKeys gets the CompactKeys of the Reply.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
@@ -353,6 +394,11 @@ func (m *Reply) SetCompactKeys(v []int32) {
 		arr.SetIndex(i, value)
 	}
 	m.Call("setCompactKeysList", arr)
+}
+
+// ClearCompactKeys clears the CompactKeys of the Reply.
+func (m *Reply) ClearCompactKeys() {
+	m.Call("clearCompactKeysList")
 }
 
 // New creates a new Reply.
@@ -691,6 +737,16 @@ func (m *Communique) SetNumber(v int32) {
 	m.Call("setNumber", v)
 }
 
+// HasNumber indicates whether the Number of the Communique is set.
+func (m *Communique) HasNumber() bool {
+	return m.Call("hasNumber").Bool()
+}
+
+// ClearNumber clears the Number of the Communique.
+func (m *Communique) ClearNumber() {
+	m.Call("clearNumber")
+}
+
 // GetName gets the Name of the Communique.
 func (m *Communique) GetName() string {
 	return m.Call("getName").String()
@@ -699,6 +755,16 @@ func (m *Communique) GetName() string {
 // SetName sets the Name of the Communique.
 func (m *Communique) SetName(v string) {
 	m.Call("setName", v)
+}
+
+// HasName indicates whether the Name of the Communique is set.
+func (m *Communique) HasName() bool {
+	return m.Call("hasName").Bool()
+}
+
+// ClearName clears the Name of the Communique.
+func (m *Communique) ClearName() {
+	m.Call("clearName")
 }
 
 // GetData gets the Data of the Communique.
@@ -711,6 +777,16 @@ func (m *Communique) SetData(v []byte) {
 	m.Call("setData", v)
 }
 
+// HasData indicates whether the Data of the Communique is set.
+func (m *Communique) HasData() bool {
+	return m.Call("hasData").Bool()
+}
+
+// ClearData clears the Data of the Communique.
+func (m *Communique) ClearData() {
+	m.Call("clearData")
+}
+
 // GetTempC gets the TempC of the Communique.
 func (m *Communique) GetTempC() float64 {
 	return m.Call("getTempC").Float()
@@ -719,6 +795,16 @@ func (m *Communique) GetTempC() float64 {
 // SetTempC sets the TempC of the Communique.
 func (m *Communique) SetTempC(v float64) {
 	m.Call("setTempC", v)
+}
+
+// HasTempC indicates whether the TempC of the Communique is set.
+func (m *Communique) HasTempC() bool {
+	return m.Call("hasTempC").Bool()
+}
+
+// ClearTempC clears the TempC of the Communique.
+func (m *Communique) ClearTempC() {
+	m.Call("clearTempC")
 }
 
 // GetHeight gets the Height of the Communique.
@@ -731,6 +817,16 @@ func (m *Communique) SetHeight(v float32) {
 	m.Call("setHeight", v)
 }
 
+// HasHeight indicates whether the Height of the Communique is set.
+func (m *Communique) HasHeight() bool {
+	return m.Call("hasHeight").Bool()
+}
+
+// ClearHeight clears the Height of the Communique.
+func (m *Communique) ClearHeight() {
+	m.Call("clearHeight")
+}
+
 // GetToday gets the Today of the Communique.
 func (m *Communique) GetToday() Days {
 	return Days(m.Call("getToday").Int())
@@ -739,6 +835,16 @@ func (m *Communique) GetToday() Days {
 // SetToday sets the Today of the Communique.
 func (m *Communique) SetToday(v Days) {
 	m.Call("setToday", v)
+}
+
+// HasToday indicates whether the Today of the Communique is set.
+func (m *Communique) HasToday() bool {
+	return m.Call("hasToday").Bool()
+}
+
+// ClearToday clears the Today of the Communique.
+func (m *Communique) ClearToday() {
+	m.Call("clearToday")
 }
 
 // GetMaybe gets the Maybe of the Communique.
@@ -751,6 +857,16 @@ func (m *Communique) SetMaybe(v bool) {
 	m.Call("setMaybe", v)
 }
 
+// HasMaybe indicates whether the Maybe of the Communique is set.
+func (m *Communique) HasMaybe() bool {
+	return m.Call("hasMaybe").Bool()
+}
+
+// ClearMaybe clears the Maybe of the Communique.
+func (m *Communique) ClearMaybe() {
+	m.Call("clearMaybe")
+}
+
 // GetDelta gets the Delta of the Communique.
 func (m *Communique) GetDelta() int32 {
 	return int32(m.Call("getDelta").Int())
@@ -761,6 +877,16 @@ func (m *Communique) SetDelta(v int32) {
 	m.Call("setDelta", v)
 }
 
+// HasDelta indicates whether the Delta of the Communique is set.
+func (m *Communique) HasDelta() bool {
+	return m.Call("hasDelta").Bool()
+}
+
+// ClearDelta clears the Delta of the Communique.
+func (m *Communique) ClearDelta() {
+	m.Call("clearDelta")
+}
+
 // GetMsg gets the Msg of the Communique.
 func (m *Communique) GetMsg() *Reply {
 	return &Reply{Object: m.Call("getMsg")}
@@ -769,6 +895,16 @@ func (m *Communique) GetMsg() *Reply {
 // SetMsg sets the Msg of the Communique.
 func (m *Communique) SetMsg(v *Reply) {
 	m.Call("setMsg", v.Call("toArray"))
+}
+
+// HasMsg indicates whether the Msg of the Communique is set.
+func (m *Communique) HasMsg() bool {
+	return m.Call("hasMsg").Bool()
+}
+
+// ClearMsg clears the Msg of the Communique.
+func (m *Communique) ClearMsg() {
+	m.Call("clearMsg")
 }
 
 // New creates a new Communique.

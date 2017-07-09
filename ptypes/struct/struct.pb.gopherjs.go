@@ -72,6 +72,12 @@ func (m *Struct) SetFields(v map[string]*Value) {
 	}
 }
 
+// ClearFields clears the Fields of the Struct.
+// Unordered map of dynamically typed values.
+func (m *Struct) ClearFields() {
+	m.Call("clearFieldsMap")
+}
+
 // New creates a new Struct.
 // Unordered map of dynamically typed values.
 func (m *Struct) New(fields map[string]*Value) *Struct {
@@ -224,6 +230,18 @@ func (m *Value) SetNullValue(v NullValue) {
 	m.Call("setNullValue", v)
 }
 
+// HasNullValue indicates whether the NullValue of the Value is set.
+// Represents a null value.
+func (m *Value) HasNullValue() bool {
+	return m.Call("hasNullValue").Bool()
+}
+
+// ClearNullValue clears the NullValue of the Value.
+// Represents a null value.
+func (m *Value) ClearNullValue() {
+	m.Call("clearNullValue")
+}
+
 // GetNumberValue gets the NumberValue of the Value.
 // Represents a double value.
 func (m *Value) GetNumberValue() float64 {
@@ -234,6 +252,18 @@ func (m *Value) GetNumberValue() float64 {
 // Represents a double value.
 func (m *Value) SetNumberValue(v float64) {
 	m.Call("setNumberValue", v)
+}
+
+// HasNumberValue indicates whether the NumberValue of the Value is set.
+// Represents a double value.
+func (m *Value) HasNumberValue() bool {
+	return m.Call("hasNumberValue").Bool()
+}
+
+// ClearNumberValue clears the NumberValue of the Value.
+// Represents a double value.
+func (m *Value) ClearNumberValue() {
+	m.Call("clearNumberValue")
 }
 
 // GetStringValue gets the StringValue of the Value.
@@ -248,6 +278,18 @@ func (m *Value) SetStringValue(v string) {
 	m.Call("setStringValue", v)
 }
 
+// HasStringValue indicates whether the StringValue of the Value is set.
+// Represents a string value.
+func (m *Value) HasStringValue() bool {
+	return m.Call("hasStringValue").Bool()
+}
+
+// ClearStringValue clears the StringValue of the Value.
+// Represents a string value.
+func (m *Value) ClearStringValue() {
+	m.Call("clearStringValue")
+}
+
 // GetBoolValue gets the BoolValue of the Value.
 // Represents a boolean value.
 func (m *Value) GetBoolValue() bool {
@@ -258,6 +300,18 @@ func (m *Value) GetBoolValue() bool {
 // Represents a boolean value.
 func (m *Value) SetBoolValue(v bool) {
 	m.Call("setBoolValue", v)
+}
+
+// HasBoolValue indicates whether the BoolValue of the Value is set.
+// Represents a boolean value.
+func (m *Value) HasBoolValue() bool {
+	return m.Call("hasBoolValue").Bool()
+}
+
+// ClearBoolValue clears the BoolValue of the Value.
+// Represents a boolean value.
+func (m *Value) ClearBoolValue() {
+	m.Call("clearBoolValue")
 }
 
 // GetStructValue gets the StructValue of the Value.
@@ -272,6 +326,18 @@ func (m *Value) SetStructValue(v *Struct) {
 	m.Call("setStructValue", v.Call("toArray"))
 }
 
+// HasStructValue indicates whether the StructValue of the Value is set.
+// Represents a structured value.
+func (m *Value) HasStructValue() bool {
+	return m.Call("hasStructValue").Bool()
+}
+
+// ClearStructValue clears the StructValue of the Value.
+// Represents a structured value.
+func (m *Value) ClearStructValue() {
+	m.Call("clearStructValue")
+}
+
 // GetListValue gets the ListValue of the Value.
 // Represents a repeated `Value`.
 func (m *Value) GetListValue() *ListValue {
@@ -282,6 +348,18 @@ func (m *Value) GetListValue() *ListValue {
 // Represents a repeated `Value`.
 func (m *Value) SetListValue(v *ListValue) {
 	m.Call("setListValue", v.Call("toArray"))
+}
+
+// HasListValue indicates whether the ListValue of the Value is set.
+// Represents a repeated `Value`.
+func (m *Value) HasListValue() bool {
+	return m.Call("hasListValue").Bool()
+}
+
+// ClearListValue clears the ListValue of the Value.
+// Represents a repeated `Value`.
+func (m *Value) ClearListValue() {
+	m.Call("clearListValue")
 }
 
 // New creates a new Value.
@@ -348,6 +426,18 @@ func (m *ListValue) SetValues(v []*Value) {
 		arr.SetIndex(i, value)
 	}
 	m.Call("setValuesList", arr)
+}
+
+// HasValues indicates whether the Values of the ListValue is set.
+// Repeated field of dynamically typed values.
+func (m *ListValue) HasValues() bool {
+	return m.Call("hasValues").Bool()
+}
+
+// ClearValues clears the Values of the ListValue.
+// Repeated field of dynamically typed values.
+func (m *ListValue) ClearValues() {
+	m.Call("clearValuesList")
 }
 
 // New creates a new ListValue.
