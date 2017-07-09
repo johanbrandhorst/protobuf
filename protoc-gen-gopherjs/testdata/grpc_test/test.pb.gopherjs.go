@@ -2,17 +2,17 @@
 // source: grpc_test/test.proto
 
 /*
-	Package my_test is a generated protocol buffer package.
+Package my_test is a generated protocol buffer package.
 
-	It is generated from these files:
-		grpc_test/test.proto
+It is generated from these files:
+	grpc_test/test.proto
 
-	It has these top-level messages:
-		Request
-		Reply
-		OtherBase
-		OtherReplyExtensions
-		Communique
+It has these top-level messages:
+	Request
+	Reply
+	OtherBase
+	OtherReplyExtensions
+	Communique
 */
 package my_test
 
@@ -116,39 +116,6 @@ func (x Reply_Entry_Game) String() string {
 // This is a message that might be sent somewhere.
 type Request struct {
 	*js.Object
-}
-
-// New creates a new Request.
-// This is a map field. It will generate map[int32]string.
-// This is a map field whose value type is a message.
-// This field should not conflict with any getters.
-func (m *Request) New(key []int64, hue Request_Color, hat HatType, deadline float32, nameMapping map[int32]string, msgMapping map[int64]*Reply, reset int32, getKey string) *Request {
-	m = &Request{
-		Object: js.Global.Get("proto").Get("my").Get("test").Get("Request").New([]interface{}{
-			js.Undefined,
-			hue,
-			hat,
-			deadline,
-			js.Undefined,
-			js.Undefined,
-			reset,
-			getKey,
-		}),
-	}
-
-	arr := js.Global.Get("Array").New(len(key))
-	for i, value := range key {
-		arr.SetIndex(i, value)
-		m.Call("setKeyList", arr)
-	}
-	for key, value := range nameMapping {
-		m.Call("getNameMappingMap").Call("set", key, value)
-	}
-	for key, value := range msgMapping {
-		m.Call("getMsgMappingMap").Call("set", key, value)
-	}
-
-	return m
 }
 
 // GetKey gets the Key of the Request.
@@ -264,6 +231,43 @@ func (m *Request) SetGetKey(v string) {
 	m.Call("setGetKey", v)
 }
 
+// New creates a new Request.
+// This is a map field. It will generate map[int32]string.
+// This is a map field whose value type is a message.
+// This field should not conflict with any getters.
+func (m *Request) New(key []int64, hue Request_Color, hat HatType, deadline float32, nameMapping map[int32]string, msgMapping map[int64]*Reply, reset int32, getKey string) *Request {
+	m = &Request{
+		Object: js.Global.Get("proto").Get("my").Get("test").Get("Request").New([]interface{}{
+			js.Undefined,
+			hue,
+			hat,
+			deadline,
+			js.Undefined,
+			js.Undefined,
+			reset,
+			getKey,
+		}),
+	}
+
+	arr := js.Global.Get("Array").New(len(key))
+	for i, value := range key {
+		arr.SetIndex(i, value)
+	}
+	m.Call("setKeyList", arr)
+
+	mp := m.Call("getNameMappingMap")
+	for key, value := range nameMapping {
+		mp.Call("set", key, value)
+	}
+
+	mp_ := m.Call("getMsgMappingMap")
+	for key, value := range msgMapping {
+		mp_.Call("set", key, value)
+	}
+
+	return m
+}
+
 // Serialize marshals Request to a slice of bytes.
 func (m *Request) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
@@ -283,29 +287,6 @@ func (m *Request) Deserialize(rawBytes []byte) (*Request, error) {
 
 type Reply struct {
 	*js.Object
-}
-
-// New creates a new Reply.
-func (m *Reply) New(found []*Reply_Entry, compactKeys []int32) *Reply {
-	m = &Reply{
-		Object: js.Global.Get("proto").Get("my").Get("test").Get("Reply").New([]interface{}{
-			js.Undefined,
-			js.Undefined,
-		}),
-	}
-
-	arr := js.Global.Get("Array").New(len(found))
-	for i, value := range found {
-		arr.SetIndex(i, value)
-		m.Call("setFoundList", arr)
-	}
-	arr_ := js.Global.Get("Array").New(len(compactKeys))
-	for i, value := range compactKeys {
-		arr_.SetIndex(i, value)
-		m.Call("setCompactKeysList", arr_)
-	}
-
-	return m
 }
 
 // GetFound gets the Found of the Reply.
@@ -350,6 +331,30 @@ func (m *Reply) SetCompactKeys(v []int32) {
 	m.Call("setCompactKeysList", arr)
 }
 
+// New creates a new Reply.
+func (m *Reply) New(found []*Reply_Entry, compactKeys []int32) *Reply {
+	m = &Reply{
+		Object: js.Global.Get("proto").Get("my").Get("test").Get("Reply").New([]interface{}{
+			js.Undefined,
+			js.Undefined,
+		}),
+	}
+
+	arr := js.Global.Get("Array").New(len(found))
+	for i, value := range found {
+		arr.SetIndex(i, value)
+	}
+	m.Call("setFoundList", arr)
+
+	arr_ := js.Global.Get("Array").New(len(compactKeys))
+	for i, value := range compactKeys {
+		arr_.SetIndex(i, value)
+	}
+	m.Call("setCompactKeysList", arr_)
+
+	return m
+}
+
 // Serialize marshals Reply to a slice of bytes.
 func (m *Reply) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
@@ -369,19 +374,6 @@ func (m *Reply) Deserialize(rawBytes []byte) (*Reply, error) {
 
 type Reply_Entry struct {
 	*js.Object
-}
-
-// New creates a new Reply_Entry.
-func (m *Reply_Entry) New(keyThatNeeds1234camelCasIng int64, value int64, MyFieldName2 int64) *Reply_Entry {
-	m = &Reply_Entry{
-		Object: js.Global.Get("proto").Get("my").Get("test").Get("Reply").Get("Entry").New([]interface{}{
-			keyThatNeeds1234camelCasIng,
-			value,
-			MyFieldName2,
-		}),
-	}
-
-	return m
 }
 
 // GetKeyThatNeeds_1234Camel_CasIng gets the KeyThatNeeds_1234Camel_CasIng of the Reply_Entry.
@@ -414,6 +406,19 @@ func (m *Reply_Entry) SetXMyFieldName_2(v int64) {
 	m.Call("setXMyFieldName_2", v)
 }
 
+// New creates a new Reply_Entry.
+func (m *Reply_Entry) New(keyThatNeeds1234camelCasIng int64, value int64, MyFieldName2 int64) *Reply_Entry {
+	m = &Reply_Entry{
+		Object: js.Global.Get("proto").Get("my").Get("test").Get("Reply").Get("Entry").New([]interface{}{
+			keyThatNeeds1234camelCasIng,
+			value,
+			MyFieldName2,
+		}),
+	}
+
+	return m
+}
+
 // Serialize marshals Reply_Entry to a slice of bytes.
 func (m *Reply_Entry) Serialize() ([]byte, error) {
 	return jspb.Serialize(m)
@@ -435,6 +440,16 @@ type OtherBase struct {
 	*js.Object
 }
 
+// GetName gets the Name of the OtherBase.
+func (m *OtherBase) GetName() string {
+	return m.Call("getName").String()
+}
+
+// SetName sets the Name of the OtherBase.
+func (m *OtherBase) SetName(v string) {
+	m.Call("setName", v)
+}
+
 // New creates a new OtherBase.
 func (m *OtherBase) New(name string) *OtherBase {
 	m = &OtherBase{
@@ -444,16 +459,6 @@ func (m *OtherBase) New(name string) *OtherBase {
 	}
 
 	return m
-}
-
-// GetName gets the Name of the OtherBase.
-func (m *OtherBase) GetName() string {
-	return m.Call("getName").String()
-}
-
-// SetName sets the Name of the OtherBase.
-func (m *OtherBase) SetName(v string) {
-	m.Call("setName", v)
 }
 
 // Serialize marshals OtherBase to a slice of bytes.
@@ -477,6 +482,16 @@ type OtherReplyExtensions struct {
 	*js.Object
 }
 
+// GetKey gets the Key of the OtherReplyExtensions.
+func (m *OtherReplyExtensions) GetKey() int32 {
+	return int32(m.Call("getKey").Int())
+}
+
+// SetKey sets the Key of the OtherReplyExtensions.
+func (m *OtherReplyExtensions) SetKey(v int32) {
+	m.Call("setKey", v)
+}
+
 // New creates a new OtherReplyExtensions.
 func (m *OtherReplyExtensions) New(key int32) *OtherReplyExtensions {
 	m = &OtherReplyExtensions{
@@ -486,16 +501,6 @@ func (m *OtherReplyExtensions) New(key int32) *OtherReplyExtensions {
 	}
 
 	return m
-}
-
-// GetKey gets the Key of the OtherReplyExtensions.
-func (m *OtherReplyExtensions) GetKey() int32 {
-	return int32(m.Call("getKey").Int())
-}
-
-// SetKey sets the Key of the OtherReplyExtensions.
-func (m *OtherReplyExtensions) SetKey(v int32) {
-	m.Call("setKey", v)
 }
 
 // Serialize marshals OtherReplyExtensions to a slice of bytes.
@@ -519,29 +524,9 @@ type Communique struct {
 	*js.Object
 }
 
-// New creates a new Communique.
-func (m *Communique) New(makeMeCry bool) *Communique {
-	m = &Communique{
-		Object: js.Global.Get("proto").Get("my").Get("test").Get("Communique").New([]interface{}{
-			makeMeCry,
-			js.Undefined,
-			js.Undefined,
-			js.Undefined,
-			js.Undefined,
-			js.Undefined,
-			js.Undefined,
-			js.Undefined,
-			js.Undefined,
-			js.Undefined,
-		}),
-	}
-
-	return m
-}
-
-// This is a oneof, called "union".
+// This is a oneof, called "union_thing".
 //
-// Types that are valid to be assigned to Union:
+// Types that are valid to be assigned to UnionThing:
 //	*Communique_Number
 //	*Communique_Name
 //	*Communique_Data
@@ -551,8 +536,8 @@ func (m *Communique) New(makeMeCry bool) *Communique {
 //	*Communique_Maybe
 //	*Communique_Delta_
 //	*Communique_Msg
-type isCommunique_Union interface {
-	isCommunique_Union()
+type isCommunique_UnionThing interface {
+	isCommunique_UnionThing()
 }
 
 type Communique_Number struct {
@@ -583,18 +568,19 @@ type Communique_Msg struct {
 	Msg *Reply
 }
 
-func (*Communique_Number) isCommunique_Union() {}
-func (*Communique_Name) isCommunique_Union()   {}
-func (*Communique_Data) isCommunique_Union()   {}
-func (*Communique_TempC) isCommunique_Union()  {}
-func (*Communique_Height) isCommunique_Union() {}
-func (*Communique_Today) isCommunique_Union()  {}
-func (*Communique_Maybe) isCommunique_Union()  {}
-func (*Communique_Delta_) isCommunique_Union() {}
-func (*Communique_Msg) isCommunique_Union()    {}
+func (*Communique_Number) isCommunique_UnionThing() {}
+func (*Communique_Name) isCommunique_UnionThing()   {}
+func (*Communique_Data) isCommunique_UnionThing()   {}
+func (*Communique_TempC) isCommunique_UnionThing()  {}
+func (*Communique_Height) isCommunique_UnionThing() {}
+func (*Communique_Today) isCommunique_UnionThing()  {}
+func (*Communique_Maybe) isCommunique_UnionThing()  {}
+func (*Communique_Delta_) isCommunique_UnionThing() {}
+func (*Communique_Msg) isCommunique_UnionThing()    {}
 
-func (m *Communique) GetUnion() (x isCommunique_Union) {
-	switch m.Call("getUnionCase").Int() {
+// GetUnionThing gets the UnionThing of the Communique.
+func (m *Communique) GetUnionThing() (x isCommunique_UnionThing) {
+	switch m.Call("getUnionThingCase").Int() {
 	case 5:
 		x = &Communique_Number{
 			Number: m.GetNumber(),
@@ -632,7 +618,34 @@ func (m *Communique) GetUnion() (x isCommunique_Union) {
 			Msg: m.GetMsg(),
 		}
 	}
+
 	return x
+}
+
+// SetUnionThing sets the UnionThing of theCommunique.
+func (m *Communique) SetUnionThing(union_thing isCommunique_UnionThing) {
+	switch x := union_thing.(type) {
+	case *Communique_Number:
+		m.SetNumber(x.Number)
+	case *Communique_Name:
+		m.SetName(x.Name)
+	case *Communique_Data:
+		m.SetData(x.Data)
+	case *Communique_TempC:
+		m.SetTempC(x.TempC)
+	case *Communique_Height:
+		m.SetHeight(x.Height)
+	case *Communique_Today:
+		m.SetToday(x.Today)
+	case *Communique_Maybe:
+		m.SetMaybe(x.Maybe)
+	case *Communique_Delta_:
+		m.SetDelta(x.Delta)
+	case *Communique_Msg:
+		m.SetMsg(x.Msg)
+	default:
+		panic("unsupported oneof type")
+	}
 }
 
 // GetMakeMeCry gets the MakeMeCry of the Communique.
@@ -733,6 +746,28 @@ func (m *Communique) GetMsg() *Reply {
 // SetMsg sets the Msg of the Communique.
 func (m *Communique) SetMsg(v *Reply) {
 	m.Call("setMsg", v.Call("toArray"))
+}
+
+// New creates a new Communique.
+func (m *Communique) New(makeMeCry bool, union_thing isCommunique_UnionThing) *Communique {
+	m = &Communique{
+		Object: js.Global.Get("proto").Get("my").Get("test").Get("Communique").New([]interface{}{
+			makeMeCry,
+			js.Undefined,
+			js.Undefined,
+			js.Undefined,
+			js.Undefined,
+			js.Undefined,
+			js.Undefined,
+			js.Undefined,
+			js.Undefined,
+			js.Undefined,
+		}),
+	}
+
+	m.SetUnionThing(union_thing)
+
+	return m
 }
 
 // Serialize marshals Communique to a slice of bytes.

@@ -33,18 +33,6 @@ type Multi2 struct {
 	*js.Object
 }
 
-// New creates a new Multi2.
-func (m *Multi2) New(requiredValue int32, color Multi2_Color) *Multi2 {
-	m = &Multi2{
-		Object: js.Global.Get("proto").Get("multitest").Get("Multi2").New([]interface{}{
-			requiredValue,
-			color,
-		}),
-	}
-
-	return m
-}
-
 // GetRequiredValue gets the RequiredValue of the Multi2.
 func (m *Multi2) GetRequiredValue() int32 {
 	return int32(m.Call("getRequiredValue").Int())
@@ -63,6 +51,18 @@ func (m *Multi2) GetColor() Multi2_Color {
 // SetColor sets the Color of the Multi2.
 func (m *Multi2) SetColor(v Multi2_Color) {
 	m.Call("setColor", v)
+}
+
+// New creates a new Multi2.
+func (m *Multi2) New(requiredValue int32, color Multi2_Color) *Multi2 {
+	m = &Multi2{
+		Object: js.Global.Get("proto").Get("multitest").Get("Multi2").New([]interface{}{
+			requiredValue,
+			color,
+		}),
+	}
+
+	return m
 }
 
 // Serialize marshals Multi2 to a slice of bytes.

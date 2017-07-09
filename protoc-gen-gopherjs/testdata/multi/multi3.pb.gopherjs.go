@@ -30,6 +30,16 @@ type Multi3 struct {
 	*js.Object
 }
 
+// GetHatType gets the HatType of the Multi3.
+func (m *Multi3) GetHatType() Multi3_HatType {
+	return Multi3_HatType(m.Call("getHatType").Int())
+}
+
+// SetHatType sets the HatType of the Multi3.
+func (m *Multi3) SetHatType(v Multi3_HatType) {
+	m.Call("setHatType", v)
+}
+
 // New creates a new Multi3.
 func (m *Multi3) New(hatType Multi3_HatType) *Multi3 {
 	m = &Multi3{
@@ -39,16 +49,6 @@ func (m *Multi3) New(hatType Multi3_HatType) *Multi3 {
 	}
 
 	return m
-}
-
-// GetHatType gets the HatType of the Multi3.
-func (m *Multi3) GetHatType() Multi3_HatType {
-	return Multi3_HatType(m.Call("getHatType").Int())
-}
-
-// SetHatType sets the HatType of the Multi3.
-func (m *Multi3) SetHatType(v Multi3_HatType) {
-	m.Call("setHatType", v)
 }
 
 // Serialize marshals Multi3 to a slice of bytes.

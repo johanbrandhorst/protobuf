@@ -23,19 +23,6 @@ type Multi1 struct {
 	*js.Object
 }
 
-// New creates a new Multi1.
-func (m *Multi1) New(multi2 *Multi2, color Multi2_Color, hatType Multi3_HatType) *Multi1 {
-	m = &Multi1{
-		Object: js.Global.Get("proto").Get("multitest").Get("Multi1").New([]interface{}{
-			multi2.Call("toArray"),
-			color,
-			hatType,
-		}),
-	}
-
-	return m
-}
-
 // GetMulti2 gets the Multi2 of the Multi1.
 func (m *Multi1) GetMulti2() *Multi2 {
 	return &Multi2{Object: m.Call("getMulti2")}
@@ -43,7 +30,7 @@ func (m *Multi1) GetMulti2() *Multi2 {
 
 // SetMulti2 sets the Multi2 of the Multi1.
 func (m *Multi1) SetMulti2(v *Multi2) {
-	m.Call("setMulti2", v)
+	m.Call("setMulti2", v.Call("toArray"))
 }
 
 // GetColor gets the Color of the Multi1.
@@ -64,6 +51,19 @@ func (m *Multi1) GetHatType() Multi3_HatType {
 // SetHatType sets the HatType of the Multi1.
 func (m *Multi1) SetHatType(v Multi3_HatType) {
 	m.Call("setHatType", v)
+}
+
+// New creates a new Multi1.
+func (m *Multi1) New(multi2 *Multi2, color Multi2_Color, hatType Multi3_HatType) *Multi1 {
+	m = &Multi1{
+		Object: js.Global.Get("proto").Get("multitest").Get("Multi1").New([]interface{}{
+			multi2.Call("toArray"),
+			color,
+			hatType,
+		}),
+	}
+
+	return m
 }
 
 // Serialize marshals Multi1 to a slice of bytes.
