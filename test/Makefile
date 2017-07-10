@@ -19,4 +19,4 @@ regenerate:
 	go generate ./client/...
 
 test:
-	go run main.go
+	ginkgo .

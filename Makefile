@@ -6,5 +6,5 @@ regenerate:
 install:
 	cd protoc-gen-gopherjs && go install ./
 
-unittest:
+tests:
 	cd test && make regenerate && make test
