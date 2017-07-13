@@ -25,13 +25,14 @@ var _ = Describe("gRPC-Web Unit Tests", func() {
 	})
 
 	It("should pass", func() {
-		By("loading the test page", func() {
+		By("Loading the test page", func() {
 			Expect(page.Navigate("https://localhost:10000")).NotTo(HaveOccurred())
 			Expect(page).To(HaveURL("https://localhost:10000/"))
 		})
 
-		By("finding the number of failures", func() {
+		By("Finding the number of failures", func() {
 			Eventually(page.FirstByClass("failed")).Should(BeFound())
+			Eventually(page.FindByID("qunit-testresult").FindByClass("failed")).Should(BeFound())
 			failures, err := page.FindByID("qunit-testresult").FindByClass("failed").Text()
 			Expect(err).NotTo(HaveOccurred())
 			if failures == "0" {
