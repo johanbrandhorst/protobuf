@@ -2,11 +2,11 @@ package webdriver_test
 
 import (
 	"os/exec"
-	"syscall"
 	"testing"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gexec"
 	"github.com/sclevine/agouti"
 )
 
@@ -15,35 +15,50 @@ func TestTest(t *testing.T) {
 	RunSpecs(t, "Test Suite")
 }
 
-var testServer *exec.Cmd
+var testServer *gexec.Session
 var agoutiDriver *agouti.WebDriver
 
 var _ = BeforeSuite(func() {
-	testServer = exec.Command("go", "run", "./server/main.go")
-	testServer.Stderr = GinkgoWriter
-	testServer.Stdout = GinkgoWriter
-	// Set process group
-	testServer.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
-	Expect(testServer.Start()).NotTo(HaveOccurred())
+	var binPath string
+	By("Building the server", func() {
+		var err error
+		binPath, err = gexec.Build("./server/main.go")
+		Expect(err).NotTo(HaveOccurred())
+	})
 
-	agoutiDriver = agouti.ChromeDriver(
-	// Unfortunately headless doesn't seem to work quite yet,
-	// seems to lock up when trying to load the page.
-	// (tried Google Chrome 59.0.3071.115)
-	// https://developers.google.com/web/updates/2017/04/headless-chrome#drivers
-	//agouti.ChromeOptions("args", []string{
-	//	"--headless",
-	//	"--disable-gpu",
-	//	"--remote-debugging-port=9222",
-	//}),
-	)
-	Expect(agoutiDriver.Start()).NotTo(HaveOccurred())
+	By("Running the server", func() {
+		var err error
+		testServer, err = gexec.Start(exec.Command(binPath), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+	})
+
+	By("Starting the WebDriver", func() {
+		agoutiDriver = agouti.ChromeDriver(
+		// Unfortunately headless doesn't seem to work quite yet,
+		// seems lock up loading the page.
+		// (tried Google Chrome 59.0.3071.115)
+		// https://developers.google.com/web/updates/2017/04/headless-chrome#drivers
+		//agouti.ChromeOptions("args", []string{
+		//	"--headless",
+		//	"--disable-gpu",
+		//}),
+		)
+		Expect(agoutiDriver.Start()).NotTo(HaveOccurred())
+	})
 })
 
 var _ = AfterSuite(func() {
-	Expect(agoutiDriver.Stop()).NotTo(HaveOccurred())
-	pgid, err := syscall.Getpgid(testServer.Process.Pid)
-	Expect(err).NotTo(HaveOccurred())
-	Expect(syscall.Kill(-pgid, syscall.SIGINT)).NotTo(HaveOccurred())
-	testServer.Wait() // This will error, but that's expected
+	By("Stopping the WebDriver", func() {
+		Expect(agoutiDriver.Stop()).NotTo(HaveOccurred())
+	})
+
+	By("Stopping the server", func() {
+		testServer.Terminate()
+		testServer.Wait()
+		Expect(testServer).To(gexec.Exit())
+	})
+
+	By("Cleaning up built artifacts", func() {
+		gexec.CleanupBuildArtifacts()
+	})
 })
