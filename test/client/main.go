@@ -1,10 +1,16 @@
 package main
 
 import (
+	"context"
+	"fmt"
+
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/rusco/qunit"
 
+	"github.com/johanbrandhorst/protobuf/grpcweb"
+	"github.com/johanbrandhorst/protobuf/grpcweb/status"
 	"github.com/johanbrandhorst/protobuf/test/client/proto/test"
+	"github.com/johanbrandhorst/protobuf/test/shared"
 )
 
 //go:generate gopherjs build main.go -m -o html/index.js
@@ -171,4 +177,152 @@ func main() {
 		assert.Equal(req.HasIdNumber(), false, "HasIdNumber was false")
 	})
 
+	qunit.AsyncTest("Simple unary server call", func() interface{} {
+		c := test.NewTestServiceClient("https://" + shared.HTTP2Server)
+
+		go func() {
+			defer qunit.Start()
+
+			req := new(test.PingRequest).New(
+				"test", 1, 0, test.PingRequest_NONE, false, false, false, 0)
+			resp, err := c.Ping(context.Background(), req)
+			if err != nil {
+				st := status.FromError(err)
+				qunit.Ok(false, "Unexpected Ping error seen: "+st.Message)
+				return
+			}
+
+			qunit.Ok(true, "Request succeeded")
+			if resp.GetValue() != "test" {
+				qunit.Ok(false, fmt.Sprintf("Value was not as expected, was %q", resp.GetValue()))
+			}
+			if resp.GetCounter() != 1 {
+				qunit.Ok(false, fmt.Sprintf("Counter was not as expected, was %q", resp.GetCounter()))
+			}
+		}()
+
+		return nil
+	})
+
+	qunit.AsyncTest("Unary server call with metadata", func() interface{} {
+		c := test.NewTestServiceClient("https://" + shared.HTTP2Server)
+
+		go func() {
+			defer qunit.Start()
+
+			req := new(test.PingRequest).New(
+				"test", 1, 0, test.PingRequest_NONE, false, false, false, 0)
+			ctx := context.WithValue(
+				context.Background(), shared.ClientMDTestKey, shared.ClientMDTestValue)
+			resp, err := c.Ping(ctx, req)
+			if err != nil {
+				st := status.FromError(err)
+				qunit.Ok(false, "Unexpected Ping error seen: "+st.Message)
+				return
+			}
+
+			qunit.Ok(true, "Request succeeded")
+			if resp.GetValue() != "test" {
+				qunit.Ok(false, fmt.Sprintf("Value was not as expected, was %q", resp.GetValue()))
+			}
+			if resp.GetCounter() != 1 {
+				qunit.Ok(false, fmt.Sprintf("Counter was not as expected, was %q", resp.GetCounter()))
+			}
+		}()
+
+		return nil
+	})
+
+	qunit.AsyncTest("Unary server call expecting only headers", func() interface{} {
+		c := test.NewTestServiceClient("https://" + shared.HTTP2Server)
+
+		go func() {
+			defer qunit.Start()
+
+			req := new(test.PingRequest).New(
+				"test", 1, 0, test.PingRequest_NONE, false, true, false, 0)
+			headers, trailers := grpcweb.MD{}, grpcweb.MD{}
+			resp, err := c.Ping(context.Background(), req, grpcweb.Header(&headers), grpcweb.Trailer(&trailers))
+			if err != nil {
+				st := status.FromError(err)
+				qunit.Ok(false, "Unexpected Ping error seen: "+st.Message)
+				return
+			}
+
+			qunit.Ok(true, "Request succeeded")
+
+			if resp.GetValue() != "test" {
+				qunit.Ok(false, fmt.Sprintf("Value was not as expected, was %q", resp.GetValue()))
+			}
+			if resp.GetCounter() != 1 {
+				qunit.Ok(false, fmt.Sprintf("Counter was not as expected, was %q", resp.GetCounter()))
+			}
+
+			if len(headers.Get(shared.ServerMDTestKey1)) != 1 {
+				qunit.Ok(false, fmt.Sprintf("Size of Header 1 was not as expected, was %v", len(headers.Get(shared.ServerMDTestKey1))))
+			}
+			if headers.Get(shared.ServerMDTestKey1)[0] != shared.ServerMDTestValue1 {
+				qunit.Ok(false, fmt.Sprintf("Header 1 was not as expected, was %q", headers.Get(shared.ServerMDTestKey1)))
+			}
+			if len(headers.Get(shared.ServerMDTestKey2)) != 1 {
+				qunit.Ok(false, fmt.Sprintf("Size of Header 2 was not as expected, was %v", len(headers.Get(shared.ServerMDTestKey2))))
+			}
+			if headers.Get(shared.ServerMDTestKey2)[0] != shared.ServerMDTestValue2 {
+				qunit.Ok(false, fmt.Sprintf("Header 2 was not as expected, was %q", headers.Get(shared.ServerMDTestKey2)))
+			}
+
+			// Trailers always include the grpc-status, anything else is unexpected
+			if trailers.Len() > 1 {
+				qunit.Ok(false, fmt.Sprintf("Unexpected trailer provided, size of trailers was %d", trailers.Len()))
+			}
+		}()
+
+		return nil
+	})
+
+	qunit.AsyncTest("Unary server call expecting only trailers", func() interface{} {
+		c := test.NewTestServiceClient("https://" + shared.HTTP2Server)
+
+		go func() {
+			defer qunit.Start()
+
+			req := new(test.PingRequest).New(
+				"test", 1, 0, test.PingRequest_NONE, false, false, true, 0)
+			headers, trailers := grpcweb.MD{}, grpcweb.MD{}
+			resp, err := c.Ping(context.Background(), req, grpcweb.Header(&headers), grpcweb.Trailer(&trailers))
+			if err != nil {
+				st := status.FromError(err)
+				qunit.Ok(false, "Unexpected Ping error seen: "+st.Message)
+				return
+			}
+
+			qunit.Ok(true, "Request succeeded")
+
+			if resp.GetValue() != "test" {
+				qunit.Ok(false, fmt.Sprintf("Value was not as expected, was %q", resp.GetValue()))
+			}
+			if resp.GetCounter() != 1 {
+				qunit.Ok(false, fmt.Sprintf("Counter was not as expected, was %q", resp.GetCounter()))
+			}
+			if len(trailers.Get(shared.ServerTrailerTestKey1)) != 1 {
+				qunit.Ok(false, fmt.Sprintf("Size of Trailer 1 was not as expected, was %v", len(trailers.Get(shared.ServerTrailerTestKey1))))
+			}
+			if trailers.Get(shared.ServerTrailerTestKey1)[0] != shared.ServerMDTestValue1 {
+				qunit.Ok(false, fmt.Sprintf("Trailer 1 was not as expected, was %q", trailers.Get(shared.ServerTrailerTestKey1)))
+			}
+			if len(trailers.Get(shared.ServerTrailerTestKey2)) != 1 {
+				qunit.Ok(false, fmt.Sprintf("Size of Trailer 2 was not as expected, was %v", len(trailers.Get(shared.ServerTrailerTestKey2))))
+			}
+			if trailers.Get(shared.ServerTrailerTestKey2)[0] != shared.ServerMDTestValue2 {
+				qunit.Ok(false, fmt.Sprintf("Trailer 2 was not as expected, was %q", trailers.Get(shared.ServerTrailerTestKey2)))
+			}
+
+			// Headers always include the content-type, anything else is unexpected
+			if headers.Len() > 1 {
+				qunit.Ok(false, fmt.Sprintf("Unexpected header provided, size of headers was %d", headers.Len()))
+			}
+		}()
+
+		return nil
+	})
 }
