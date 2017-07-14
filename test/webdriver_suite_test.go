@@ -34,14 +34,25 @@ var _ = BeforeSuite(func() {
 
 	By("Starting the WebDriver", func() {
 		agoutiDriver = agouti.ChromeDriver(
+			agouti.Desired(agouti.Capabilities{
+				"loggingPrefs": map[string]string{
+					"browser": "INFO",
+				},
+				"browserName": "chrome",
+			}),
 		// Unfortunately headless doesn't seem to work quite yet,
 		// seems lock up loading the page.
 		// (tried Google Chrome 59.0.3071.115)
 		// https://developers.google.com/web/updates/2017/04/headless-chrome#drivers
-		//agouti.ChromeOptions("args", []string{
-		//	"--headless",
-		//	"--disable-gpu",
-		//}),
+		/*agouti.ChromeOptions(
+			"args", []string{
+				"--headless",
+				"--disable-gpu",
+			},
+		),
+		agouti.ChromeOptions(
+			"binary", "/usr/bin/google-chrome-stable",
+		),*/
 		)
 		Expect(agoutiDriver.Start()).NotTo(HaveOccurred())
 	})

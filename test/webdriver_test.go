@@ -9,6 +9,8 @@ import (
 	"github.com/sclevine/agouti"
 	"github.com/sclevine/agouti/api"
 	. "github.com/sclevine/agouti/matchers"
+
+	"github.com/johanbrandhorst/protobuf/test/shared"
 )
 
 var _ = Describe("gRPC-Web Unit Tests", func() {
@@ -26,8 +28,7 @@ var _ = Describe("gRPC-Web Unit Tests", func() {
 
 	It("should pass", func() {
 		By("Loading the test page", func() {
-			Expect(page.Navigate("https://localhost:10000")).NotTo(HaveOccurred())
-			Expect(page).To(HaveURL("https://localhost:10000/"))
+			Expect(page.Navigate("https://" + shared.GopherJSServer)).NotTo(HaveOccurred())
 		})
 
 		By("Finding the number of failures", func() {
@@ -38,6 +39,14 @@ var _ = Describe("gRPC-Web Unit Tests", func() {
 			if failures == "0" {
 				return
 			}
+
+			logs, err := page.ReadAllLogs("browser")
+			Expect(err).NotTo(HaveOccurred())
+			fmt.Fprintln(GinkgoWriter, "Console output ------------------------------------")
+			for _, log := range logs {
+				fmt.Fprintf(GinkgoWriter, "[%s][%s]\t%s\n", log.Time.Format("15:04:05.000"), log.Level, log.Message)
+			}
+			fmt.Fprintln(GinkgoWriter, "Console output ------------------------------------")
 
 			// We have at least one failure - lets compile an error message
 			Eventually(page.FindByID(

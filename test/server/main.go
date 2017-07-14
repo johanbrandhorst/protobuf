@@ -18,6 +18,7 @@ import (
 	"google.golang.org/grpc/transport"
 
 	testproto "github.com/johanbrandhorst/protobuf/test/server/proto/test"
+	"github.com/johanbrandhorst/protobuf/test/shared"
 )
 
 func main() {
@@ -37,24 +38,22 @@ func main() {
 	}
 
 	http1Server := http.Server{
-		Addr:    ":9090",
+		Addr:    shared.HTTP1Server,
 		Handler: http.HandlerFunc(handler),
 	}
 	http1Server.TLSNextProto = map[string]func(*http.Server, *tls.Conn, http.Handler){} // Disable HTTP2
 	http1EmptyServer := http.Server{
-		Addr: ":9095",
-		Handler: http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-			emptyHandler(res, req)
-		}),
+		Addr:    shared.EmptyHTTP1Server,
+		Handler: http.HandlerFunc(emptyHandler),
 	}
 	http1EmptyServer.TLSNextProto = map[string]func(*http.Server, *tls.Conn, http.Handler){} // Disable HTTP2
 
 	http2Server := http.Server{
-		Addr:    ":9100",
+		Addr:    shared.HTTP2Server,
 		Handler: http.HandlerFunc(handler),
 	}
 	http2EmptyServer := http.Server{
-		Addr:    ":9105",
+		Addr:    shared.EmptyHTTP2Server,
 		Handler: http.HandlerFunc(emptyHandler),
 	}
 
@@ -90,7 +89,7 @@ func main() {
 
 	// Host the GopherJS code
 	httpsSrv := &http.Server{
-		Addr:    ":10000",
+		Addr:    shared.GopherJSServer,
 		Handler: http.FileServer(http.Dir("./client/html")),
 	}
 	if err := httpsSrv.ListenAndServeTLS("./insecure/localhost.crt", "./insecure/localhost.key"); err != nil {
@@ -110,17 +109,33 @@ func (s *testSrv) PingEmpty(ctx context.Context, _ *empty.Empty) (*testproto.Pin
 func (s *testSrv) Ping(ctx context.Context, ping *testproto.PingRequest) (*testproto.PingResponse, error) {
 	if ping.GetCheckMetadata() {
 		md, ok := metadata.FromContext(ctx)
-		if !ok || md["headertestkey1"][0] != "ClientValue1" {
+		if !ok || md[shared.ClientMDTestKey][0] != shared.ClientMDTestValue {
 			return nil, grpc.Errorf(codes.InvalidArgument, "Metadata was invalid")
 		}
 	}
 	if ping.GetSendHeaders() {
-		grpc.SendHeader(ctx, metadata.Pairs("HeaderTestKey1", "ServerValue1", "HeaderTestKey2", "ServerValue2"))
+		grpc.SendHeader(
+			ctx,
+			metadata.Pairs(
+				shared.ServerMDTestKey1,
+				shared.ServerMDTestValue1,
+				shared.ServerMDTestKey2,
+				shared.ServerMDTestValue2,
+			),
+		)
 	}
 	if ping.GetSendTrailers() {
-		grpc.SetTrailer(ctx, metadata.Pairs("TrailerTestKey1", "ServerValue1", "TrailerTestKey2", "ServerValue2"))
+		grpc.SetTrailer(
+			ctx,
+			metadata.Pairs(
+				shared.ServerTrailerTestKey1,
+				shared.ServerMDTestValue1,
+				shared.ServerTrailerTestKey2,
+				shared.ServerMDTestValue2,
+			),
+		)
 	}
-	return &testproto.PingResponse{Value: ping.Value, Counter: 252}, nil
+	return &testproto.PingResponse{Value: ping.GetValue(), Counter: ping.GetResponseCount()}, nil
 }
 
 func (s *testSrv) PingError(ctx context.Context, ping *testproto.PingRequest) (*empty.Empty, error) {
