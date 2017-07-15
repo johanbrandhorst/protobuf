@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/rusco/qunit"
@@ -13,11 +14,22 @@ import (
 	"github.com/johanbrandhorst/protobuf/grpcweb/status"
 	"github.com/johanbrandhorst/protobuf/test/client/proto/test"
 	"github.com/johanbrandhorst/protobuf/test/shared"
+	"google.golang.org/grpc/codes"
 )
 
 //go:generate gopherjs build main.go -m -o html/index.js
 
+func recoverer() {
+	e := recover()
+	if e == nil {
+		return
+	}
+
+	qunit.Ok(false, fmt.Sprintf("Saw panic: %v", e))
+}
+
 func main() {
+	defer recoverer() // recovers any panics and fails tests
 	qunit.Module("grpcweb")
 
 	qunit.Test("Simple type factory", func(assert qunit.QUnitAssert) {
@@ -179,10 +191,11 @@ func main() {
 		assert.Equal(req.HasIdNumber(), false, "HasIdNumber was false")
 	})
 
-	qunit.AsyncTest("Simple unary server call", func() interface{} {
+	qunit.AsyncTest("Unary server call", func() interface{} {
 		c := test.NewTestServiceClient("https://" + shared.HTTP2Server)
 
 		go func() {
+			defer recoverer() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			req := new(test.PingRequest).New(
@@ -210,6 +223,7 @@ func main() {
 		c := test.NewTestServiceClient("https://" + shared.HTTP2Server)
 
 		go func() {
+			defer recoverer() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			req := new(test.PingRequest).New(
@@ -238,6 +252,7 @@ func main() {
 		c := test.NewTestServiceClient("https://" + shared.HTTP2Server)
 
 		go func() {
+			defer recoverer() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			req := new(test.PingRequest).New(
@@ -293,6 +308,7 @@ func main() {
 		c := test.NewTestServiceClient("https://" + shared.HTTP2Server)
 
 		go func() {
+			defer recoverer() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			req := new(test.PingRequest).New(
@@ -340,6 +356,7 @@ func main() {
 		c := test.NewTestServiceClient("https://" + shared.HTTP2Server)
 
 		go func() {
+			defer recoverer() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			req := new(test.PingRequest).New(
@@ -378,6 +395,108 @@ func main() {
 			if headers.Len() > 1 {
 				qunit.Ok(false, fmt.Sprintf("Unexpected header provided, size of headers was %d", headers.Len()))
 			}
+		}()
+
+		return nil
+	})
+
+	qunit.AsyncTest("Unary server call returning gRPC error", func() interface{} {
+		c := test.NewTestServiceClient("https://" + shared.HTTP2Server)
+
+		go func() {
+			defer recoverer() // recovers any panics and fails tests
+			defer qunit.Start()
+
+			req := new(test.PingRequest).New(
+				"", 0, uint32(codes.InvalidArgument), test.PingRequest_CODE, false, false, false, 0)
+			_, err := c.PingError(context.Background(), req)
+			if err == nil {
+				qunit.Ok(false, "Expected error, returned nil")
+				return
+			}
+
+			st := status.FromError(err)
+			if st.Code != codes.InvalidArgument {
+				qunit.Ok(false, fmt.Sprintf("Unexpected code returned, was %s", st.Code))
+			}
+
+			qunit.Ok(true, "Error was as expected")
+		}()
+
+		return nil
+	})
+
+	qunit.AsyncTest("Unary server call returning network error", func() interface{} {
+		c := test.NewTestServiceClient("https://" + shared.HTTP2Server)
+
+		go func() {
+			defer recoverer() // recovers any panics and fails tests
+			defer qunit.Start()
+
+			req := new(test.PingRequest).New(
+				"", 0, 0, test.PingRequest_DROP, false, false, false, 0)
+			_, err := c.PingError(context.Background(), req)
+			if err == nil {
+				qunit.Ok(false, "Expected error, returned nil")
+				return
+			}
+
+			st := status.FromError(err)
+			if st.Code != codes.Internal {
+				qunit.Ok(false, fmt.Sprintf("Unexpected code returned, was %s", st.Code))
+			}
+			if st.Message != "Response closed without grpc-status (Headers only)" {
+				qunit.Ok(false, fmt.Sprintf("Unexpected message returned, was %q", st.Message))
+			}
+
+			qunit.Ok(true, "Error was as expected")
+		}()
+
+		return nil
+	})
+
+	qunit.AsyncTest("Streaming server call", func() interface{} {
+		c := test.NewTestServiceClient("https://" + shared.HTTP2Server)
+
+		go func() {
+			defer recoverer() // recovers any panics and fails tests
+			defer qunit.Start()
+
+			req := new(test.PingRequest).New(
+				"test", 1, 0, test.PingRequest_NONE, false, false, false, 0)
+			srv, err := c.PingList(context.Background(), req)
+			if err != nil {
+				st := status.FromError(err)
+				qunit.Ok(false, "Unexpected PingList error seen: "+st.Message)
+				return
+			}
+
+			var pings []*test.PingResponse
+			for {
+				ping, err := srv.Recv()
+				if err != nil {
+					if err == io.EOF {
+						qunit.Ok(true, "Request succeeded")
+						break
+					}
+
+					st := status.FromError(err)
+					qunit.Ok(false, "Unexpected Recv error seen:"+st.Message)
+				}
+
+				pings = append(pings, ping)
+			}
+
+			for i, ping := range pings {
+				if int(ping.GetCounter()) != i {
+					qunit.Ok(false, fmt.Sprintf("Unexpected count in ping #%d, was %d", i, ping.GetCounter()))
+				}
+				if ping.GetValue() != fmt.Sprintf(`test %d`, i) {
+					qunit.Ok(false, fmt.Sprintf("Unexpected value in ping #%d, was %q", i, ping.GetValue()))
+				}
+			}
+
+			qunit.Ok(true, "Request succeeded")
 		}()
 
 		return nil
