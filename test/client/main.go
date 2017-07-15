@@ -462,8 +462,9 @@ func main() {
 			defer recoverer() // recovers any panics and fails tests
 			defer qunit.Start()
 
+			// Send 10 messages with 10ms wait before each
 			req := new(test.PingRequest).New(
-				"test", 1, 0, test.PingRequest_NONE, false, false, false, 0)
+				"test", 10, 0, test.PingRequest_NONE, false, false, false, 10)
 			srv, err := c.PingList(context.Background(), req)
 			if err != nil {
 				st := status.FromError(err)
@@ -476,7 +477,6 @@ func main() {
 				ping, err := srv.Recv()
 				if err != nil {
 					if err == io.EOF {
-						qunit.Ok(true, "Request succeeded")
 						break
 					}
 
