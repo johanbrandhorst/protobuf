@@ -60,9 +60,15 @@ func (b *BrowserHeaders) Append(key, value string) {
 	b.Call("append", key, value)
 }
 
-// Get gets all values associated with key.
-func (b *BrowserHeaders) Get(key string) []string {
-	return b.Call("get", key).Interface().([]string)
+// Get gets all values associated with key. Mutating
+// the returned slice will not modify the contents of the key.
+func (b *BrowserHeaders) Get(key string) (value []string) {
+	// JavaScript Array types are converted to `[]interface{}`
+	// so this copies the values into a separate slice
+	b.Call("get", key).Call("forEach", func(v string) {
+		value = append(value, v)
+	})
+	return value
 }
 
 // Delete deletes the key.
