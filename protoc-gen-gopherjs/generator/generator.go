@@ -80,6 +80,12 @@ func RegisterPlugin(p Plugin) {
 	plugins = append(plugins, p)
 }
 
+// generatedCodeVersion indicates a version of the generated code.
+// It is incremented whenever an incompatibility between the generated code and
+// the jspb package is introduced; the generated code references
+// a constant, jspb.JspbPackageIsVersionN (where N is generatedCodeVersion).
+const generatedCodeVersion = 1
+
 // Each type we import as a protocol buffer (other than FileDescriptorProto) needs
 // a pointer to the FileDescriptorProto that represents it.  These types achieve that
 // wrapping by placing each Proto inside a struct with the pointer to its File. The
@@ -936,6 +942,8 @@ func (g *Generator) generate(file *FileDescriptor) {
 	g.Buffer = new(bytes.Buffer)
 	g.generateHeader()
 	g.generateImports()
+	g.generateVersionAssertion()
+
 	if !g.writeOutput {
 		return
 	}
@@ -1074,6 +1082,7 @@ func (g *Generator) generateImports() {
 		g.P("import ", pname, " ", strconv.Quote(importPath))
 	}
 	g.P()
+
 	// TODO: may need to worry about uniqueness across plugins
 	for _, p := range plugins {
 		p.GenerateImports(g.file)
@@ -1101,6 +1110,14 @@ func (g *Generator) generateImported(id *ImportedDescriptor) {
 	g.P("// ", sn, " from public import ", filename)
 	g.usedPackages[df.PackageName()] = true
 
+	g.P()
+}
+
+func (g *Generator) generateVersionAssertion() {
+	// Assert version compatibility.
+	g.P("// This is a compile-time assertion to ensure that this generated file")
+	g.P("// is compatible with the jspb package it is being compiled against.")
+	g.P("const _ = ", g.Pkg["jspb"], ".JspbPackageIsVersion", generatedCodeVersion)
 	g.P()
 }
 
