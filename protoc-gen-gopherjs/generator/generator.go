@@ -1857,7 +1857,7 @@ func (g *Generator) getMessageReference(typeName string) string {
 
 func (g *Generator) addSerialize(typeName string) {
 	g.P(`// Serialize marshals `, typeName, ` to a slice of bytes.`)
-	g.P(`func (m *` + typeName + `) Serialize() ([]byte, error) {`)
+	g.P(`func (m *` + typeName + `) Serialize() []byte {`)
 	g.In()
 	g.P(`return jspb.Serialize(m)`)
 	g.Out()
