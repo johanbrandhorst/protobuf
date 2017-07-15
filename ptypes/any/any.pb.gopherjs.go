@@ -15,6 +15,10 @@ package any
 import js "github.com/gopherjs/gopherjs/js"
 import jspb "github.com/johanbrandhorst/protobuf/jspb"
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the jspb package it is being compiled against.
+const _ = jspb.JspbPackageIsVersion1
+
 // `Any` contains an arbitrary serialized protocol buffer message along with a
 // URL that describes the type of the serialized message.
 //
@@ -191,7 +195,7 @@ func (m *Any) New(typeUrl string, value []byte) *Any {
 }
 
 // Serialize marshals Any to a slice of bytes.
-func (m *Any) Serialize() ([]byte, error) {
+func (m *Any) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 

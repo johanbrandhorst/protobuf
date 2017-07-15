@@ -22,9 +22,12 @@ import _ "github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/testdata/multi
 
 import (
 	context "context"
-
 	grpcweb "github.com/johanbrandhorst/protobuf/grpcweb"
 )
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the jspb package it is being compiled against.
+const _ = jspb.JspbPackageIsVersion1
 
 type HatType int
 
@@ -288,7 +291,7 @@ func (m *Request) New(key []int64, hue Request_Color, hat HatType, deadline floa
 }
 
 // Serialize marshals Request to a slice of bytes.
-func (m *Request) Serialize() ([]byte, error) {
+func (m *Request) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -390,7 +393,7 @@ func (m *Reply) New(found []*Reply_Entry, compactKeys []int32) *Reply {
 }
 
 // Serialize marshals Reply to a slice of bytes.
-func (m *Reply) Serialize() ([]byte, error) {
+func (m *Reply) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -454,7 +457,7 @@ func (m *Reply_Entry) New(keyThatNeeds1234camelCasIng int64, value int64, MyFiel
 }
 
 // Serialize marshals Reply_Entry to a slice of bytes.
-func (m *Reply_Entry) Serialize() ([]byte, error) {
+func (m *Reply_Entry) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -496,7 +499,7 @@ func (m *OtherBase) New(name string) *OtherBase {
 }
 
 // Serialize marshals OtherBase to a slice of bytes.
-func (m *OtherBase) Serialize() ([]byte, error) {
+func (m *OtherBase) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -538,7 +541,7 @@ func (m *OtherReplyExtensions) New(key int32) *OtherReplyExtensions {
 }
 
 // Serialize marshals OtherReplyExtensions to a slice of bytes.
-func (m *OtherReplyExtensions) Serialize() ([]byte, error) {
+func (m *OtherReplyExtensions) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -894,7 +897,7 @@ func (m *Communique) New(makeMeCry bool, union_thing isCommunique_UnionThing) *C
 }
 
 // Serialize marshals Communique to a slice of bytes.
-func (m *Communique) Serialize() ([]byte, error) {
+func (m *Communique) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -924,7 +927,7 @@ func (m *Communique_Delta) New() *Communique_Delta {
 }
 
 // Serialize marshals Communique_Delta to a slice of bytes.
-func (m *Communique_Delta) Serialize() ([]byte, error) {
+func (m *Communique_Delta) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -968,10 +971,7 @@ func NewTestServiceClient(hostname string, opts ...grpcweb.DialOption) TestServi
 }
 
 func (c *testServiceClient) Unary(ctx context.Context, in *Request, opts ...grpcweb.CallOption) (*Reply, error) {
-	req, err := in.Serialize()
-	if err != nil {
-		return nil, err
-	}
+	req := in.Serialize()
 
 	resp, err := c.client.RPCCall(ctx, "Unary", req, opts...)
 	if err != nil {
@@ -982,10 +982,7 @@ func (c *testServiceClient) Unary(ctx context.Context, in *Request, opts ...grpc
 }
 
 func (c *testServiceClient) ServerStreaming(ctx context.Context, in *Request, opts ...grpcweb.CallOption) (TestService_ServerStreamingClient, error) {
-	req, err := in.Serialize()
-	if err != nil {
-		return nil, err
-	}
+	req := in.Serialize()
 
 	srv, err := c.client.Stream(ctx, "ServerStreaming", req, opts...)
 	if err != nil {

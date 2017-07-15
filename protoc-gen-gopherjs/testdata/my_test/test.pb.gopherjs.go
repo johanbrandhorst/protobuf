@@ -22,6 +22,10 @@ import js "github.com/gopherjs/gopherjs/js"
 import jspb "github.com/johanbrandhorst/protobuf/jspb"
 import multitest2 "github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/testdata/multi"
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the jspb package it is being compiled against.
+const _ = jspb.JspbPackageIsVersion1
+
 type HatType int
 
 const (
@@ -324,7 +328,7 @@ func (m *Request) New(key []int64, hue Request_Color, hat HatType, deadline floa
 }
 
 // Serialize marshals Request to a slice of bytes.
-func (m *Request) Serialize() ([]byte, error) {
+func (m *Request) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -426,7 +430,7 @@ func (m *Reply) New(found []*Reply_Entry, compactKeys []int32) *Reply {
 }
 
 // Serialize marshals Reply to a slice of bytes.
-func (m *Reply) Serialize() ([]byte, error) {
+func (m *Reply) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -490,7 +494,7 @@ func (m *Reply_Entry) New(keyThatNeeds1234camelCasIng int64, value int64, MyFiel
 }
 
 // Serialize marshals Reply_Entry to a slice of bytes.
-func (m *Reply_Entry) Serialize() ([]byte, error) {
+func (m *Reply_Entry) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -532,7 +536,7 @@ func (m *OtherBase) New(name string) *OtherBase {
 }
 
 // Serialize marshals OtherBase to a slice of bytes.
-func (m *OtherBase) Serialize() ([]byte, error) {
+func (m *OtherBase) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -574,7 +578,7 @@ func (m *OtherReplyExtensions) New(key int32) *OtherReplyExtensions {
 }
 
 // Serialize marshals OtherReplyExtensions to a slice of bytes.
-func (m *OtherReplyExtensions) Serialize() ([]byte, error) {
+func (m *OtherReplyExtensions) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -930,7 +934,7 @@ func (m *Communique) New(makeMeCry bool, union isCommunique_Union) *Communique {
 }
 
 // Serialize marshals Communique to a slice of bytes.
-func (m *Communique) Serialize() ([]byte, error) {
+func (m *Communique) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -960,7 +964,7 @@ func (m *Communique_Delta) New() *Communique_Delta {
 }
 
 // Serialize marshals Communique_Delta to a slice of bytes.
-func (m *Communique_Delta) Serialize() ([]byte, error) {
+func (m *Communique_Delta) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 

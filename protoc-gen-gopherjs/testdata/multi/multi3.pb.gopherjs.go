@@ -6,6 +6,10 @@ package multitest
 import js "github.com/gopherjs/gopherjs/js"
 import jspb "github.com/johanbrandhorst/protobuf/jspb"
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the jspb package it is being compiled against.
+const _ = jspb.JspbPackageIsVersion1
+
 type Multi3_HatType int
 
 const (
@@ -52,7 +56,7 @@ func (m *Multi3) New(hatType Multi3_HatType) *Multi3 {
 }
 
 // Serialize marshals Multi3 to a slice of bytes.
-func (m *Multi3) Serialize() ([]byte, error) {
+func (m *Multi3) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 

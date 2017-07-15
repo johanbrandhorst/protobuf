@@ -6,6 +6,10 @@ package multitest
 import js "github.com/gopherjs/gopherjs/js"
 import jspb "github.com/johanbrandhorst/protobuf/jspb"
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the jspb package it is being compiled against.
+const _ = jspb.JspbPackageIsVersion1
+
 type Multi2_Color int
 
 const (
@@ -66,7 +70,7 @@ func (m *Multi2) New(requiredValue int32, color Multi2_Color) *Multi2 {
 }
 
 // Serialize marshals Multi2 to a slice of bytes.
-func (m *Multi2) Serialize() ([]byte, error) {
+func (m *Multi2) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 

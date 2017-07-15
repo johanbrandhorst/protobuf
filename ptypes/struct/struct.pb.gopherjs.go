@@ -17,6 +17,10 @@ package structpb
 import js "github.com/gopherjs/gopherjs/js"
 import jspb "github.com/johanbrandhorst/protobuf/jspb"
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the jspb package it is being compiled against.
+const _ = jspb.JspbPackageIsVersion1
+
 // `NullValue` is a singleton enumeration to represent the null value for the
 // `Value` type union.
 //
@@ -96,7 +100,7 @@ func (m *Struct) New(fields map[string]*Value) *Struct {
 }
 
 // Serialize marshals Struct to a slice of bytes.
-func (m *Struct) Serialize() ([]byte, error) {
+func (m *Struct) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -382,7 +386,7 @@ func (m *Value) New(kind isValue_Kind) *Value {
 }
 
 // Serialize marshals Value to a slice of bytes.
-func (m *Value) Serialize() ([]byte, error) {
+func (m *Value) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
@@ -459,7 +463,7 @@ func (m *ListValue) New(values []*Value) *ListValue {
 }
 
 // Serialize marshals ListValue to a slice of bytes.
-func (m *ListValue) Serialize() ([]byte, error) {
+func (m *ListValue) Serialize() []byte {
 	return jspb.Serialize(m)
 }
 
