@@ -28,6 +28,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 
+	"github.com/johanbrandhorst/protobuf/grpcweb/browserheaders"
 	"github.com/johanbrandhorst/protobuf/grpcweb/status"
 )
 
@@ -124,9 +125,9 @@ func invoke(ctx context.Context, host, service, method string, req []byte, onMsg
 	methodDesc := newMethodDescriptor(newService(service), method, newResponseType())
 
 	c := &callInfo{}
-	rawOnEnd := func(code int, msg string, trailers *browserHeaders) {
-		s := status.New(codes.Code(code), msg, trailers.headers)
-		c.trailerMD = trailers.headers
+	rawOnEnd := func(code int, msg string, trailers *browserheaders.BrowserHeaders) {
+		s := status.New(codes.Code(code), msg, trailers)
+		c.trailers = trailers
 
 		// Perform CallOptions required after call
 		for _, o := range opts {
@@ -135,12 +136,12 @@ func invoke(ctx context.Context, host, service, method string, req []byte, onMsg
 
 		onEnd(s)
 	}
-	onHeaders := func(headers *browserHeaders) {
-		c.headerMD = headers.headers
+	onHeaders := func(headers *browserheaders.BrowserHeaders) {
+		c.headers = headers
 	}
 
-	md, _ := metadata.FromContext(ctx)
-	props := newProperties(host, false, newRequest(req), newBrowserHeaders(md), onHeaders, onMsg, rawOnEnd)
+	md, _ := metadata.FromOutgoingContext(ctx)
+	props := newProperties(host, false, newRequest(req), browserheaders.New(md), onHeaders, onMsg, rawOnEnd)
 
 	// Recover any thrown JS errors
 	defer func() {
