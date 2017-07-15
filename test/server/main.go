@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/golang/protobuf/ptypes/empty"
@@ -109,7 +110,8 @@ func (s *testSrv) PingEmpty(ctx context.Context, _ *empty.Empty) (*testproto.Pin
 func (s *testSrv) Ping(ctx context.Context, ping *testproto.PingRequest) (*testproto.PingResponse, error) {
 	if ping.GetCheckMetadata() {
 		md, ok := metadata.FromContext(ctx)
-		if !ok || md[shared.ClientMDTestKey][0] != shared.ClientMDTestValue {
+		if !ok || len(md[strings.ToLower(shared.ClientMDTestKey)]) == 0 ||
+			md[strings.ToLower(shared.ClientMDTestKey)][0] != shared.ClientMDTestValue {
 			return nil, grpc.Errorf(codes.InvalidArgument, "Metadata was invalid")
 		}
 	}
