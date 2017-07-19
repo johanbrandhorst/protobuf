@@ -15,8 +15,34 @@ func TestTest(t *testing.T) {
 	RunSpecs(t, "Test Suite")
 }
 
-var testServer *gexec.Session
-var agoutiDriver *agouti.WebDriver
+var (
+	testServer   *gexec.Session
+	chromeDriver = agouti.ChromeDriver(
+		agouti.Desired(agouti.Capabilities{
+			"loggingPrefs": map[string]string{
+				"browser": "INFO",
+			},
+			"browserName": "chrome",
+		}),
+		// Unfortunately headless doesn't seem to work quite yet,
+		// seems lock up loading the page.
+		// (tried Google Chrome 59.0.3071.115)
+		// https://developers.google.com/web/updates/2017/04/headless-chrome#drivers
+		/*agouti.ChromeOptions(
+			"args", []string{
+				"--headless",
+				"--disable-gpu",
+			},
+		),
+		agouti.ChromeOptions(
+			"binary", "/usr/bin/google-chrome-stable",
+		),*/
+	)
+	seleniumDriver = agouti.Selenium(
+		agouti.Browser("firefox"),
+		agouti.Desired(agouti.NewCapabilities("acceptInsecureCerts")),
+	)
+)
 
 var _ = BeforeSuite(func() {
 	var binPath string
@@ -32,35 +58,16 @@ var _ = BeforeSuite(func() {
 		Expect(err).NotTo(HaveOccurred())
 	})
 
-	By("Starting the WebDriver", func() {
-		agoutiDriver = agouti.ChromeDriver(
-			agouti.Desired(agouti.Capabilities{
-				"loggingPrefs": map[string]string{
-					"browser": "INFO",
-				},
-				"browserName": "chrome",
-			}),
-		// Unfortunately headless doesn't seem to work quite yet,
-		// seems lock up loading the page.
-		// (tried Google Chrome 59.0.3071.115)
-		// https://developers.google.com/web/updates/2017/04/headless-chrome#drivers
-		/*agouti.ChromeOptions(
-			"args", []string{
-				"--headless",
-				"--disable-gpu",
-			},
-		),
-		agouti.ChromeOptions(
-			"binary", "/usr/bin/google-chrome-stable",
-		),*/
-		)
-		Expect(agoutiDriver.Start()).NotTo(HaveOccurred())
+	By("Starting the WebDrivers", func() {
+		Expect(chromeDriver.Start()).NotTo(HaveOccurred())
+		Expect(seleniumDriver.Start()).NotTo(HaveOccurred())
 	})
 })
 
 var _ = AfterSuite(func() {
-	By("Stopping the WebDriver", func() {
-		Expect(agoutiDriver.Stop()).NotTo(HaveOccurred())
+	By("Stopping the WebDrivers", func() {
+		Expect(chromeDriver.Stop()).NotTo(HaveOccurred())
+		Expect(seleniumDriver.Stop()).NotTo(HaveOccurred())
 	})
 
 	By("Stopping the server", func() {
