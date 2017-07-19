@@ -119,23 +119,15 @@ func (s *testSrv) Ping(ctx context.Context, ping *testproto.PingRequest) (*testp
 		grpc.SendHeader(
 			ctx,
 			metadata.Pairs(
-				shared.ServerMDTestKey1,
-				shared.ServerMDTestValue1,
-				shared.ServerMDTestKey2,
-				shared.ServerMDTestValue2,
-			),
-		)
+				shared.ServerMDTestKey1, shared.ServerMDTestValue1,
+				shared.ServerMDTestKey2, shared.ServerMDTestValue2))
 	}
 	if ping.GetSendTrailers() {
 		grpc.SetTrailer(
 			ctx,
 			metadata.Pairs(
-				shared.ServerTrailerTestKey1,
-				shared.ServerMDTestValue1,
-				shared.ServerTrailerTestKey2,
-				shared.ServerMDTestValue2,
-			),
-		)
+				shared.ServerTrailerTestKey1, shared.ServerMDTestValue1,
+				shared.ServerTrailerTestKey2, shared.ServerMDTestValue2))
 	}
 	return &testproto.PingResponse{Value: ping.GetValue(), Counter: ping.GetResponseCount()}, nil
 }
@@ -148,20 +140,41 @@ func (s *testSrv) PingError(ctx context.Context, ping *testproto.PingRequest) (*
 
 	}
 	if ping.GetSendHeaders() {
-		grpc.SendHeader(ctx, metadata.Pairs("HeaderTestKey1", "ServerValue1", "HeaderTestKey2", "ServerValue2"))
+		grpc.SendHeader(
+			ctx,
+			metadata.Pairs(
+				shared.ServerMDTestKey1, shared.ServerMDTestValue1,
+				shared.ServerMDTestKey2, shared.ServerMDTestValue2))
 	}
 	if ping.GetSendTrailers() {
-		grpc.SetTrailer(ctx, metadata.Pairs("TrailerTestKey1", "ServerValue1", "TrailerTestKey2", "ServerValue2"))
+		grpc.SetTrailer(
+			ctx,
+			metadata.Pairs(
+				shared.ServerTrailerTestKey1, shared.ServerMDTestValue1,
+				shared.ServerTrailerTestKey2, shared.ServerMDTestValue2))
 	}
 	return nil, grpc.Errorf(codes.Code(ping.ErrorCodeReturned), "Intentionally returning error for PingError")
 }
 
 func (s *testSrv) PingList(ping *testproto.PingRequest, stream testproto.TestService_PingListServer) error {
+	if ping.GetCheckMetadata() {
+		md, ok := metadata.FromContext(stream.Context())
+		if !ok || len(md[strings.ToLower(shared.ClientMDTestKey)]) == 0 ||
+			md[strings.ToLower(shared.ClientMDTestKey)][0] != shared.ClientMDTestValue {
+			return grpc.Errorf(codes.InvalidArgument, "Metadata was invalid")
+		}
+	}
 	if ping.GetSendHeaders() {
-		stream.SendHeader(metadata.Pairs("HeaderTestKey1", "ServerValue1", "HeaderTestKey2", "ServerValue2"))
+		stream.SendHeader(
+			metadata.Pairs(
+				shared.ServerMDTestKey1, shared.ServerMDTestValue1,
+				shared.ServerMDTestKey2, shared.ServerMDTestValue2))
 	}
 	if ping.GetSendTrailers() {
-		stream.SetTrailer(metadata.Pairs("TrailerTestKey1", "ServerValue1", "TrailerTestKey2", "ServerValue2"))
+		stream.SetTrailer(
+			metadata.Pairs(
+				shared.ServerTrailerTestKey1, shared.ServerMDTestValue1,
+				shared.ServerTrailerTestKey2, shared.ServerMDTestValue2))
 	}
 	if ping.FailureType == testproto.PingRequest_DROP {
 		t, _ := transport.StreamFromContext(stream.Context())
