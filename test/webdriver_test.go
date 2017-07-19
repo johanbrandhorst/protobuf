@@ -40,7 +40,7 @@ func browserTest(browserName string, newPage pageFunc) {
 			})
 
 			By("Finding the number of failures", func() {
-				Eventually(page.FirstByClass("failed")).Should(BeFound())
+				Eventually(page.FirstByClass("failed"), 2).Should(BeFound())
 				Eventually(page.FindByID("qunit-testresult").FindByClass("failed")).Should(BeFound())
 				failures, err := page.FindByID("qunit-testresult").FindByClass("failed").Text()
 				Expect(err).NotTo(HaveOccurred())
