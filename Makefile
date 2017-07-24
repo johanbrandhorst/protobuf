@@ -8,3 +8,6 @@ install:
 
 tests:
 	cd test && make regenerate && make test
+
+rebuild:
+	cd grpcweb/grpcwebjs && make build
