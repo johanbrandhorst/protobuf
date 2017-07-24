@@ -93,7 +93,8 @@ func (b *BrowserHeaders) HasKeyWithValue(key, value string) bool {
 	return b.Call("has", key, value).Bool()
 }
 
-// ForEach runs the callback function against all keys and values.
+// ForEach runs the callback function against all keys and values,
+// iterating over keys and values in insertion order.
 func (b *BrowserHeaders) ForEach(callback func(string, []string)) {
 	b.Call("forEach", callback)
 }
