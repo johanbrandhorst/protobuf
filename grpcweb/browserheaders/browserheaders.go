@@ -41,7 +41,7 @@ func New(headers metadata.MD) *BrowserHeaders {
 	}
 	for k, v := range headers {
 		for _, h := range v {
-			b.Set(k, h)
+			b.Append(k, h)
 		}
 	}
 
@@ -50,14 +50,8 @@ func New(headers metadata.MD) *BrowserHeaders {
 
 // Set sets the value of the key to value. It
 // overwrites any values for that key.
-func (b *BrowserHeaders) Set(key, value string) {
-	b.Call("set", key, value)
-}
-
-// Append adds the value to the key without overwriting
-// existing values.
-func (b *BrowserHeaders) Append(key, value string) {
-	b.Call("append", key, value)
+func (b *BrowserHeaders) Set(key string, values []string) {
+	b.Call("set", key, values)
 }
 
 // Get gets all values associated with key. Mutating
@@ -69,6 +63,12 @@ func (b *BrowserHeaders) Get(key string) (value []string) {
 		value = append(value, v)
 	})
 	return value
+}
+
+// Append adds the value to the key without overwriting
+// existing values.
+func (b *BrowserHeaders) Append(key, value string) {
+	b.Call("append", key, value)
 }
 
 // Delete deletes the key.
