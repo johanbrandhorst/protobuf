@@ -31,7 +31,7 @@ import (
 // BrowserHeaders encasulates the Improbable BrowserHeaders.
 type BrowserHeaders struct {
 	*js.Object
-	md metadata.MD `js:"keyValueMap"`
+	MD metadata.MD `js:"keyValueMap"`
 }
 
 // New initializes and populates a new BrowserHeaders.
@@ -101,5 +101,5 @@ func (b *BrowserHeaders) ForEach(callback func(string, []string)) {
 
 // Len returns the number of keys.
 func (b *BrowserHeaders) Len() int {
-	return b.md.Len()
+	return b.MD.Len()
 }
