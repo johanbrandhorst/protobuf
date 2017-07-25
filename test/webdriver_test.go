@@ -63,57 +63,72 @@ func browserTest(browserName string, newPage pageFunc) {
 				Expect(err).NotTo(HaveOccurred())
 				var errMsgs []string
 				for _, element := range elements {
-					// Get test name
+					// Get module name
 					msg, err := element.GetElement(api.Selector{
+						Using: "css selector",
+						Value: ".module-name",
+					})
+					Expect(err).NotTo(HaveOccurred())
+					modName, err := msg.GetText()
+					Expect(err).NotTo(HaveOccurred())
+					// Get test name
+					msg, err = element.GetElement(api.Selector{
 						Using: "css selector",
 						Value: ".test-name",
 					})
 					Expect(err).NotTo(HaveOccurred())
 					testName, err := msg.GetText()
 					Expect(err).NotTo(HaveOccurred())
-					// Get error summary
-					msg, err = element.GetElement(api.Selector{
+					// Get specific fail node
+					fails, err := element.GetElements(api.Selector{
 						Using: "css selector",
-						Value: ".test-message",
+						Value: ".fail",
 					})
 					Expect(err).NotTo(HaveOccurred())
-					errSum, err := msg.GetText()
-					Expect(err).NotTo(HaveOccurred())
-
-					errText := fmt.Sprintf("%s:\n\t%s", testName, errSum)
-
-					// Get diff
-					expected, err := element.GetElements(api.Selector{
-						Using: "css selector",
-						Value: "del",
-					})
-					Expect(err).NotTo(HaveOccurred())
-					var expectedText string
-					if len(expected) > 0 {
-						expectedText, err = expected[0].GetText()
+					var errSums []string
+					for _, fail := range fails {
+						// Get error summary
+						msg, err := fail.GetElement(api.Selector{
+							Using: "css selector",
+							Value: ".test-message",
+						})
+						errSum, err := msg.GetText()
 						Expect(err).NotTo(HaveOccurred())
-					}
-					actual, err := element.GetElements(api.Selector{
-						Using: "css selector",
-						Value: "ins",
-					})
-					Expect(err).NotTo(HaveOccurred())
-					var actualText string
-					if len(actual) > 0 {
-						actualText, err = actual[0].GetText()
+
+						// Get diff
+						expected, err := fail.GetElements(api.Selector{
+							Using: "css selector",
+							Value: "del",
+						})
 						Expect(err).NotTo(HaveOccurred())
+						var expectedText string
+						if len(expected) > 0 {
+							expectedText, err = expected[0].GetText()
+							Expect(err).NotTo(HaveOccurred())
+						}
+						actual, err := fail.GetElements(api.Selector{
+							Using: "css selector",
+							Value: "ins",
+						})
+						Expect(err).NotTo(HaveOccurred())
+						var actualText string
+						if len(actual) > 0 {
+							actualText, err = actual[0].GetText()
+							Expect(err).NotTo(HaveOccurred())
+						}
+						if expectedText != "" && actualText != "" {
+							errSum = fmt.Sprintf(
+								"%s\n\t\t\tExpected: %s\n\t\t\tActual: %s",
+								errSum,
+								strings.TrimSuffix(expectedText, " "),
+								strings.TrimSuffix(actualText, " "),
+							)
+						}
+
+						errSums = append(errSums, errSum)
 					}
 
-					errMsg := errText
-					if expectedText != "" && actualText != "" {
-						errMsg = fmt.Sprintf(
-							"%s\n\t\tExpected: %s\n\t\tActual: %s",
-							errText,
-							strings.TrimSuffix(expectedText, " "),
-							strings.TrimSuffix(actualText, " "),
-						)
-					}
-					errMsgs = append(errMsgs, errMsg)
+					errMsgs = append(errMsgs, fmt.Sprintf("%s:\n\t%s:\n\t\t%s", modName, testName, strings.Join(errSums, "\n\t\t")))
 				}
 
 				// Prints each error
