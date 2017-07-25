@@ -42,9 +42,9 @@ func browserTest(browserName string, newPage pageFunc) {
 			By("Finding the number of failures", func() {
 				Eventually(page.FirstByClass("failed"), 2).Should(BeFound())
 				Eventually(page.FindByID("qunit-testresult").FindByClass("failed"), 2).Should(BeFound())
-				failures, err := page.FindByID("qunit-testresult").FindByClass("failed").Text()
+				numFailures, err := page.FindByID("qunit-testresult").FindByClass("failed").Text()
 				Expect(err).NotTo(HaveOccurred())
-				if failures == "0" {
+				if numFailures == "0" {
 					return
 				}
 
@@ -57,32 +57,30 @@ func browserTest(browserName string, newPage pageFunc) {
 				fmt.Fprintln(GinkgoWriter, "Console output ------------------------------------")
 
 				// We have at least one failure - lets compile an error message
-				Eventually(page.FindByID(
-					"qunit-tests",
-				).AllByClass(
-					"fail",
-				).AllByClass(
-					"fail",
-				)).Should(BeFound())
-				messages := page.FindByID(
-					"qunit-tests",
-				).AllByClass(
-					"fail",
-				).AllByClass(
-					"fail",
-				)
-				elements, err := messages.Elements()
+				Eventually(page.AllByXPath("//li[contains(@id, 'qunit-test-output') and @class='fail']")).Should(BeFound())
+				failures := page.AllByXPath("//li[contains(@id, 'qunit-test-output') and @class='fail']")
+				elements, err := failures.Elements()
 				Expect(err).NotTo(HaveOccurred())
 				var errMsgs []string
 				for _, element := range elements {
-					// Get error summary
+					// Get test name
 					msg, err := element.GetElement(api.Selector{
+						Using: "css selector",
+						Value: ".test-name",
+					})
+					Expect(err).NotTo(HaveOccurred())
+					testName, err := msg.GetText()
+					Expect(err).NotTo(HaveOccurred())
+					// Get error summary
+					msg, err = element.GetElement(api.Selector{
 						Using: "css selector",
 						Value: ".test-message",
 					})
 					Expect(err).NotTo(HaveOccurred())
-					errText, err := msg.GetText()
+					errSum, err := msg.GetText()
 					Expect(err).NotTo(HaveOccurred())
+
+					errText := fmt.Sprintf("%s:\n\t%s", testName, errSum)
 
 					// Get diff
 					expected, err := element.GetElements(api.Selector{
@@ -109,7 +107,7 @@ func browserTest(browserName string, newPage pageFunc) {
 					errMsg := errText
 					if expectedText != "" && actualText != "" {
 						errMsg = fmt.Sprintf(
-							"%s\n\tExpected: %q\n\tActual: %q",
+							"%s\n\t\tExpected: %s\n\t\tActual: %s",
 							errText,
 							strings.TrimSuffix(expectedText, " "),
 							strings.TrimSuffix(actualText, " "),
