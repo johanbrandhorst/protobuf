@@ -125,8 +125,12 @@ func invoke(ctx context.Context, host, service, method string, req []byte, onMsg
 	methodDesc := newMethodDescriptor(newService(service), method, newResponseType())
 
 	c := &callInfo{}
-	rawOnEnd := func(code int, msg string, trailers *metadata.Metadata) {
-		s := status.New(codes.Code(code), msg, trailers.MD)
+	rawOnEnd := func(code int, msg string, trailers metadata.Metadata) {
+		s := &status.Status{
+			Code:     codes.Code(code),
+			Message:  msg,
+			Trailers: trailers.MD,
+		}
 		c.trailers = trailers.MD
 
 		// Perform CallOptions required after call
@@ -136,7 +140,7 @@ func invoke(ctx context.Context, host, service, method string, req []byte, onMsg
 
 		onEnd(s)
 	}
-	onHeaders := func(headers *metadata.Metadata) {
+	onHeaders := func(headers metadata.Metadata) {
 		c.headers = headers.MD
 	}
 

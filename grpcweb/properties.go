@@ -44,9 +44,9 @@ func newRequest(rawBytes []byte) *request {
 	return r
 }
 
-type onHeadersFunc func(*metadata.Metadata)
+type onHeadersFunc func(metadata.Metadata)
 type onEndFunc func(*status.Status)
-type rawOnEndFunc func(int, string, *metadata.Metadata)
+type rawOnEndFunc func(int, string, metadata.Metadata)
 type onMessageFunc func([]byte)
 
 // Properties pretends to be an Improbable gRPC-web Properties struct.
