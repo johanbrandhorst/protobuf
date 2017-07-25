@@ -28,7 +28,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/johanbrandhorst/protobuf/grpcweb/browserheaders"
+	"github.com/johanbrandhorst/protobuf/grpcweb/internal/browserheaders"
 	"github.com/johanbrandhorst/protobuf/grpcweb/status"
 )
 
@@ -126,8 +126,8 @@ func invoke(ctx context.Context, host, service, method string, req []byte, onMsg
 
 	c := &callInfo{}
 	rawOnEnd := func(code int, msg string, trailers *browserheaders.BrowserHeaders) {
-		s := status.New(codes.Code(code), msg, trailers)
-		c.trailers = trailers
+		s := status.New(codes.Code(code), msg, trailers.MD)
+		c.trailers = trailers.MD
 
 		// Perform CallOptions required after call
 		for _, o := range opts {
@@ -137,7 +137,7 @@ func invoke(ctx context.Context, host, service, method string, req []byte, onMsg
 		onEnd(s)
 	}
 	onHeaders := func(headers *browserheaders.BrowserHeaders) {
-		c.headers = headers
+		c.headers = headers.MD
 	}
 
 	md, _ := metadata.FromOutgoingContext(ctx)

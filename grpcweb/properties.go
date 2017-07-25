@@ -23,7 +23,7 @@ package grpcweb
 import (
 	"github.com/gopherjs/gopherjs/js"
 
-	"github.com/johanbrandhorst/protobuf/grpcweb/browserheaders"
+	"github.com/johanbrandhorst/protobuf/grpcweb/internal/browserheaders"
 	"github.com/johanbrandhorst/protobuf/grpcweb/status"
 )
 
