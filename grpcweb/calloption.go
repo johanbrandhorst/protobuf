@@ -21,6 +21,8 @@
 package grpcweb
 
 import (
+	"google.golang.org/grpc/metadata"
+
 	"github.com/johanbrandhorst/protobuf/grpcweb/browserheaders"
 )
 
@@ -47,16 +49,16 @@ func (o afterCall) after(c *callInfo)        { o(c) }
 
 // Header returns a CallOptions that retrieves the header metadata
 // for a unary RPC.
-func Header(headers *browserheaders.BrowserHeaders) CallOption {
+func Header(headers *metadata.MD) CallOption {
 	return afterCall(func(c *callInfo) {
-		*headers = *c.headers
+		*headers = c.headers.MD
 	})
 }
 
 // Trailer returns a CallOptions that retrieves the trailer metadata
 // for a unary RPC.
-func Trailer(trailers *browserheaders.BrowserHeaders) CallOption {
+func Trailer(trailers *metadata.MD) CallOption {
 	return afterCall(func(c *callInfo) {
-		*trailers = *c.trailers
+		*trailers = c.trailers.MD
 	})
 }
