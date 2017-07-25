@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/johanbrandhorst/protobuf/grpcweb/internal/browserheaders/test/shared"
+	"github.com/johanbrandhorst/protobuf/grpcweb/internal/metadata/test/shared"
 )
 
 func main() {

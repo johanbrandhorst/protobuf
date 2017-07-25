@@ -10,7 +10,7 @@ import (
 	"github.com/sclevine/agouti/api"
 	. "github.com/sclevine/agouti/matchers"
 
-	"github.com/johanbrandhorst/protobuf/grpcweb/internal/browserheaders/test/shared"
+	"github.com/johanbrandhorst/protobuf/grpcweb/internal/metadata/test/shared"
 )
 
 var _ = Describe("gRPC-Web Unit Tests", func() {

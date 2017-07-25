@@ -26,9 +26,9 @@ import (
 
 	"github.com/gopherjs/gopherjs/js"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
+	gmd "google.golang.org/grpc/metadata"
 
-	"github.com/johanbrandhorst/protobuf/grpcweb/internal/browserheaders"
+	"github.com/johanbrandhorst/protobuf/grpcweb/internal/metadata"
 	"github.com/johanbrandhorst/protobuf/grpcweb/status"
 )
 
@@ -125,7 +125,7 @@ func invoke(ctx context.Context, host, service, method string, req []byte, onMsg
 	methodDesc := newMethodDescriptor(newService(service), method, newResponseType())
 
 	c := &callInfo{}
-	rawOnEnd := func(code int, msg string, trailers *browserheaders.BrowserHeaders) {
+	rawOnEnd := func(code int, msg string, trailers *metadata.Metadata) {
 		s := status.New(codes.Code(code), msg, trailers.MD)
 		c.trailers = trailers.MD
 
@@ -136,12 +136,12 @@ func invoke(ctx context.Context, host, service, method string, req []byte, onMsg
 
 		onEnd(s)
 	}
-	onHeaders := func(headers *browserheaders.BrowserHeaders) {
+	onHeaders := func(headers *metadata.Metadata) {
 		c.headers = headers.MD
 	}
 
-	md, _ := metadata.FromOutgoingContext(ctx)
-	props := newProperties(host, false, newRequest(req), browserheaders.New(md), onHeaders, onMsg, rawOnEnd)
+	md, _ := gmd.FromOutgoingContext(ctx)
+	props := newProperties(host, false, newRequest(req), metadata.New(md), onHeaders, onMsg, rawOnEnd)
 
 	// Recover any thrown JS errors
 	defer func() {

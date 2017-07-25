@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package browserheaders
+package metadata
 
 import (
 	"github.com/gopherjs/gopherjs/js"
@@ -28,17 +28,17 @@ import (
 	_ "github.com/johanbrandhorst/protobuf/grpcweb/grpcwebjs"
 )
 
-// BrowserHeaders encasulates the Improbable BrowserHeaders.
-type BrowserHeaders struct {
+// Metadata encasulates the Improbable Metadata.
+type Metadata struct {
 	*js.Object
 	MD metadata.MD `js:"keyValueMap"`
 }
 
-// New initializes and populates a new BrowserHeaders.
-func New(headers metadata.MD) *BrowserHeaders {
-	b := &BrowserHeaders{
-		Object: js.Global.Get("BrowserHeaders").New(),
+// New initializes and populates a new Metadata.
+func New(md metadata.MD) *Metadata {
+	b := &Metadata{
+		Object: js.Global.Get("Metadata").New(),
 	}
-	b.MD = headers
+	b.MD = md
 	return b
 }
