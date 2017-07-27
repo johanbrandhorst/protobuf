@@ -2,6 +2,7 @@ package webdriver_test
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	. "github.com/onsi/ginkgo"
@@ -15,12 +16,23 @@ import (
 
 var _ = Describe("gRPC-Web Unit Tests", func() {
 	//browserTest("Firefox", seleniumDriver.NewPage)
-	browserTest("ChromeDriver", chromeDriver.NewPage)
+	if os.Getenv("CHROMEDRIVER_ADDR") != "" && os.Getenv("GOPHERJS_SERVER_ADDR") != "" {
+		browserTest("Remote ChromeDriver", os.Getenv("GOPHERJS_SERVER_ADDR"), func(opts ...agouti.Option) (*agouti.Page, error) {
+			return agouti.NewPage(fmt.Sprintf("http://%s", os.Getenv("CHROMEDRIVER_ADDR")),
+				agouti.Desired(agouti.Capabilities{
+					"loggingPrefs": map[string]string{
+						"browser": "INFO",
+					},
+				}))
+		})
+	} else {
+		browserTest("ChromeDriver", "localhost"+shared.GopherJSServer, chromeDriver.NewPage)
+	}
 })
 
 type pageFunc func(...agouti.Option) (*agouti.Page, error)
 
-func browserTest(browserName string, newPage pageFunc) {
+func browserTest(browserName, address string, newPage pageFunc) {
 	var page *agouti.Page
 
 	BeforeEach(func() {
@@ -36,7 +48,7 @@ func browserTest(browserName string, newPage pageFunc) {
 	Context(fmt.Sprintf("when testing %s", browserName), func() {
 		It("should not find any errors", func() {
 			By("Loading the test page", func() {
-				Expect(page.Navigate("https://" + shared.GopherJSServer)).NotTo(HaveOccurred())
+				Expect(page.Navigate("https://" + address)).NotTo(HaveOccurred())
 			})
 
 			By("Finding the number of failures", func() {

@@ -10,6 +10,7 @@ import (
 	"github.com/rusco/qunit"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"honnef.co/go/js/dom"
 
 	"github.com/johanbrandhorst/protobuf/grpcweb"
 	metatest "github.com/johanbrandhorst/protobuf/grpcweb/metadata/test"
@@ -23,6 +24,8 @@ import (
 )
 
 //go:generate gopherjs build main.go -m -o html/index.js
+
+var uri = strings.TrimSuffix(dom.GetWindow().Document().BaseURI(), shared.GopherJSServer+"/")
 
 func typeTests() {
 	qunit.Module("Integration Types tests")
@@ -191,7 +194,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	qunit.Module(fmt.Sprintf("%s Integration tests", label))
 
 	qunit.AsyncTest("Unary server call", func() interface{} {
-		c := test.NewTestServiceClient("https://" + serverAddr)
+		c := test.NewTestServiceClient(uri + serverAddr)
 
 		go func() {
 			defer recoverer.Recover() // recovers any panics and fails tests
@@ -219,7 +222,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	})
 
 	qunit.AsyncTest("Unary server call with metadata", func() interface{} {
-		c := test.NewTestServiceClient("https://" + serverAddr)
+		c := test.NewTestServiceClient(uri + serverAddr)
 
 		go func() {
 			defer recoverer.Recover() // recovers any panics and fails tests
@@ -248,7 +251,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	})
 
 	qunit.AsyncTest("Unary server call expecting headers and trailers", func() interface{} {
-		c := test.NewTestServiceClient("https://" + serverAddr)
+		c := test.NewTestServiceClient(uri + serverAddr)
 
 		go func() {
 			defer recoverer.Recover() // recovers any panics and fails tests
@@ -304,7 +307,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	})
 
 	qunit.AsyncTest("Unary server call expecting only headers", func() interface{} {
-		c := test.NewTestServiceClient("https://" + serverAddr)
+		c := test.NewTestServiceClient(uri + serverAddr)
 
 		go func() {
 			defer recoverer.Recover() // recovers any panics and fails tests
@@ -352,7 +355,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	})
 
 	qunit.AsyncTest("Unary server call expecting only trailers", func() interface{} {
-		c := test.NewTestServiceClient("https://" + serverAddr)
+		c := test.NewTestServiceClient(uri + serverAddr)
 
 		go func() {
 			defer recoverer.Recover() // recovers any panics and fails tests
@@ -400,7 +403,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	})
 
 	qunit.AsyncTest("Unary server call returning gRPC error", func() interface{} {
-		c := test.NewTestServiceClient("https://" + serverAddr)
+		c := test.NewTestServiceClient(uri + serverAddr)
 
 		go func() {
 			defer recoverer.Recover() // recovers any panics and fails tests
@@ -426,7 +429,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	})
 
 	qunit.AsyncTest("Unary server call returning network error", func() interface{} {
-		c := test.NewTestServiceClient("https://" + serverAddr)
+		c := test.NewTestServiceClient(uri + serverAddr)
 
 		go func() {
 			defer recoverer.Recover() // recovers any panics and fails tests
@@ -455,7 +458,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	})
 
 	qunit.AsyncTest("Streaming server call", func() interface{} {
-		c := test.NewTestServiceClient("https://" + serverAddr)
+		c := test.NewTestServiceClient(uri + serverAddr)
 
 		go func() {
 			defer recoverer.Recover() // recovers any panics and fails tests
@@ -507,7 +510,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	})
 
 	qunit.AsyncTest("Streaming server call with metadata", func() interface{} {
-		c := test.NewTestServiceClient("https://" + serverAddr)
+		c := test.NewTestServiceClient(uri + serverAddr)
 
 		go func() {
 			defer recoverer.Recover() // recovers any panics and fails tests
@@ -560,7 +563,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	})
 
 	qunit.AsyncTest("Streaming server call expecting headers and trailers", func() interface{} {
-		c := test.NewTestServiceClient("https://" + serverAddr)
+		c := test.NewTestServiceClient(uri + serverAddr)
 
 		go func() {
 			defer recoverer.Recover() // recovers any panics and fails tests
@@ -639,7 +642,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	})
 
 	qunit.AsyncTest("Streaming server call expecting only headers", func() interface{} {
-		c := test.NewTestServiceClient("https://" + serverAddr)
+		c := test.NewTestServiceClient(uri + serverAddr)
 
 		go func() {
 			defer recoverer.Recover() // recovers any panics and fails tests
@@ -710,7 +713,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	})
 
 	qunit.AsyncTest("Streaming server call expecting only trailers", func() interface{} {
-		c := test.NewTestServiceClient("https://" + serverAddr)
+		c := test.NewTestServiceClient(uri + serverAddr)
 
 		go func() {
 			defer recoverer.Recover() // recovers any panics and fails tests
@@ -781,7 +784,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	})
 
 	qunit.AsyncTest("Streaming server call returning network error", func() interface{} {
-		c := test.NewTestServiceClient("https://" + serverAddr)
+		c := test.NewTestServiceClient(uri + serverAddr)
 
 		go func() {
 			defer recoverer.Recover() // recovers any panics and fails tests
@@ -817,7 +820,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	})
 
 	qunit.AsyncTest("Unary call to empty server", func() interface{} {
-		c := test.NewTestServiceClient("https://" + emptyServerAddr)
+		c := test.NewTestServiceClient(uri + emptyServerAddr)
 
 		go func() {
 			defer recoverer.Recover() // recovers any panics and fails tests
