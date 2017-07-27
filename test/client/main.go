@@ -25,7 +25,7 @@ import (
 //go:generate gopherjs build main.go -m -o html/index.js
 
 func typeTests() {
-	qunit.Module("Types tests")
+	qunit.Module("Integration Types tests")
 
 	qunit.Test("Simple type factory", func(assert qunit.QUnitAssert) {
 		qunit.Expect(8)
@@ -188,7 +188,7 @@ func typeTests() {
 }
 
 func serverTests(label, serverAddr, emptyServerAddr string) {
-	qunit.Module(fmt.Sprintf("%s gRPC-Web tests", label))
+	qunit.Module(fmt.Sprintf("%s Integration tests", label))
 
 	qunit.AsyncTest("Unary server call", func() interface{} {
 		c := test.NewTestServiceClient("https://" + serverAddr)
