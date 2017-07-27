@@ -7,8 +7,8 @@ install:
 	cd protoc-gen-gopherjs && go install ./
 
 tests:
-	(cd test && make regenerate && make test) && \
-	(cd grpcweb/internal/metadata/test && make regenerate && make test)
+	(cd protoc-gen-gopherjs/test && make test) && \
+	(cd test && make regenerate && make test)
 
 rebuild:
 	cd grpcweb/grpcwebjs && make build

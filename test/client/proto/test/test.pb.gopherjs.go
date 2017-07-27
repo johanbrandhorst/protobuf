@@ -494,31 +494,3 @@ func (x *testServicePingListClient) Recv() (*PingResponse, error) {
 
 	return new(PingResponse).Deserialize(resp)
 }
-
-// Client API for FailService service
-
-type FailServiceClient interface {
-	NonExistant(ctx context.Context, in *PingRequest, opts ...grpcweb.CallOption) (*PingResponse, error)
-}
-
-type failServiceClient struct {
-	client *grpcweb.Client
-}
-
-// NewFailServiceClient creates a new gRPC-Web client.
-func NewFailServiceClient(hostname string, opts ...grpcweb.DialOption) FailServiceClient {
-	return &failServiceClient{
-		client: grpcweb.NewClient(hostname, "test.FailService", opts...),
-	}
-}
-
-func (c *failServiceClient) NonExistant(ctx context.Context, in *PingRequest, opts ...grpcweb.CallOption) (*PingResponse, error) {
-	req := in.Serialize()
-
-	resp, err := c.client.RPCCall(ctx, "NonExistant", req, opts...)
-	if err != nil {
-		return nil, err
-	}
-
-	return new(PingResponse).Deserialize(resp)
-}

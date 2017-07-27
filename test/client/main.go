@@ -12,25 +12,20 @@ import (
 	"google.golang.org/grpc/metadata"
 
 	"github.com/johanbrandhorst/protobuf/grpcweb"
+	metatest "github.com/johanbrandhorst/protobuf/grpcweb/metadata/test"
 	"github.com/johanbrandhorst/protobuf/grpcweb/status"
+	grpctest "github.com/johanbrandhorst/protobuf/grpcweb/test"
+	gentest "github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/test"
 	"github.com/johanbrandhorst/protobuf/ptypes/empty"
 	"github.com/johanbrandhorst/protobuf/test/client/proto/test"
+	"github.com/johanbrandhorst/protobuf/test/recoverer"
 	"github.com/johanbrandhorst/protobuf/test/shared"
 )
 
 //go:generate gopherjs build main.go -m -o html/index.js
 
-func recoverer() {
-	e := recover()
-	if e == nil {
-		return
-	}
-
-	qunit.Ok(false, fmt.Sprintf("Saw panic: %v", e))
-}
-
 func typeTests() {
-	defer recoverer() // recovers any panics and fails tests
+	qunit.Module("Types tests")
 
 	qunit.Test("Simple type factory", func(assert qunit.QUnitAssert) {
 		qunit.Expect(8)
@@ -193,13 +188,13 @@ func typeTests() {
 }
 
 func serverTests(label, serverAddr, emptyServerAddr string) {
-	defer recoverer() // recovers any panics and fails tests
+	qunit.Module(fmt.Sprintf("%s gRPC-Web tests", label))
 
-	qunit.AsyncTest(fmt.Sprintf("%s: Unary server call", label), func() interface{} {
+	qunit.AsyncTest("Unary server call", func() interface{} {
 		c := test.NewTestServiceClient("https://" + serverAddr)
 
 		go func() {
-			defer recoverer() // recovers any panics and fails tests
+			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			req := new(test.PingRequest).New(
@@ -223,11 +218,11 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 		return nil
 	})
 
-	qunit.AsyncTest(fmt.Sprintf("%s: Unary server call with metadata", label), func() interface{} {
+	qunit.AsyncTest("Unary server call with metadata", func() interface{} {
 		c := test.NewTestServiceClient("https://" + serverAddr)
 
 		go func() {
-			defer recoverer() // recovers any panics and fails tests
+			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			req := new(test.PingRequest).New(
@@ -252,11 +247,11 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 		return nil
 	})
 
-	qunit.AsyncTest(fmt.Sprintf("%s: Unary server call expecting headers and trailers", label), func() interface{} {
+	qunit.AsyncTest("Unary server call expecting headers and trailers", func() interface{} {
 		c := test.NewTestServiceClient("https://" + serverAddr)
 
 		go func() {
-			defer recoverer() // recovers any panics and fails tests
+			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			req := new(test.PingRequest).New(
@@ -308,11 +303,11 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 		return nil
 	})
 
-	qunit.AsyncTest(fmt.Sprintf("%s: Unary server call expecting only headers", label), func() interface{} {
+	qunit.AsyncTest("Unary server call expecting only headers", func() interface{} {
 		c := test.NewTestServiceClient("https://" + serverAddr)
 
 		go func() {
-			defer recoverer() // recovers any panics and fails tests
+			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			req := new(test.PingRequest).New(
@@ -356,11 +351,11 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 		return nil
 	})
 
-	qunit.AsyncTest(fmt.Sprintf("%s: Unary server call expecting only trailers", label), func() interface{} {
+	qunit.AsyncTest("Unary server call expecting only trailers", func() interface{} {
 		c := test.NewTestServiceClient("https://" + serverAddr)
 
 		go func() {
-			defer recoverer() // recovers any panics and fails tests
+			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			req := new(test.PingRequest).New(
@@ -404,11 +399,11 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 		return nil
 	})
 
-	qunit.AsyncTest(fmt.Sprintf("%s: Unary server call returning gRPC error", label), func() interface{} {
+	qunit.AsyncTest("Unary server call returning gRPC error", func() interface{} {
 		c := test.NewTestServiceClient("https://" + serverAddr)
 
 		go func() {
-			defer recoverer() // recovers any panics and fails tests
+			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			req := new(test.PingRequest).New(
@@ -430,11 +425,11 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 		return nil
 	})
 
-	qunit.AsyncTest(fmt.Sprintf("%s: Unary server call returning network error", label), func() interface{} {
+	qunit.AsyncTest("Unary server call returning network error", func() interface{} {
 		c := test.NewTestServiceClient("https://" + serverAddr)
 
 		go func() {
-			defer recoverer() // recovers any panics and fails tests
+			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			req := new(test.PingRequest).New(
@@ -459,11 +454,11 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 		return nil
 	})
 
-	qunit.AsyncTest(fmt.Sprintf("%s: Streaming server call", label), func() interface{} {
+	qunit.AsyncTest("Streaming server call", func() interface{} {
 		c := test.NewTestServiceClient("https://" + serverAddr)
 
 		go func() {
-			defer recoverer() // recovers any panics and fails tests
+			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			// Send 20 messages with 1ms wait before each
@@ -511,11 +506,11 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 		return nil
 	})
 
-	qunit.AsyncTest(fmt.Sprintf("%s: Streaming server call with metadata", label), func() interface{} {
+	qunit.AsyncTest("Streaming server call with metadata", func() interface{} {
 		c := test.NewTestServiceClient("https://" + serverAddr)
 
 		go func() {
-			defer recoverer() // recovers any panics and fails tests
+			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			// Send 20 messages with 1ms wait before each
@@ -564,11 +559,11 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 		return nil
 	})
 
-	qunit.AsyncTest(fmt.Sprintf("%s: Streaming server call expecting headers and trailers", label), func() interface{} {
+	qunit.AsyncTest("Streaming server call expecting headers and trailers", func() interface{} {
 		c := test.NewTestServiceClient("https://" + serverAddr)
 
 		go func() {
-			defer recoverer() // recovers any panics and fails tests
+			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			// Send 20 messages with 1ms wait before each
@@ -643,11 +638,11 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 		return nil
 	})
 
-	qunit.AsyncTest(fmt.Sprintf("%s: Streaming server call expecting only headers", label), func() interface{} {
+	qunit.AsyncTest("Streaming server call expecting only headers", func() interface{} {
 		c := test.NewTestServiceClient("https://" + serverAddr)
 
 		go func() {
-			defer recoverer() // recovers any panics and fails tests
+			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			// Send 20 messages with 1ms wait before each
@@ -714,11 +709,11 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 		return nil
 	})
 
-	qunit.AsyncTest(fmt.Sprintf("%s: Streaming server call expecting only trailers", label), func() interface{} {
+	qunit.AsyncTest("Streaming server call expecting only trailers", func() interface{} {
 		c := test.NewTestServiceClient("https://" + serverAddr)
 
 		go func() {
-			defer recoverer() // recovers any panics and fails tests
+			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			// Send 20 messages with 1ms wait before each
@@ -785,11 +780,11 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 		return nil
 	})
 
-	qunit.AsyncTest(fmt.Sprintf("%s: Streaming server call returning network error", label), func() interface{} {
+	qunit.AsyncTest("Streaming server call returning network error", func() interface{} {
 		c := test.NewTestServiceClient("https://" + serverAddr)
 
 		go func() {
-			defer recoverer() // recovers any panics and fails tests
+			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			// Send 20 messages with 1ms wait before each
@@ -821,11 +816,11 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 		return nil
 	})
 
-	qunit.AsyncTest(fmt.Sprintf("%s: Unary call to empty server", label), func() interface{} {
+	qunit.AsyncTest("Unary call to empty server", func() interface{} {
 		c := test.NewTestServiceClient("https://" + emptyServerAddr)
 
 		go func() {
-			defer recoverer() // recovers any panics and fails tests
+			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
 			_, err := c.PingEmpty(context.Background(), new(empty.Empty).New())
@@ -847,9 +842,18 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 }
 
 func main() {
-	qunit.Module("grpcweb")
+	defer recoverer.Recover() // recovers any panics and fails tests
 
 	typeTests()
 	serverTests("HTTP2", shared.HTTP2Server, shared.EmptyHTTP2Server)
 	serverTests("HTTP1", shared.HTTP1Server, shared.EmptyHTTP1Server)
+
+	// protoc-gen-gopherjs tests
+	gentest.GenTypesTest()
+
+	// grpcweb metadata tests
+	metatest.MetadataTest()
+
+	// grpcweb tests
+	grpctest.GRPCWebTest()
 }
