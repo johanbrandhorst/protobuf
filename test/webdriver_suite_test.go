@@ -38,10 +38,10 @@ var (
 			"binary", "/usr/bin/google-chrome-stable",
 		),*/
 	)
-	seleniumDriver = agouti.Selenium(
+	/*seleniumDriver = agouti.Selenium(
 		agouti.Browser("firefox"),
 		agouti.Desired(agouti.NewCapabilities("acceptInsecureCerts")),
-	)
+	)*/
 )
 
 var _ = BeforeSuite(func() {
@@ -60,14 +60,14 @@ var _ = BeforeSuite(func() {
 
 	By("Starting the WebDrivers", func() {
 		Expect(chromeDriver.Start()).NotTo(HaveOccurred())
-		Expect(seleniumDriver.Start()).NotTo(HaveOccurred())
+		//Expect(seleniumDriver.Start()).NotTo(HaveOccurred())
 	})
 })
 
 var _ = AfterSuite(func() {
 	By("Stopping the WebDrivers", func() {
 		Expect(chromeDriver.Stop()).NotTo(HaveOccurred())
-		Expect(seleniumDriver.Stop()).NotTo(HaveOccurred())
+		//Expect(seleniumDriver.Stop()).NotTo(HaveOccurred())
 	})
 
 	By("Stopping the server", func() {
