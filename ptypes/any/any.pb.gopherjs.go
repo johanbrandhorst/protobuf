@@ -150,7 +150,7 @@ func (m *Any) SetTypeUrl(v string) {
 // GetValue gets the Value of the Any.
 // Must be a valid serialized protocol buffer of the above specified type.
 func (m *Any) GetValue() []byte {
-	return m.Call("getValue").Interface().([]byte)
+	return m.Call("getValue_asU8").Interface().([]byte)
 }
 
 // SetValue sets the Value of the Any.

@@ -432,12 +432,6 @@ func (m *ListValue) SetValues(v []*Value) {
 	m.Call("setValuesList", arr)
 }
 
-// HasValues indicates whether the Values of the ListValue is set.
-// Repeated field of dynamically typed values.
-func (m *ListValue) HasValues() bool {
-	return m.Call("hasValues").Bool()
-}
-
 // ClearValues clears the Values of the ListValue.
 // Repeated field of dynamically typed values.
 func (m *ListValue) ClearValues() {

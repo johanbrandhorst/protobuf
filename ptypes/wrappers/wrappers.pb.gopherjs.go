@@ -421,7 +421,7 @@ type BytesValue struct {
 // GetValue gets the Value of the BytesValue.
 // The bytes value.
 func (m *BytesValue) GetValue() []byte {
-	return m.Call("getValue").Interface().([]byte)
+	return m.Call("getValue_asU8").Interface().([]byte)
 }
 
 // SetValue sets the Value of the BytesValue.
