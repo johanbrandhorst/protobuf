@@ -1655,6 +1655,8 @@ func (g *Generator) generateMessage(message *Descriptor) {
 				g.P(`return int32(m.Call("get`+fname+`").`+typeFunc, `)`)
 			case descriptor.FieldDescriptorProto_TYPE_UINT32, descriptor.FieldDescriptorProto_TYPE_FIXED32:
 				g.P(`return uint32(m.Call("get`+fname+`").`+typeFunc, `)`)
+			case descriptor.FieldDescriptorProto_TYPE_BYTES:
+				g.P(`return m.Call("get` + fname + `_asU8").` + typeFunc)
 			default:
 				g.P(`return m.Call("get` + fname + `").` + typeFunc)
 			}
