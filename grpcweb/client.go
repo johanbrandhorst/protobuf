@@ -28,7 +28,7 @@ import (
 	"google.golang.org/grpc/codes"
 	gmd "google.golang.org/grpc/metadata"
 
-	"github.com/johanbrandhorst/protobuf/grpcweb/internal/metadata"
+	"github.com/johanbrandhorst/protobuf/grpcweb/metadata"
 	"github.com/johanbrandhorst/protobuf/grpcweb/status"
 )
 

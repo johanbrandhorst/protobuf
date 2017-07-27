@@ -23,7 +23,7 @@ package grpcweb
 import (
 	"github.com/gopherjs/gopherjs/js"
 
-	"github.com/johanbrandhorst/protobuf/grpcweb/internal/metadata"
+	"github.com/johanbrandhorst/protobuf/grpcweb/metadata"
 	"github.com/johanbrandhorst/protobuf/grpcweb/status"
 )
 

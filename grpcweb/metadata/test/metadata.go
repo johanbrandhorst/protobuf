@@ -1,29 +1,19 @@
-package main
+package test
 
 import (
-	"fmt"
-
 	"github.com/rusco/qunit"
 	gmd "google.golang.org/grpc/metadata"
 
-	"github.com/johanbrandhorst/protobuf/grpcweb/internal/metadata"
+	"github.com/johanbrandhorst/protobuf/grpcweb/metadata"
+	"github.com/johanbrandhorst/protobuf/test/recoverer"
 )
 
-//go:generate gopherjs build main.go -m -o html/index.js
+// This test is imported and run by the root level tests
 
-func recoverer() {
-	e := recover()
-	if e == nil {
-		return
-	}
+func MetadataTest() {
+	defer recoverer.Recover() // recovers any panics and fails tests
 
-	qunit.Ok(false, fmt.Sprintf("Saw panic: %v", e))
-}
-
-func main() {
-	defer recoverer() // recovers any panics and fails tests
-
-	qunit.Module("metadata")
+	qunit.Module("Metadata tests")
 
 	qunit.Test("Creating a new metadata type", func(assert qunit.QUnitAssert) {
 		qunit.Expect(1)
