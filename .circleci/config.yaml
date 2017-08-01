@@ -1,0 +1,25 @@
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version
+      - image: ypereirareis/docker-compose
+
+    working_directory: /go/src/github.com/johanbrandhorst/protobuf
+    steps:
+      - checkout
+
+      # specify any bash command here prefixed with `run: `
+      - run:
+          name: Browser Integration Tests
+          command: |
+            set -x
+            trap '
+              docker-compose logs selenium &&
+              docker-compose logs chromedriver &&
+              docker-compose down' EXIT;
+            docker-compose up -d
+            docker-compose exec -T testrunner bash -c '
+              cd /go/src/github.com/johanbrandhorst/protobuf &&
+              go install ./vendor/github.com/onsi/ginkgo/ginkgo &&
+              cd test && make test'
