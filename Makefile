@@ -18,6 +18,9 @@ docker:
 			docker-compose down' EXIT; \
 		docker-compose up -d && \
 		docker-compose exec -T testrunner bash -c '\
+            mkdir -p /go/src/github.com/johanbrandhorst/protobuf/' && \
+		docker cp ./ testrunner:/go/src/github.com/johanbrandhorst/protobuf/ && \
+		docker-compose exec -T testrunner bash -c '\
 			cd /go/src/github.com/johanbrandhorst/protobuf && \
 			go install ./vendor/github.com/onsi/ginkgo/ginkgo &&\
 			cd test && make test'\

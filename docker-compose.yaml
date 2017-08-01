@@ -21,6 +21,7 @@ services:
        # privileged: true
     testrunner:
         # This just sleeps, we execute the test command using docker-compose exec.
+        container_name: testrunner
         command: sleep infinity
         depends_on:
             - chromedriver
@@ -38,6 +39,4 @@ services:
         image: golang:latest
         networks:
             - internal
-        volumes:
-            - "./:/go/src/github.com/johanbrandhorst/protobuf/"
 
