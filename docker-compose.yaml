@@ -12,13 +12,22 @@ services:
         networks:
             - internal
         privileged: true
+    selenium:
+        expose:
+            - "4444"
+        image: selenium/standalone-firefox:latest
+        networks:
+            - internal
+       # privileged: true
     testrunner:
         # This just sleeps, we execute the test command using docker-compose exec.
         command: sleep infinity
         depends_on:
             - chromedriver
+            - selenium
         environment:
             CHROMEDRIVER_ADDR: chromedriver:4444
+            SELENIUM_ADDR: selenium:4444
             GOPHERJS_SERVER_ADDR: testrunner:8080
         expose:
             - "8080"

@@ -15,16 +15,31 @@ import (
 )
 
 var _ = Describe("gRPC-Web Unit Tests", func() {
-	//browserTest("Firefox", seleniumDriver.NewPage)
-	if os.Getenv("CHROMEDRIVER_ADDR") != "" && os.Getenv("GOPHERJS_SERVER_ADDR") != "" {
-		browserTest("Remote ChromeDriver", os.Getenv("GOPHERJS_SERVER_ADDR"), func(opts ...agouti.Option) (*agouti.Page, error) {
-			return agouti.NewPage(fmt.Sprintf("http://%s", os.Getenv("CHROMEDRIVER_ADDR")),
-				agouti.Desired(agouti.Capabilities{
-					"loggingPrefs": map[string]string{
-						"browser": "INFO",
-					},
-				}))
-		})
+	if os.Getenv("GOPHERJS_SERVER_ADDR") != "" {
+		if os.Getenv("CHROMEDRIVER_ADDR") != "" {
+			browserTest("Google Chrome", os.Getenv("GOPHERJS_SERVER_ADDR"), func(opts ...agouti.Option) (*agouti.Page, error) {
+				return agouti.NewPage(fmt.Sprintf("http://%s", os.Getenv("CHROMEDRIVER_ADDR")),
+					agouti.Desired(agouti.Capabilities{
+						"loggingPrefs": map[string]string{
+							"browser": "INFO",
+						},
+					}))
+			})
+		}
+
+		if os.Getenv("SELENIUM_ADDR") != "" {
+			browserTest("Mozilla Firefox", os.Getenv("GOPHERJS_SERVER_ADDR"), func(opts ...agouti.Option) (*agouti.Page, error) {
+				return agouti.NewPage(fmt.Sprintf("http://%s/wd/hub", os.Getenv("SELENIUM_ADDR")),
+					agouti.Desired(agouti.Capabilities{
+						"loggingPrefs": map[string]string{
+							"browser": "INFO",
+						},
+						"acceptInsecureCerts": true,
+					}),
+					agouti.Browser("firefox"),
+				)
+			})
+		}
 	} else {
 		browserTest("ChromeDriver", "localhost"+shared.GopherJSServer, chromeDriver.NewPage)
 	}

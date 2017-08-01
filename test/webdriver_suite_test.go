@@ -60,7 +60,7 @@ var _ = BeforeSuite(func() {
 	})
 
 	By("Starting the WebDrivers", func() {
-		if os.Getenv("CHROMEDRIVER_ADDR") == "" || os.Getenv("GOPHERJS_SERVER_ADDR") == "" {
+		if os.Getenv("GOPHERJS_SERVER_ADDR") == "" {
 			Expect(chromeDriver.Start()).NotTo(HaveOccurred())
 			//Expect(seleniumDriver.Start()).NotTo(HaveOccurred())
 		}
@@ -69,7 +69,7 @@ var _ = BeforeSuite(func() {
 
 var _ = AfterSuite(func() {
 	By("Stopping the WebDrivers", func() {
-		if os.Getenv("CHROMEDRIVER_ADDR") == "" || os.Getenv("GOPHERJS_SERVER_ADDR") == "" {
+		if os.Getenv("GOPHERJS_SERVER_ADDR") == "" {
 			Expect(chromeDriver.Stop()).NotTo(HaveOccurred())
 			//Expect(seleniumDriver.Stop()).NotTo(HaveOccurred())
 		}
