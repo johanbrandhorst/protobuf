@@ -11,9 +11,9 @@ import (
 	"github.com/sclevine/agouti"
 )
 
-func TestTest(t *testing.T) {
+func TestWebdriver(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Test Suite")
+	RunSpecs(t, "Webdriver Suite")
 }
 
 var (
