@@ -2,28 +2,68 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version
-      - image: ypereirareis/docker-compose
+      - image: golang
+    working_directory: /go/src/github.com/johanbrandhorst/protobuf
+    steps:
+      - checkout
+      - run: go get -u github.com/gopherjs/gopherjs
+      - run: make build
+  generate:
+    docker:
+      - image: golang
+    working_directory: /go/src/github.com/johanbrandhorst/protobuf
+    steps:
+      - checkout
+      - run:
+          name: Install protoc
+          command: >
+            apt-get update
 
+            apt-get install -y unzip git wget python3
+
+            rm -rf /var/lib/apt/lists/*
+
+            wget
+            https://github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-linux-x86_64.zip
+
+            unzip protoc-3.3.0-linux-x86_64.zip -d /usr/local
+
+            rm protoc-3.3.0-linux-x86_64.zip
+
+            apt-get remove -y wget unzip
+
+            apt-get autoremove -y
+      - run:
+          name: Install go dependencies
+          command: >
+            make install
+
+            go get -u -v github.com/golang/protobuf/protoc-gen-go
+            github.com/gopherjs/gopherjs
+      - run:
+          name: Regenerate
+          command: |
+            make regenerate
+            git diff --exit-code
+      - run:
+          name: Generator tests
+          command: make tests
+  tests:
+    docker:
+      - image: ypereirareis/docker-compose
     working_directory: /go/src/github.com/johanbrandhorst/protobuf
     steps:
       - checkout
       - setup_remote_docker
-
-      # specify any bash command here prefixed with `run: `
       - run:
           name: Browser Integration Tests
-          command: |
-            set -x
-            trap '
-              docker-compose logs selenium &&
-              docker-compose logs chromedriver &&
-              docker-compose down' EXIT;
-            docker-compose up -d
-            docker-compose exec -T testrunner bash -c '
-              mkdir -p /go/src/github.com/johanbrandhorst/protobuf/'
-            docker cp ./ testrunner:/go/src/github.com/johanbrandhorst/protobuf/
-            docker-compose exec -T testrunner bash -c '
-              cd /go/src/github.com/johanbrandhorst/protobuf &&
-              go install ./vendor/github.com/onsi/ginkgo/ginkgo &&
-              cd test && make test'
+          command: make integratoin
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build
+      - generate
+      - tests:
+        requires:
+          - generate
