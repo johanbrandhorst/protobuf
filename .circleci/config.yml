@@ -65,5 +65,5 @@ workflows:
       - build
       - generate
       - tests:
-        requires:
-          - generate
+          requires:
+            - generate
