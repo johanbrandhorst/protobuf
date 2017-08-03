@@ -7,11 +7,14 @@ install:
 	cd protoc-gen-gopherjs && go install ./
 
 tests:
-	(cd protoc-gen-gopherjs && make tests) && \
-	(cd test && make test)
+	cd protoc-gen-gopherjs && make tests
 
-docker:
+build:
+	go build $$(go list ./... | grep -v github.com/johanbrandhorst/protobuf/test$$)
+
+integration:
 	bash -c "\
+		set -x \
 		trap '\
 			docker-compose logs selenium && \
 			docker-compose logs chromedriver && \
