@@ -57,7 +57,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Browser Integration Tests
-          command: make integratoin
+          command: make integration
 workflows:
   version: 2
   build-and-test:
