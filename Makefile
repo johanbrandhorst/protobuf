@@ -25,8 +25,8 @@ integration:
 		docker cp ./ testrunner:/go/src/github.com/johanbrandhorst/protobuf/ && \
 		docker-compose exec -T testrunner bash -c '\
 			cd /go/src/github.com/johanbrandhorst/protobuf && \
-			go install ./vendor/github.com/onsi/ginkgo/ginkgo &&\
-			cd test && make test'\
+			go install ./vendor/github.com/onsi/ginkgo/ginkgo && \
+			cd test && make test' \
 		"
 
 rebuild:
