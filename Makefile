@@ -10,7 +10,7 @@ tests:
 	cd protoc-gen-gopherjs && make tests
 
 build:
-	go build $$(go list ./... | grep -v github.com/johanbrandhorst/protobuf/test$$)
+	go build $$(go list ./... | grep -v github.com/johanbrandhorst/protobuf/test$$ | grep -v vendor)
 
 integration:
 	bash -c "\
