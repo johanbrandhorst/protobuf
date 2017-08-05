@@ -14,10 +14,10 @@
   revision = "821be91cc9a849c728fd80ec57d6f76e2e8c5bec"
 
 [[projects]]
+  branch = "master"
   name = "github.com/onsi/ginkgo"
   packages = [".","config","internal/codelocation","internal/containernode","internal/failer","internal/leafnodes","internal/remote","internal/spec","internal/spec_iterator","internal/specrunner","internal/suite","internal/testingtproxy","internal/writer","reporters","reporters/stenographer","reporters/stenographer/support/go-colorable","reporters/stenographer/support/go-isatty","types"]
-  revision = "9eda700730cba42af70d53180f9dcce9266bc2bc"
-  version = "v1.4.0"
+  revision = "8382b23d18dbaaff8e5f7e83784c53ebb8ec2f47"
 
 [[projects]]
   name = "github.com/onsi/gomega"
@@ -38,10 +38,10 @@
   revision = "b496079b6f93dd00f23689777d968b05b26c4350"
 
 [[projects]]
+  branch = "master"
   name = "github.com/sclevine/agouti"
-  packages = [".","api","api/internal/bus","api/internal/service","internal/element","internal/target","matchers","matchers/internal/colorparser","matchers/internal/page","matchers/internal/selection"]
-  revision = "b920a9cc753368454c642011939e1d7ec58e0024"
-  version = "2.0"
+  packages = [".","api","api/internal/bus","api/internal/service","internal/element","internal/target","matchers","matchers/internal","matchers/internal/colorparser"]
+  revision = "dfc6680bb9fcb3f3d3b6f506a1d1e77fbc9c9613"
 
 [[projects]]
   branch = "master"
@@ -88,6 +88,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "b3100cbb477097748ea31c2dac24f9bed8de69af7e832d0a4dad6a3acadf8ae5"
+  inputs-digest = "d883ef5fa3b529e4ec37cf98262f219772273a040dd2b8248abe14f58ecda275"
   solver-name = "gps-cdcl"
   solver-version = 1

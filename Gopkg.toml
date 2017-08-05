@@ -31,20 +31,20 @@ ignored = ["github.com/gopherjs/gopherjs/js"]
   name = "github.com/improbable-eng/grpc-web"
 
 [[constraint]]
+  branch = "master"
   name = "github.com/onsi/ginkgo"
-  version = "1.4.0"
 
 [[constraint]]
+  branch = "master"
   name = "github.com/onsi/gomega"
-  version = "1.2.0"
 
 [[constraint]]
   branch = "master"
   name = "github.com/rusco/qunit"
 
 [[constraint]]
+  branch = "master"
   name = "github.com/sclevine/agouti"
-  version = "2.0.0"
 
 [[constraint]]
   branch = "master"
