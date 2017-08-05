@@ -18,7 +18,6 @@ services:
         image: selenium/standalone-firefox:latest
         networks:
             - internal
-       # privileged: true
     testrunner:
         # This just sleeps, we execute the test command using docker-compose exec.
         container_name: testrunner
