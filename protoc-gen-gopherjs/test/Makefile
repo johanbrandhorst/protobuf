@@ -1,6 +1,8 @@
 golden:
 	gofmt -w grpc_test/test.pb.gopherjs.go
 	diff -w grpc_test/test.pb.gopherjs.go grpc_test/test.pb.gopherjs.go.golden
+	gofmt -w types/types.pb.gopherjs.go
+	diff -w types/types.pb.gopherjs.go types/types.pb.gopherjs.go.golden
 
 regenerate:
 	# Invoke protoc once to generate three independent .pb.go files in the same package.
@@ -9,31 +11,38 @@ regenerate:
 	protoc \
 		--gopherjs_out=plugins=grpc,Mmulti/multi1.proto=github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/test/multi:. \
 		--js_out=import_style=commonjs,binary:. grpc_test/test.proto
+	protoc \
+		--gopherjs_out=plugins=grpc,Mmulti/multi1.proto=github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/test/multi:. \
+		--js_out=import_style=commonjs,binary:. types/types.proto
 
 	# Replace any well known type imports with correct namespace
 	sed -i -E "s;require\('google-protobuf/.*'\);\$$global.proto.google.protobuf;g" \
 		./grpc_test/test_pb.js \
 		./multi/multi1_pb.js \
 		./multi/multi2_pb.js \
-		./multi/multi3_pb.js
+		./multi/multi3_pb.js \
+		./types/types_pb.js
 	# Replace any well known type imports with correct namespace
 	sed -i -E "s;require\('../multi.*'\);\$$global.proto.multitest;g" \
 		./grpc_test/test_pb.js \
 		./multi/multi1_pb.js \
 		./multi/multi2_pb.js \
-		./multi/multi3_pb.js
+		./multi/multi3_pb.js \
+		./types/types_pb.js
 	# Replace any other imports with global namespace
 	sed -i -E "s;require\('.*'\);\$$global;g" \
 		./grpc_test/test_pb.js \
 		./multi/multi1_pb.js \
 		./multi/multi2_pb.js \
-		./multi/multi3_pb.js
+		./multi/multi3_pb.js \
+		./types/types_pb.js
 	# Remove export statements
 	sed -i -E "s/goog\.object\.extend\(exports, proto\..*\);\$$//g" \
 		./grpc_test/test_pb.js \
 		./multi/multi1_pb.js \
 		./multi/multi2_pb.js \
-		./multi/multi3_pb.js
+		./multi/multi3_pb.js \
+		./types/types_pb.js
 
 	# Move exportSymbol in multi1_pb to avoid undefined proto type
 	sed -i "s/goog.exportSymbol('proto.multitest.Multi1', null, global);//g" \
@@ -47,5 +56,6 @@ regenerate:
 	mv ./multi/multi1_pb.js ./multi/multi1_pb.inc.js
 	mv ./multi/multi2_pb.js ./multi/multi2_pb.inc.js
 	mv ./multi/multi3_pb.js ./multi/multi3_pb.inc.js
+	mv ./types/types_pb.js ./types/types_pb.inc.js
 
 test: regenerate golden
