@@ -152,6 +152,11 @@ func (m *Complex) SetCommunique(v []*Complex_Communique) {
 	m.Call("setCommuniqueList", arr)
 }
 
+// AddCommunique appends an entry to the Communique slice of the Complex.
+func (m *Complex) AddCommunique(v *Complex_Communique) {
+	m.Call("addCommunique", v.Call("toArray"))
+}
+
 // ClearCommunique clears the Communique of the Complex.
 func (m *Complex) ClearCommunique() {
 	m.Call("clearCommuniqueList")

@@ -1315,6 +1315,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 	}
 	fieldGetterNames := make(map[*descriptor.FieldDescriptorProto]string)
 	fieldSetterNames := make(map[*descriptor.FieldDescriptorProto]string)
+	fieldAdderNames := make(map[*descriptor.FieldDescriptorProto]string)
 	fieldHaserNames := make(map[*descriptor.FieldDescriptorProto]string)
 	fieldClearerNames := make(map[*descriptor.FieldDescriptorProto]string)
 	fieldTypes := make(map[*descriptor.FieldDescriptorProto]string)
@@ -1366,6 +1367,10 @@ func (g *Generator) generateMessage(message *Descriptor) {
 
 		fieldGetterNames[field] = fieldGetterName
 		fieldSetterNames[field] = fieldSetterName
+
+		if isRepeated(field) && g.getMapDescriptor(field) == nil {
+			fieldAdderNames[field] = allocNames("Add" + base)[0]
+		}
 
 		haser := field.OneofIndex != nil ||
 			(*field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE &&
@@ -1696,6 +1701,26 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		g.Out()
 		g.P(`}`)
 		g.P()
+
+		// Generate Adder (Only for repeated types)
+		if isRepeated(field) && g.getMapDescriptor(field) == nil {
+			adderName := fieldAdderNames[field]
+			g.P(`// `, adderName, ` appends an entry to the `, fname, ` slice of the `, ccTypeName, `.`)
+			g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
+			// Spent a good 30 minutes trying to figure out how to turn a repeated field
+			// into a non-repeated field for g.GoType before realising this little hack.
+			nonRepeatedTypeName := strings.TrimPrefix(typename, "[]")
+			g.P(`func (m *`+ccTypeName+`) `+adderName+`(v `, nonRepeatedTypeName, `) {`)
+			g.In()
+			if *field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
+				g.P(`m.Call("add` + fname + `", v.Call("toArray"))`)
+			} else {
+				g.P(`m.Call("add` + fname + `", v)`)
+			}
+			g.Out()
+			g.P(`}`)
+			g.P()
+		}
 
 		// Generate Haser (Only for oneof and message fields)
 		if field.OneofIndex != nil ||

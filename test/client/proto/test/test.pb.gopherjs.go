@@ -183,6 +183,11 @@ func (m *ExtraStuff) SetCardNumbers(v []uint32) {
 	m.Call("setCardNumbersList", arr)
 }
 
+// AddCardNumbers appends an entry to the CardNumbers slice of the ExtraStuff.
+func (m *ExtraStuff) AddCardNumbers(v uint32) {
+	m.Call("addCardNumbers", v)
+}
+
 // ClearCardNumbers clears the CardNumbers of the ExtraStuff.
 func (m *ExtraStuff) ClearCardNumbers() {
 	m.Call("clearCardNumbersList")

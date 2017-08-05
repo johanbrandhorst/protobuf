@@ -432,6 +432,12 @@ func (m *ListValue) SetValues(v []*Value) {
 	m.Call("setValuesList", arr)
 }
 
+// AddValues appends an entry to the Values slice of the ListValue.
+// Repeated field of dynamically typed values.
+func (m *ListValue) AddValues(v *Value) {
+	m.Call("addValues", v.Call("toArray"))
+}
+
 // ClearValues clears the Values of the ListValue.
 // Repeated field of dynamically typed values.
 func (m *ListValue) ClearValues() {
