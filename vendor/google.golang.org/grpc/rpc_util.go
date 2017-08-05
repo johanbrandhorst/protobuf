@@ -244,7 +244,7 @@ type parser struct {
 	r io.Reader
 
 	// The header of a gRPC message. Find more detail
-	// at http://www.grpc.io/docs/guides/wire.html.
+	// at https://grpc.io/docs/guides/wire.html.
 	header [5]byte
 }
 
@@ -519,6 +519,6 @@ const SupportPackageIsVersion3 = true
 const SupportPackageIsVersion4 = true
 
 // Version is the current grpc version.
-const Version = "1.5.0-dev"
+const Version = "1.5.1"
 
 const grpcUA = "grpc-go/" + Version

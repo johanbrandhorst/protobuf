@@ -199,7 +199,7 @@ func Expect(amount int) *js.Object {
 }
 
 func Equiv(a interface{}, b interface{}) *js.Object {
-	return js.Global.Get("QUnit").Call("equip", a, b)
+	return js.Global.Get("QUnit").Call("equiv", a, b)
 }
 
 func Module(name string) *js.Object {

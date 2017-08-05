@@ -1,27 +1,48 @@
 package target
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type Selectors []Selector
 
-func (s Selectors) canMergeType(selectorType Type) bool {
+func (s Selectors) AppendCSS(cssSelector string) Selectors {
+	selector := Selector{Type: "css selector", Value: cssSelector}
+
+	if s.canMergeCSS() {
+		lastIndex := len(s) - 1
+		selector.Value = s[lastIndex].Value + " " + selector.Value
+		return appendSelector(s[:lastIndex], selector)
+	}
+
+	return appendSelector(s, selector)
+}
+
+func (s Selectors) canMergeCSS() bool {
 	if len(s) == 0 {
 		return false
 	}
 	last := s[len(s)-1]
-	bothCSS := selectorType == CSS && last.Type == CSS
-	return bothCSS && !last.Indexed && !last.Single
+	return last.Type == "css selector" && !last.Indexed && !last.Single
 }
 
-func (s Selectors) Append(selectorType Type, value string) Selectors {
-	selector := Selector{Type: selectorType, Value: value}
+func (s Selectors) AppendXPath(xPathSelector string) Selectors {
+	selector := Selector{Type: "xpath", Value: xPathSelector}
+	return appendSelector(s, selector)
+}
 
-	if s.canMergeType(selectorType) {
-		lastIndex := len(s) - 1
-		selector.Value = s[lastIndex].Value + " " + selector.Value
-		return s[:lastIndex].append(selector)
-	}
-	return s.append(selector)
+func (s Selectors) AppendLink(text string) Selectors {
+	selector := Selector{Type: "link text", Value: text}
+	return appendSelector(s, selector)
+}
+
+func (s Selectors) AppendLabeled(text string) Selectors {
+	return s.AppendXPath(fmt.Sprintf(`//input[@id=(//label[normalize-space()="%s"]/@for)] | //label[normalize-space()="%s"]/input`, text, text))
+}
+
+func (s Selectors) AppendButton(text string) Selectors {
+	return s.AppendXPath(fmt.Sprintf(`//input[@type="submit" or @type="button"][normalize-space(@value)="%s"] | //button[normalize-space()="%s"]`, text, text))
 }
 
 func (s Selectors) Single() Selectors {
@@ -33,7 +54,7 @@ func (s Selectors) Single() Selectors {
 	selector := s[lastIndex]
 	selector.Single = true
 	selector.Indexed = false
-	return s[:lastIndex].append(selector)
+	return appendSelector(s[:lastIndex], selector)
 }
 
 func (s Selectors) At(index int) Selectors {
@@ -46,7 +67,7 @@ func (s Selectors) At(index int) Selectors {
 	selector.Single = false
 	selector.Indexed = true
 	selector.Index = index
-	return s[:lastIndex].append(selector)
+	return appendSelector(s[:lastIndex], selector)
 }
 
 func (s Selectors) String() string {
@@ -59,7 +80,7 @@ func (s Selectors) String() string {
 	return strings.Join(tags, " | ")
 }
 
-func (s Selectors) append(selector Selector) Selectors {
-	selectorsCopy := append(Selectors(nil), s...)
+func appendSelector(selectors Selectors, selector Selector) Selectors {
+	selectorsCopy := append(Selectors(nil), selectors...)
 	return append(selectorsCopy, selector)
 }
