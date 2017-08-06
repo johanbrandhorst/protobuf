@@ -2,16 +2,16 @@
 // source: types/types.proto
 
 /*
-Package types is a generated protocol buffer package.
+	Package types is a generated protocol buffer package.
 
-It is generated from these files:
-	types/types.proto
+	It is generated from these files:
+		types/types.proto
 
-It has these top-level messages:
-	TestAllTypes
-	NestedTestAllTypes
-	ForeignMessage
-	TestMap
+	It has these top-level messages:
+		TestAllTypes
+		NestedTestAllTypes
+		ForeignMessage
+		TestMap
 */
 package types
 
@@ -114,7 +114,7 @@ type TestAllTypes struct {
 //	*TestAllTypes_OneofNestedMessage
 //	*TestAllTypes_OneofString
 //	*TestAllTypes_OneofBytes
-//	*TestAllTypes_OneofImported
+//	*TestAllTypes_OneofImportedMessage
 type isTestAllTypes_OneofField interface {
 	isTestAllTypes_OneofField()
 }
@@ -131,15 +131,15 @@ type TestAllTypes_OneofString struct {
 type TestAllTypes_OneofBytes struct {
 	OneofBytes []byte
 }
-type TestAllTypes_OneofImported struct {
-	OneofImported *multitest2.Multi1
+type TestAllTypes_OneofImportedMessage struct {
+	OneofImportedMessage *multitest2.Multi1
 }
 
-func (*TestAllTypes_OneofUint32) isTestAllTypes_OneofField()        {}
-func (*TestAllTypes_OneofNestedMessage) isTestAllTypes_OneofField() {}
-func (*TestAllTypes_OneofString) isTestAllTypes_OneofField()        {}
-func (*TestAllTypes_OneofBytes) isTestAllTypes_OneofField()         {}
-func (*TestAllTypes_OneofImported) isTestAllTypes_OneofField()      {}
+func (*TestAllTypes_OneofUint32) isTestAllTypes_OneofField()          {}
+func (*TestAllTypes_OneofNestedMessage) isTestAllTypes_OneofField()   {}
+func (*TestAllTypes_OneofString) isTestAllTypes_OneofField()          {}
+func (*TestAllTypes_OneofBytes) isTestAllTypes_OneofField()           {}
+func (*TestAllTypes_OneofImportedMessage) isTestAllTypes_OneofField() {}
 
 // GetOneofField gets the OneofField of the TestAllTypes.
 func (m *TestAllTypes) GetOneofField() (x isTestAllTypes_OneofField) {
@@ -161,8 +161,8 @@ func (m *TestAllTypes) GetOneofField() (x isTestAllTypes_OneofField) {
 			OneofBytes: m.GetOneofBytes(),
 		}
 	case 115:
-		x = &TestAllTypes_OneofImported{
-			OneofImported: m.GetOneofImported(),
+		x = &TestAllTypes_OneofImportedMessage{
+			OneofImportedMessage: m.GetOneofImportedMessage(),
 		}
 	}
 
@@ -181,14 +181,17 @@ func (m *TestAllTypes) SetOneofField(oneof_field isTestAllTypes_OneofField) {
 		m.SetOneofString(x.OneofString)
 	case *TestAllTypes_OneofBytes:
 		m.SetOneofBytes(x.OneofBytes)
-	case *TestAllTypes_OneofImported:
-		m.SetOneofImported(x.OneofImported)
+	case *TestAllTypes_OneofImportedMessage:
+		m.SetOneofImportedMessage(x.OneofImportedMessage)
 	}
 }
 
 // GetSingleInt32 gets the SingleInt32 of the TestAllTypes.
 // Singular
-func (m *TestAllTypes) GetSingleInt32() int32 {
+func (m *TestAllTypes) GetSingleInt32() (x int32) {
+	if m == nil {
+		return x
+	}
 	return int32(m.Call("getSingleInt32").Int())
 }
 
@@ -199,7 +202,10 @@ func (m *TestAllTypes) SetSingleInt32(v int32) {
 }
 
 // GetSingleInt64 gets the SingleInt64 of the TestAllTypes.
-func (m *TestAllTypes) GetSingleInt64() int64 {
+func (m *TestAllTypes) GetSingleInt64() (x int64) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getSingleInt64").Int64()
 }
 
@@ -209,7 +215,10 @@ func (m *TestAllTypes) SetSingleInt64(v int64) {
 }
 
 // GetSingleUint32 gets the SingleUint32 of the TestAllTypes.
-func (m *TestAllTypes) GetSingleUint32() uint32 {
+func (m *TestAllTypes) GetSingleUint32() (x uint32) {
+	if m == nil {
+		return x
+	}
 	return uint32(m.Call("getSingleUint32").Int())
 }
 
@@ -219,7 +228,10 @@ func (m *TestAllTypes) SetSingleUint32(v uint32) {
 }
 
 // GetSingleUint64 gets the SingleUint64 of the TestAllTypes.
-func (m *TestAllTypes) GetSingleUint64() uint64 {
+func (m *TestAllTypes) GetSingleUint64() (x uint64) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getSingleUint64").Uint64()
 }
 
@@ -229,7 +241,10 @@ func (m *TestAllTypes) SetSingleUint64(v uint64) {
 }
 
 // GetSingleSint32 gets the SingleSint32 of the TestAllTypes.
-func (m *TestAllTypes) GetSingleSint32() int32 {
+func (m *TestAllTypes) GetSingleSint32() (x int32) {
+	if m == nil {
+		return x
+	}
 	return int32(m.Call("getSingleSint32").Int())
 }
 
@@ -239,7 +254,10 @@ func (m *TestAllTypes) SetSingleSint32(v int32) {
 }
 
 // GetSingleSint64 gets the SingleSint64 of the TestAllTypes.
-func (m *TestAllTypes) GetSingleSint64() int64 {
+func (m *TestAllTypes) GetSingleSint64() (x int64) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getSingleSint64").Int64()
 }
 
@@ -249,7 +267,10 @@ func (m *TestAllTypes) SetSingleSint64(v int64) {
 }
 
 // GetSingleFixed32 gets the SingleFixed32 of the TestAllTypes.
-func (m *TestAllTypes) GetSingleFixed32() uint32 {
+func (m *TestAllTypes) GetSingleFixed32() (x uint32) {
+	if m == nil {
+		return x
+	}
 	return uint32(m.Call("getSingleFixed32").Int())
 }
 
@@ -259,7 +280,10 @@ func (m *TestAllTypes) SetSingleFixed32(v uint32) {
 }
 
 // GetSingleFixed64 gets the SingleFixed64 of the TestAllTypes.
-func (m *TestAllTypes) GetSingleFixed64() uint64 {
+func (m *TestAllTypes) GetSingleFixed64() (x uint64) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getSingleFixed64").Uint64()
 }
 
@@ -269,7 +293,10 @@ func (m *TestAllTypes) SetSingleFixed64(v uint64) {
 }
 
 // GetSingleSfixed32 gets the SingleSfixed32 of the TestAllTypes.
-func (m *TestAllTypes) GetSingleSfixed32() int32 {
+func (m *TestAllTypes) GetSingleSfixed32() (x int32) {
+	if m == nil {
+		return x
+	}
 	return int32(m.Call("getSingleSfixed32").Int())
 }
 
@@ -279,7 +306,10 @@ func (m *TestAllTypes) SetSingleSfixed32(v int32) {
 }
 
 // GetSingleSfixed64 gets the SingleSfixed64 of the TestAllTypes.
-func (m *TestAllTypes) GetSingleSfixed64() int64 {
+func (m *TestAllTypes) GetSingleSfixed64() (x int64) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getSingleSfixed64").Int64()
 }
 
@@ -289,7 +319,10 @@ func (m *TestAllTypes) SetSingleSfixed64(v int64) {
 }
 
 // GetSingleFloat gets the SingleFloat of the TestAllTypes.
-func (m *TestAllTypes) GetSingleFloat() float32 {
+func (m *TestAllTypes) GetSingleFloat() (x float32) {
+	if m == nil {
+		return x
+	}
 	return float32(m.Call("getSingleFloat").Float())
 }
 
@@ -299,7 +332,10 @@ func (m *TestAllTypes) SetSingleFloat(v float32) {
 }
 
 // GetSingleDouble gets the SingleDouble of the TestAllTypes.
-func (m *TestAllTypes) GetSingleDouble() float64 {
+func (m *TestAllTypes) GetSingleDouble() (x float64) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getSingleDouble").Float()
 }
 
@@ -309,7 +345,10 @@ func (m *TestAllTypes) SetSingleDouble(v float64) {
 }
 
 // GetSingleBool gets the SingleBool of the TestAllTypes.
-func (m *TestAllTypes) GetSingleBool() bool {
+func (m *TestAllTypes) GetSingleBool() (x bool) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getSingleBool").Bool()
 }
 
@@ -319,7 +358,10 @@ func (m *TestAllTypes) SetSingleBool(v bool) {
 }
 
 // GetSingleString gets the SingleString of the TestAllTypes.
-func (m *TestAllTypes) GetSingleString() string {
+func (m *TestAllTypes) GetSingleString() (x string) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getSingleString").String()
 }
 
@@ -329,7 +371,10 @@ func (m *TestAllTypes) SetSingleString(v string) {
 }
 
 // GetSingleBytes gets the SingleBytes of the TestAllTypes.
-func (m *TestAllTypes) GetSingleBytes() []byte {
+func (m *TestAllTypes) GetSingleBytes() (x []byte) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getSingleBytes_asU8").Interface().([]byte)
 }
 
@@ -338,32 +383,41 @@ func (m *TestAllTypes) SetSingleBytes(v []byte) {
 	m.Call("setSingleBytes", v)
 }
 
-// GetSingleImported gets the SingleImported of the TestAllTypes.
-func (m *TestAllTypes) GetSingleImported() *multitest2.Multi1 {
-	return &multitest2.Multi1{Object: m.Call("getSingleImported")}
+// GetSingleImportedMessage gets the SingleImportedMessage of the TestAllTypes.
+func (m *TestAllTypes) GetSingleImportedMessage() (x *multitest2.Multi1) {
+	if m == nil {
+		return x
+	}
+	return &multitest2.Multi1{Object: m.Call("getSingleImportedMessage")}
 }
 
-// SetSingleImported sets the SingleImported of the TestAllTypes.
-func (m *TestAllTypes) SetSingleImported(v *multitest2.Multi1) {
+// SetSingleImportedMessage sets the SingleImportedMessage of the TestAllTypes.
+func (m *TestAllTypes) SetSingleImportedMessage(v *multitest2.Multi1) {
 	if v != nil {
-		m.Call("setSingleImported", v)
+		m.Call("setSingleImportedMessage", v)
 	} else {
-		m.ClearSingleImported()
+		m.ClearSingleImportedMessage()
 	}
 }
 
-// HasSingleImported indicates whether the SingleImported of the TestAllTypes is set.
-func (m *TestAllTypes) HasSingleImported() bool {
-	return m.Call("hasSingleImported").Bool()
+// HasSingleImportedMessage indicates whether the SingleImportedMessage of the TestAllTypes is set.
+func (m *TestAllTypes) HasSingleImportedMessage() bool {
+	if m == nil {
+		return false
+	}
+	return m.Call("hasSingleImportedMessage").Bool()
 }
 
-// ClearSingleImported clears the SingleImported of the TestAllTypes.
-func (m *TestAllTypes) ClearSingleImported() {
-	m.Call("clearSingleImported")
+// ClearSingleImportedMessage clears the SingleImportedMessage of the TestAllTypes.
+func (m *TestAllTypes) ClearSingleImportedMessage() {
+	m.Call("clearSingleImportedMessage")
 }
 
 // GetSingleNestedMessage gets the SingleNestedMessage of the TestAllTypes.
-func (m *TestAllTypes) GetSingleNestedMessage() *TestAllTypes_NestedMessage {
+func (m *TestAllTypes) GetSingleNestedMessage() (x *TestAllTypes_NestedMessage) {
+	if m == nil {
+		return x
+	}
 	return &TestAllTypes_NestedMessage{Object: m.Call("getSingleNestedMessage")}
 }
 
@@ -378,6 +432,9 @@ func (m *TestAllTypes) SetSingleNestedMessage(v *TestAllTypes_NestedMessage) {
 
 // HasSingleNestedMessage indicates whether the SingleNestedMessage of the TestAllTypes is set.
 func (m *TestAllTypes) HasSingleNestedMessage() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasSingleNestedMessage").Bool()
 }
 
@@ -387,7 +444,10 @@ func (m *TestAllTypes) ClearSingleNestedMessage() {
 }
 
 // GetSingleForeignMessage gets the SingleForeignMessage of the TestAllTypes.
-func (m *TestAllTypes) GetSingleForeignMessage() *ForeignMessage {
+func (m *TestAllTypes) GetSingleForeignMessage() (x *ForeignMessage) {
+	if m == nil {
+		return x
+	}
 	return &ForeignMessage{Object: m.Call("getSingleForeignMessage")}
 }
 
@@ -402,6 +462,9 @@ func (m *TestAllTypes) SetSingleForeignMessage(v *ForeignMessage) {
 
 // HasSingleForeignMessage indicates whether the SingleForeignMessage of the TestAllTypes is set.
 func (m *TestAllTypes) HasSingleForeignMessage() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasSingleForeignMessage").Bool()
 }
 
@@ -411,7 +474,10 @@ func (m *TestAllTypes) ClearSingleForeignMessage() {
 }
 
 // GetSingleNestedEnum gets the SingleNestedEnum of the TestAllTypes.
-func (m *TestAllTypes) GetSingleNestedEnum() TestAllTypes_NestedEnum {
+func (m *TestAllTypes) GetSingleNestedEnum() (x TestAllTypes_NestedEnum) {
+	if m == nil {
+		return x
+	}
 	return TestAllTypes_NestedEnum(m.Call("getSingleNestedEnum").Int())
 }
 
@@ -421,7 +487,10 @@ func (m *TestAllTypes) SetSingleNestedEnum(v TestAllTypes_NestedEnum) {
 }
 
 // GetSingleForeignEnum gets the SingleForeignEnum of the TestAllTypes.
-func (m *TestAllTypes) GetSingleForeignEnum() ForeignEnum {
+func (m *TestAllTypes) GetSingleForeignEnum() (x ForeignEnum) {
+	if m == nil {
+		return x
+	}
 	return ForeignEnum(m.Call("getSingleForeignEnum").Int())
 }
 
@@ -434,8 +503,10 @@ func (m *TestAllTypes) SetSingleForeignEnum(v ForeignEnum) {
 // Repeated
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedInt32() []int32 {
-	x := []int32{}
+func (m *TestAllTypes) GetRepeatedInt32() (x []int32) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, int32(value.Int()))
 	}
@@ -468,8 +539,10 @@ func (m *TestAllTypes) ClearRepeatedInt32() {
 // GetRepeatedInt64 gets the RepeatedInt64 of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedInt64() []int64 {
-	x := []int64{}
+func (m *TestAllTypes) GetRepeatedInt64() (x []int64) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, value.Int64())
 	}
@@ -499,8 +572,10 @@ func (m *TestAllTypes) ClearRepeatedInt64() {
 // GetRepeatedUint32 gets the RepeatedUint32 of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedUint32() []uint32 {
-	x := []uint32{}
+func (m *TestAllTypes) GetRepeatedUint32() (x []uint32) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, uint32(value.Int()))
 	}
@@ -530,8 +605,10 @@ func (m *TestAllTypes) ClearRepeatedUint32() {
 // GetRepeatedUint64 gets the RepeatedUint64 of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedUint64() []uint64 {
-	x := []uint64{}
+func (m *TestAllTypes) GetRepeatedUint64() (x []uint64) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, value.Uint64())
 	}
@@ -561,8 +638,10 @@ func (m *TestAllTypes) ClearRepeatedUint64() {
 // GetRepeatedSint32 gets the RepeatedSint32 of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedSint32() []int32 {
-	x := []int32{}
+func (m *TestAllTypes) GetRepeatedSint32() (x []int32) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, int32(value.Int()))
 	}
@@ -592,8 +671,10 @@ func (m *TestAllTypes) ClearRepeatedSint32() {
 // GetRepeatedSint64 gets the RepeatedSint64 of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedSint64() []int64 {
-	x := []int64{}
+func (m *TestAllTypes) GetRepeatedSint64() (x []int64) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, value.Int64())
 	}
@@ -623,8 +704,10 @@ func (m *TestAllTypes) ClearRepeatedSint64() {
 // GetRepeatedFixed32 gets the RepeatedFixed32 of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedFixed32() []uint32 {
-	x := []uint32{}
+func (m *TestAllTypes) GetRepeatedFixed32() (x []uint32) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, uint32(value.Int()))
 	}
@@ -654,8 +737,10 @@ func (m *TestAllTypes) ClearRepeatedFixed32() {
 // GetRepeatedFixed64 gets the RepeatedFixed64 of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedFixed64() []uint64 {
-	x := []uint64{}
+func (m *TestAllTypes) GetRepeatedFixed64() (x []uint64) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, value.Uint64())
 	}
@@ -685,8 +770,10 @@ func (m *TestAllTypes) ClearRepeatedFixed64() {
 // GetRepeatedSfixed32 gets the RepeatedSfixed32 of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedSfixed32() []int32 {
-	x := []int32{}
+func (m *TestAllTypes) GetRepeatedSfixed32() (x []int32) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, int32(value.Int()))
 	}
@@ -716,8 +803,10 @@ func (m *TestAllTypes) ClearRepeatedSfixed32() {
 // GetRepeatedSfixed64 gets the RepeatedSfixed64 of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedSfixed64() []int64 {
-	x := []int64{}
+func (m *TestAllTypes) GetRepeatedSfixed64() (x []int64) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, value.Int64())
 	}
@@ -747,8 +836,10 @@ func (m *TestAllTypes) ClearRepeatedSfixed64() {
 // GetRepeatedFloat gets the RepeatedFloat of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedFloat() []float32 {
-	x := []float32{}
+func (m *TestAllTypes) GetRepeatedFloat() (x []float32) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, float32(value.Float()))
 	}
@@ -778,8 +869,10 @@ func (m *TestAllTypes) ClearRepeatedFloat() {
 // GetRepeatedDouble gets the RepeatedDouble of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedDouble() []float64 {
-	x := []float64{}
+func (m *TestAllTypes) GetRepeatedDouble() (x []float64) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, value.Float())
 	}
@@ -809,8 +902,10 @@ func (m *TestAllTypes) ClearRepeatedDouble() {
 // GetRepeatedBool gets the RepeatedBool of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedBool() []bool {
-	x := []bool{}
+func (m *TestAllTypes) GetRepeatedBool() (x []bool) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, value.Bool())
 	}
@@ -840,8 +935,10 @@ func (m *TestAllTypes) ClearRepeatedBool() {
 // GetRepeatedString gets the RepeatedString of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedString() []string {
-	x := []string{}
+func (m *TestAllTypes) GetRepeatedString() (x []string) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, value.String())
 	}
@@ -871,8 +968,10 @@ func (m *TestAllTypes) ClearRepeatedString() {
 // GetRepeatedBytes gets the RepeatedBytes of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedBytes() [][]byte {
-	x := [][]byte{}
+func (m *TestAllTypes) GetRepeatedBytes() (x [][]byte) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, value.Interface().([]byte))
 	}
@@ -899,42 +998,46 @@ func (m *TestAllTypes) ClearRepeatedBytes() {
 	m.Call("clearRepeatedBytesList")
 }
 
-// GetRepeatedImported gets the RepeatedImported of the TestAllTypes.
+// GetRepeatedImportedMessage gets the RepeatedImportedMessage of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedImported() []*multitest2.Multi1 {
-	x := []*multitest2.Multi1{}
+func (m *TestAllTypes) GetRepeatedImportedMessage() (x []*multitest2.Multi1) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, &multitest2.Multi1{Object: value})
 	}
-	m.Call("getRepeatedImportedList").Call("forEach", arrFunc)
+	m.Call("getRepeatedImportedMessageList").Call("forEach", arrFunc)
 	return x
 }
 
-// SetRepeatedImported sets the RepeatedImported of the TestAllTypes.
-func (m *TestAllTypes) SetRepeatedImported(v []*multitest2.Multi1) {
+// SetRepeatedImportedMessage sets the RepeatedImportedMessage of the TestAllTypes.
+func (m *TestAllTypes) SetRepeatedImportedMessage(v []*multitest2.Multi1) {
 	arr := js.Global.Get("Array").New(len(v))
 	for i, value := range v {
 		arr.SetIndex(i, value)
 	}
-	m.Call("setRepeatedImportedList", arr)
+	m.Call("setRepeatedImportedMessageList", arr)
 }
 
-// AddRepeatedImported appends an entry to the RepeatedImported slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedImported(v *multitest2.Multi1) {
-	m.Call("addRepeatedImported", v)
+// AddRepeatedImportedMessage appends an entry to the RepeatedImportedMessage slice of the TestAllTypes.
+func (m *TestAllTypes) AddRepeatedImportedMessage(v *multitest2.Multi1) {
+	m.Call("addRepeatedImportedMessage", v)
 }
 
-// ClearRepeatedImported clears the RepeatedImported of the TestAllTypes.
-func (m *TestAllTypes) ClearRepeatedImported() {
-	m.Call("clearRepeatedImportedList")
+// ClearRepeatedImportedMessage clears the RepeatedImportedMessage of the TestAllTypes.
+func (m *TestAllTypes) ClearRepeatedImportedMessage() {
+	m.Call("clearRepeatedImportedMessageList")
 }
 
 // GetRepeatedNestedMessage gets the RepeatedNestedMessage of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedNestedMessage() []*TestAllTypes_NestedMessage {
-	x := []*TestAllTypes_NestedMessage{}
+func (m *TestAllTypes) GetRepeatedNestedMessage() (x []*TestAllTypes_NestedMessage) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, &TestAllTypes_NestedMessage{Object: value})
 	}
@@ -964,8 +1067,10 @@ func (m *TestAllTypes) ClearRepeatedNestedMessage() {
 // GetRepeatedForeignMessage gets the RepeatedForeignMessage of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedForeignMessage() []*ForeignMessage {
-	x := []*ForeignMessage{}
+func (m *TestAllTypes) GetRepeatedForeignMessage() (x []*ForeignMessage) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, &ForeignMessage{Object: value})
 	}
@@ -995,8 +1100,10 @@ func (m *TestAllTypes) ClearRepeatedForeignMessage() {
 // GetRepeatedNestedEnum gets the RepeatedNestedEnum of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedNestedEnum() []TestAllTypes_NestedEnum {
-	x := []TestAllTypes_NestedEnum{}
+func (m *TestAllTypes) GetRepeatedNestedEnum() (x []TestAllTypes_NestedEnum) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, TestAllTypes_NestedEnum(value.Int()))
 	}
@@ -1026,8 +1133,10 @@ func (m *TestAllTypes) ClearRepeatedNestedEnum() {
 // GetRepeatedForeignEnum gets the RepeatedForeignEnum of the TestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *TestAllTypes) GetRepeatedForeignEnum() []ForeignEnum {
-	x := []ForeignEnum{}
+func (m *TestAllTypes) GetRepeatedForeignEnum() (x []ForeignEnum) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, ForeignEnum(value.Int()))
 	}
@@ -1055,7 +1164,10 @@ func (m *TestAllTypes) ClearRepeatedForeignEnum() {
 }
 
 // GetOneofUint32 gets the OneofUint32 of the TestAllTypes.
-func (m *TestAllTypes) GetOneofUint32() uint32 {
+func (m *TestAllTypes) GetOneofUint32() (x uint32) {
+	if m == nil {
+		return x
+	}
 	return uint32(m.Call("getOneofUint32").Int())
 }
 
@@ -1066,6 +1178,9 @@ func (m *TestAllTypes) SetOneofUint32(v uint32) {
 
 // HasOneofUint32 indicates whether the OneofUint32 of the TestAllTypes is set.
 func (m *TestAllTypes) HasOneofUint32() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasOneofUint32").Bool()
 }
 
@@ -1075,7 +1190,10 @@ func (m *TestAllTypes) ClearOneofUint32() {
 }
 
 // GetOneofNestedMessage gets the OneofNestedMessage of the TestAllTypes.
-func (m *TestAllTypes) GetOneofNestedMessage() *TestAllTypes_NestedMessage {
+func (m *TestAllTypes) GetOneofNestedMessage() (x *TestAllTypes_NestedMessage) {
+	if m == nil {
+		return x
+	}
 	return &TestAllTypes_NestedMessage{Object: m.Call("getOneofNestedMessage")}
 }
 
@@ -1090,6 +1208,9 @@ func (m *TestAllTypes) SetOneofNestedMessage(v *TestAllTypes_NestedMessage) {
 
 // HasOneofNestedMessage indicates whether the OneofNestedMessage of the TestAllTypes is set.
 func (m *TestAllTypes) HasOneofNestedMessage() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasOneofNestedMessage").Bool()
 }
 
@@ -1099,7 +1220,10 @@ func (m *TestAllTypes) ClearOneofNestedMessage() {
 }
 
 // GetOneofString gets the OneofString of the TestAllTypes.
-func (m *TestAllTypes) GetOneofString() string {
+func (m *TestAllTypes) GetOneofString() (x string) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getOneofString").String()
 }
 
@@ -1110,6 +1234,9 @@ func (m *TestAllTypes) SetOneofString(v string) {
 
 // HasOneofString indicates whether the OneofString of the TestAllTypes is set.
 func (m *TestAllTypes) HasOneofString() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasOneofString").Bool()
 }
 
@@ -1119,7 +1246,10 @@ func (m *TestAllTypes) ClearOneofString() {
 }
 
 // GetOneofBytes gets the OneofBytes of the TestAllTypes.
-func (m *TestAllTypes) GetOneofBytes() []byte {
+func (m *TestAllTypes) GetOneofBytes() (x []byte) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getOneofBytes_asU8").Interface().([]byte)
 }
 
@@ -1130,6 +1260,9 @@ func (m *TestAllTypes) SetOneofBytes(v []byte) {
 
 // HasOneofBytes indicates whether the OneofBytes of the TestAllTypes is set.
 func (m *TestAllTypes) HasOneofBytes() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasOneofBytes").Bool()
 }
 
@@ -1138,34 +1271,40 @@ func (m *TestAllTypes) ClearOneofBytes() {
 	m.Call("clearOneofBytes")
 }
 
-// GetOneofImported gets the OneofImported of the TestAllTypes.
-func (m *TestAllTypes) GetOneofImported() *multitest2.Multi1 {
-	return &multitest2.Multi1{Object: m.Call("getOneofImported")}
+// GetOneofImportedMessage gets the OneofImportedMessage of the TestAllTypes.
+func (m *TestAllTypes) GetOneofImportedMessage() (x *multitest2.Multi1) {
+	if m == nil {
+		return x
+	}
+	return &multitest2.Multi1{Object: m.Call("getOneofImportedMessage")}
 }
 
-// SetOneofImported sets the OneofImported of the TestAllTypes.
-func (m *TestAllTypes) SetOneofImported(v *multitest2.Multi1) {
+// SetOneofImportedMessage sets the OneofImportedMessage of the TestAllTypes.
+func (m *TestAllTypes) SetOneofImportedMessage(v *multitest2.Multi1) {
 	if v != nil {
-		m.Call("setOneofImported", v)
+		m.Call("setOneofImportedMessage", v)
 	} else {
-		m.ClearOneofImported()
+		m.ClearOneofImportedMessage()
 	}
 }
 
-// HasOneofImported indicates whether the OneofImported of the TestAllTypes is set.
-func (m *TestAllTypes) HasOneofImported() bool {
-	return m.Call("hasOneofImported").Bool()
+// HasOneofImportedMessage indicates whether the OneofImportedMessage of the TestAllTypes is set.
+func (m *TestAllTypes) HasOneofImportedMessage() bool {
+	if m == nil {
+		return false
+	}
+	return m.Call("hasOneofImportedMessage").Bool()
 }
 
-// ClearOneofImported clears the OneofImported of the TestAllTypes.
-func (m *TestAllTypes) ClearOneofImported() {
-	m.Call("clearOneofImported")
+// ClearOneofImportedMessage clears the OneofImportedMessage of the TestAllTypes.
+func (m *TestAllTypes) ClearOneofImportedMessage() {
+	m.Call("clearOneofImportedMessage")
 }
 
 // New creates a new TestAllTypes.
 // Singular
 // Repeated
-func (m *TestAllTypes) New(singleInt32 int32, singleInt64 int64, singleUint32 uint32, singleUint64 uint64, singleSint32 int32, singleSint64 int64, singleFixed32 uint32, singleFixed64 uint64, singleSfixed32 int32, singleSfixed64 int64, singleFloat float32, singleDouble float64, singleBool bool, singleString string, singleBytes []byte, singleImported *multitest2.Multi1, singleNestedMessage *TestAllTypes_NestedMessage, singleForeignMessage *ForeignMessage, singleNestedEnum TestAllTypes_NestedEnum, singleForeignEnum ForeignEnum, repeatedInt32 []int32, repeatedInt64 []int64, repeatedUint32 []uint32, repeatedUint64 []uint64, repeatedSint32 []int32, repeatedSint64 []int64, repeatedFixed32 []uint32, repeatedFixed64 []uint64, repeatedSfixed32 []int32, repeatedSfixed64 []int64, repeatedFloat []float32, repeatedDouble []float64, repeatedBool []bool, repeatedString []string, repeatedBytes [][]byte, repeatedImported []*multitest2.Multi1, repeatedNestedMessage []*TestAllTypes_NestedMessage, repeatedForeignMessage []*ForeignMessage, repeatedNestedEnum []TestAllTypes_NestedEnum, repeatedForeignEnum []ForeignEnum, oneof_field isTestAllTypes_OneofField) *TestAllTypes {
+func (m *TestAllTypes) New(singleInt32 int32, singleInt64 int64, singleUint32 uint32, singleUint64 uint64, singleSint32 int32, singleSint64 int64, singleFixed32 uint32, singleFixed64 uint64, singleSfixed32 int32, singleSfixed64 int64, singleFloat float32, singleDouble float64, singleBool bool, singleString string, singleBytes []byte, singleImportedMessage *multitest2.Multi1, singleNestedMessage *TestAllTypes_NestedMessage, singleForeignMessage *ForeignMessage, singleNestedEnum TestAllTypes_NestedEnum, singleForeignEnum ForeignEnum, repeatedInt32 []int32, repeatedInt64 []int64, repeatedUint32 []uint32, repeatedUint64 []uint64, repeatedSint32 []int32, repeatedSint64 []int64, repeatedFixed32 []uint32, repeatedFixed64 []uint64, repeatedSfixed32 []int32, repeatedSfixed64 []int64, repeatedFloat []float32, repeatedDouble []float64, repeatedBool []bool, repeatedString []string, repeatedBytes [][]byte, repeatedImportedMessage []*multitest2.Multi1, repeatedNestedMessage []*TestAllTypes_NestedMessage, repeatedForeignMessage []*ForeignMessage, repeatedNestedEnum []TestAllTypes_NestedEnum, repeatedForeignEnum []ForeignEnum, oneof_field isTestAllTypes_OneofField) *TestAllTypes {
 	m = &TestAllTypes{
 		Object: js.Global.Get("proto").Get("types").Get("TestAllTypes").New([]interface{}{
 			singleInt32,
@@ -1218,7 +1357,7 @@ func (m *TestAllTypes) New(singleInt32 int32, singleInt64 int64, singleUint32 ui
 
 	m.SetOneofField(oneof_field)
 
-	m.SetSingleImported(singleImported)
+	m.SetSingleImportedMessage(singleImportedMessage)
 
 	m.SetSingleNestedMessage(singleNestedMessage)
 
@@ -1314,11 +1453,11 @@ func (m *TestAllTypes) New(singleInt32 int32, singleInt64 int64, singleUint32 ui
 	}
 	m.Call("setRepeatedBytesList", arr______________)
 
-	arr_______________ := js.Global.Get("Array").New(len(repeatedImported))
-	for i, value := range repeatedImported {
+	arr_______________ := js.Global.Get("Array").New(len(repeatedImportedMessage))
+	for i, value := range repeatedImportedMessage {
 		arr_______________.SetIndex(i, value)
 	}
-	m.Call("setRepeatedImportedList", arr_______________)
+	m.Call("setRepeatedImportedMessageList", arr_______________)
 
 	arr________________ := js.Global.Get("Array").New(len(repeatedNestedMessage))
 	for i, value := range repeatedNestedMessage {
@@ -1369,7 +1508,10 @@ type TestAllTypes_NestedMessage struct {
 }
 
 // GetB gets the B of the TestAllTypes_NestedMessage.
-func (m *TestAllTypes_NestedMessage) GetB() int32 {
+func (m *TestAllTypes_NestedMessage) GetB() (x int32) {
+	if m == nil {
+		return x
+	}
 	return int32(m.Call("getB").Int())
 }
 
@@ -1412,7 +1554,10 @@ type NestedTestAllTypes struct {
 }
 
 // GetChild gets the Child of the NestedTestAllTypes.
-func (m *NestedTestAllTypes) GetChild() *NestedTestAllTypes {
+func (m *NestedTestAllTypes) GetChild() (x *NestedTestAllTypes) {
+	if m == nil {
+		return x
+	}
 	return &NestedTestAllTypes{Object: m.Call("getChild")}
 }
 
@@ -1427,6 +1572,9 @@ func (m *NestedTestAllTypes) SetChild(v *NestedTestAllTypes) {
 
 // HasChild indicates whether the Child of the NestedTestAllTypes is set.
 func (m *NestedTestAllTypes) HasChild() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasChild").Bool()
 }
 
@@ -1436,7 +1584,10 @@ func (m *NestedTestAllTypes) ClearChild() {
 }
 
 // GetPayload gets the Payload of the NestedTestAllTypes.
-func (m *NestedTestAllTypes) GetPayload() *TestAllTypes {
+func (m *NestedTestAllTypes) GetPayload() (x *TestAllTypes) {
+	if m == nil {
+		return x
+	}
 	return &TestAllTypes{Object: m.Call("getPayload")}
 }
 
@@ -1451,6 +1602,9 @@ func (m *NestedTestAllTypes) SetPayload(v *TestAllTypes) {
 
 // HasPayload indicates whether the Payload of the NestedTestAllTypes is set.
 func (m *NestedTestAllTypes) HasPayload() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasPayload").Bool()
 }
 
@@ -1462,8 +1616,10 @@ func (m *NestedTestAllTypes) ClearPayload() {
 // GetRepeatedChild gets the RepeatedChild of the NestedTestAllTypes.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *NestedTestAllTypes) GetRepeatedChild() []*NestedTestAllTypes {
-	x := []*NestedTestAllTypes{}
+func (m *NestedTestAllTypes) GetRepeatedChild() (x []*NestedTestAllTypes) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, &NestedTestAllTypes{Object: value})
 	}
@@ -1537,7 +1693,10 @@ type ForeignMessage struct {
 }
 
 // GetC gets the C of the ForeignMessage.
-func (m *ForeignMessage) GetC() int32 {
+func (m *ForeignMessage) GetC() (x int32) {
+	if m == nil {
+		return x
+	}
 	return int32(m.Call("getC").Int())
 }
 
@@ -1580,8 +1739,11 @@ type TestMap struct {
 }
 
 // GetMapInt32Int32 gets the MapInt32Int32 of the TestMap.
-func (m *TestMap) GetMapInt32Int32() map[int32]int32 {
-	x := map[int32]int32{}
+func (m *TestMap) GetMapInt32Int32() (x map[int32]int32) {
+	if m == nil {
+		return x
+	}
+	x = map[int32]int32{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[int32(key.Int())] = int32(value.Int())
 	}
@@ -1604,8 +1766,11 @@ func (m *TestMap) ClearMapInt32Int32() {
 }
 
 // GetMapInt64Int64 gets the MapInt64Int64 of the TestMap.
-func (m *TestMap) GetMapInt64Int64() map[int64]int64 {
-	x := map[int64]int64{}
+func (m *TestMap) GetMapInt64Int64() (x map[int64]int64) {
+	if m == nil {
+		return x
+	}
+	x = map[int64]int64{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[key.Int64()] = value.Int64()
 	}
@@ -1628,8 +1793,11 @@ func (m *TestMap) ClearMapInt64Int64() {
 }
 
 // GetMapUint32Uint32 gets the MapUint32Uint32 of the TestMap.
-func (m *TestMap) GetMapUint32Uint32() map[uint32]uint32 {
-	x := map[uint32]uint32{}
+func (m *TestMap) GetMapUint32Uint32() (x map[uint32]uint32) {
+	if m == nil {
+		return x
+	}
+	x = map[uint32]uint32{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[uint32(key.Int())] = uint32(value.Int())
 	}
@@ -1652,8 +1820,11 @@ func (m *TestMap) ClearMapUint32Uint32() {
 }
 
 // GetMapUint64Uint64 gets the MapUint64Uint64 of the TestMap.
-func (m *TestMap) GetMapUint64Uint64() map[uint64]uint64 {
-	x := map[uint64]uint64{}
+func (m *TestMap) GetMapUint64Uint64() (x map[uint64]uint64) {
+	if m == nil {
+		return x
+	}
+	x = map[uint64]uint64{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[key.Uint64()] = value.Uint64()
 	}
@@ -1676,8 +1847,11 @@ func (m *TestMap) ClearMapUint64Uint64() {
 }
 
 // GetMapSint32Sint32 gets the MapSint32Sint32 of the TestMap.
-func (m *TestMap) GetMapSint32Sint32() map[int32]int32 {
-	x := map[int32]int32{}
+func (m *TestMap) GetMapSint32Sint32() (x map[int32]int32) {
+	if m == nil {
+		return x
+	}
+	x = map[int32]int32{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[int32(key.Int())] = int32(value.Int())
 	}
@@ -1700,8 +1874,11 @@ func (m *TestMap) ClearMapSint32Sint32() {
 }
 
 // GetMapSint64Sint64 gets the MapSint64Sint64 of the TestMap.
-func (m *TestMap) GetMapSint64Sint64() map[int64]int64 {
-	x := map[int64]int64{}
+func (m *TestMap) GetMapSint64Sint64() (x map[int64]int64) {
+	if m == nil {
+		return x
+	}
+	x = map[int64]int64{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[key.Int64()] = value.Int64()
 	}
@@ -1724,8 +1901,11 @@ func (m *TestMap) ClearMapSint64Sint64() {
 }
 
 // GetMapFixed32Fixed32 gets the MapFixed32Fixed32 of the TestMap.
-func (m *TestMap) GetMapFixed32Fixed32() map[uint32]uint32 {
-	x := map[uint32]uint32{}
+func (m *TestMap) GetMapFixed32Fixed32() (x map[uint32]uint32) {
+	if m == nil {
+		return x
+	}
+	x = map[uint32]uint32{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[uint32(key.Int())] = uint32(value.Int())
 	}
@@ -1748,8 +1928,11 @@ func (m *TestMap) ClearMapFixed32Fixed32() {
 }
 
 // GetMapFixed64Fixed64 gets the MapFixed64Fixed64 of the TestMap.
-func (m *TestMap) GetMapFixed64Fixed64() map[uint64]uint64 {
-	x := map[uint64]uint64{}
+func (m *TestMap) GetMapFixed64Fixed64() (x map[uint64]uint64) {
+	if m == nil {
+		return x
+	}
+	x = map[uint64]uint64{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[key.Uint64()] = value.Uint64()
 	}
@@ -1772,8 +1955,11 @@ func (m *TestMap) ClearMapFixed64Fixed64() {
 }
 
 // GetMapSfixed32Sfixed32 gets the MapSfixed32Sfixed32 of the TestMap.
-func (m *TestMap) GetMapSfixed32Sfixed32() map[int32]int32 {
-	x := map[int32]int32{}
+func (m *TestMap) GetMapSfixed32Sfixed32() (x map[int32]int32) {
+	if m == nil {
+		return x
+	}
+	x = map[int32]int32{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[int32(key.Int())] = int32(value.Int())
 	}
@@ -1796,8 +1982,11 @@ func (m *TestMap) ClearMapSfixed32Sfixed32() {
 }
 
 // GetMapSfixed64Sfixed64 gets the MapSfixed64Sfixed64 of the TestMap.
-func (m *TestMap) GetMapSfixed64Sfixed64() map[int64]int64 {
-	x := map[int64]int64{}
+func (m *TestMap) GetMapSfixed64Sfixed64() (x map[int64]int64) {
+	if m == nil {
+		return x
+	}
+	x = map[int64]int64{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[key.Int64()] = value.Int64()
 	}
@@ -1820,8 +2009,11 @@ func (m *TestMap) ClearMapSfixed64Sfixed64() {
 }
 
 // GetMapInt32Float gets the MapInt32Float of the TestMap.
-func (m *TestMap) GetMapInt32Float() map[int32]float32 {
-	x := map[int32]float32{}
+func (m *TestMap) GetMapInt32Float() (x map[int32]float32) {
+	if m == nil {
+		return x
+	}
+	x = map[int32]float32{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[int32(key.Int())] = float32(value.Float())
 	}
@@ -1844,8 +2036,11 @@ func (m *TestMap) ClearMapInt32Float() {
 }
 
 // GetMapInt32Double gets the MapInt32Double of the TestMap.
-func (m *TestMap) GetMapInt32Double() map[int32]float64 {
-	x := map[int32]float64{}
+func (m *TestMap) GetMapInt32Double() (x map[int32]float64) {
+	if m == nil {
+		return x
+	}
+	x = map[int32]float64{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[int32(key.Int())] = value.Float()
 	}
@@ -1868,8 +2063,11 @@ func (m *TestMap) ClearMapInt32Double() {
 }
 
 // GetMapBoolBool gets the MapBoolBool of the TestMap.
-func (m *TestMap) GetMapBoolBool() map[bool]bool {
-	x := map[bool]bool{}
+func (m *TestMap) GetMapBoolBool() (x map[bool]bool) {
+	if m == nil {
+		return x
+	}
+	x = map[bool]bool{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[key.Bool()] = value.Bool()
 	}
@@ -1892,8 +2090,11 @@ func (m *TestMap) ClearMapBoolBool() {
 }
 
 // GetMapStringString gets the MapStringString of the TestMap.
-func (m *TestMap) GetMapStringString() map[string]string {
-	x := map[string]string{}
+func (m *TestMap) GetMapStringString() (x map[string]string) {
+	if m == nil {
+		return x
+	}
+	x = map[string]string{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[key.String()] = value.String()
 	}
@@ -1916,8 +2117,11 @@ func (m *TestMap) ClearMapStringString() {
 }
 
 // GetMapInt32Bytes gets the MapInt32Bytes of the TestMap.
-func (m *TestMap) GetMapInt32Bytes() map[int32][]byte {
-	x := map[int32][]byte{}
+func (m *TestMap) GetMapInt32Bytes() (x map[int32][]byte) {
+	if m == nil {
+		return x
+	}
+	x = map[int32][]byte{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[int32(key.Int())] = value.Interface().([]byte)
 	}
@@ -1940,8 +2144,11 @@ func (m *TestMap) ClearMapInt32Bytes() {
 }
 
 // GetMapInt32Enum gets the MapInt32Enum of the TestMap.
-func (m *TestMap) GetMapInt32Enum() map[int32]MapEnum {
-	x := map[int32]MapEnum{}
+func (m *TestMap) GetMapInt32Enum() (x map[int32]MapEnum) {
+	if m == nil {
+		return x
+	}
+	x = map[int32]MapEnum{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[int32(key.Int())] = MapEnum(value.Int())
 	}
@@ -1964,8 +2171,11 @@ func (m *TestMap) ClearMapInt32Enum() {
 }
 
 // GetMapInt32ForeignMessage gets the MapInt32ForeignMessage of the TestMap.
-func (m *TestMap) GetMapInt32ForeignMessage() map[int32]*ForeignMessage {
-	x := map[int32]*ForeignMessage{}
+func (m *TestMap) GetMapInt32ForeignMessage() (x map[int32]*ForeignMessage) {
+	if m == nil {
+		return x
+	}
+	x = map[int32]*ForeignMessage{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[int32(key.Int())] = &ForeignMessage{Object: value}
 	}
@@ -1987,32 +2197,35 @@ func (m *TestMap) ClearMapInt32ForeignMessage() {
 	m.Call("clearMapInt32ForeignMessageMap")
 }
 
-// GetMapInt32Imported gets the MapInt32Imported of the TestMap.
-func (m *TestMap) GetMapInt32Imported() map[int32]*multitest2.Multi1 {
-	x := map[int32]*multitest2.Multi1{}
+// GetMapInt32ImportedMessage gets the MapInt32ImportedMessage of the TestMap.
+func (m *TestMap) GetMapInt32ImportedMessage() (x map[int32]*multitest2.Multi1) {
+	if m == nil {
+		return x
+	}
+	x = map[int32]*multitest2.Multi1{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[int32(key.Int())] = &multitest2.Multi1{Object: value}
 	}
-	m.Call("getMapInt32ImportedMap").Call("forEach", mapFunc)
+	m.Call("getMapInt32ImportedMessageMap").Call("forEach", mapFunc)
 	return x
 }
 
-// SetMapInt32Imported sets the MapInt32Imported of the TestMap.
-func (m *TestMap) SetMapInt32Imported(v map[int32]*multitest2.Multi1) {
-	m.Call("clearMapInt32ImportedMap")
-	mp := m.Call("getMapInt32ImportedMap")
+// SetMapInt32ImportedMessage sets the MapInt32ImportedMessage of the TestMap.
+func (m *TestMap) SetMapInt32ImportedMessage(v map[int32]*multitest2.Multi1) {
+	m.Call("clearMapInt32ImportedMessageMap")
+	mp := m.Call("getMapInt32ImportedMessageMap")
 	for key, value := range v {
 		mp.Call("set", key, value)
 	}
 }
 
-// ClearMapInt32Imported clears the MapInt32Imported of the TestMap.
-func (m *TestMap) ClearMapInt32Imported() {
-	m.Call("clearMapInt32ImportedMap")
+// ClearMapInt32ImportedMessage clears the MapInt32ImportedMessage of the TestMap.
+func (m *TestMap) ClearMapInt32ImportedMessage() {
+	m.Call("clearMapInt32ImportedMessageMap")
 }
 
 // New creates a new TestMap.
-func (m *TestMap) New(mapInt32Int32 map[int32]int32, mapInt64Int64 map[int64]int64, mapUint32Uint32 map[uint32]uint32, mapUint64Uint64 map[uint64]uint64, mapSint32Sint32 map[int32]int32, mapSint64Sint64 map[int64]int64, mapFixed32Fixed32 map[uint32]uint32, mapFixed64Fixed64 map[uint64]uint64, mapSfixed32Sfixed32 map[int32]int32, mapSfixed64Sfixed64 map[int64]int64, mapInt32Float map[int32]float32, mapInt32Double map[int32]float64, mapBoolBool map[bool]bool, mapStringString map[string]string, mapInt32Bytes map[int32][]byte, mapInt32Enum map[int32]MapEnum, mapInt32ForeignMessage map[int32]*ForeignMessage, mapInt32Imported map[int32]*multitest2.Multi1) *TestMap {
+func (m *TestMap) New(mapInt32Int32 map[int32]int32, mapInt64Int64 map[int64]int64, mapUint32Uint32 map[uint32]uint32, mapUint64Uint64 map[uint64]uint64, mapSint32Sint32 map[int32]int32, mapSint64Sint64 map[int64]int64, mapFixed32Fixed32 map[uint32]uint32, mapFixed64Fixed64 map[uint64]uint64, mapSfixed32Sfixed32 map[int32]int32, mapSfixed64Sfixed64 map[int64]int64, mapInt32Float map[int32]float32, mapInt32Double map[int32]float64, mapBoolBool map[bool]bool, mapStringString map[string]string, mapInt32Bytes map[int32][]byte, mapInt32Enum map[int32]MapEnum, mapInt32ForeignMessage map[int32]*ForeignMessage, mapInt32ImportedMessage map[int32]*multitest2.Multi1) *TestMap {
 	m = &TestMap{
 		Object: js.Global.Get("proto").Get("types").Get("TestMap").New([]interface{}{
 			js.Undefined,
@@ -2121,8 +2334,8 @@ func (m *TestMap) New(mapInt32Int32 map[int32]int32, mapInt64Int64 map[int64]int
 		mp________________.Call("set", key, value)
 	}
 
-	mp_________________ := m.Call("getMapInt32ImportedMap")
-	for key, value := range mapInt32Imported {
+	mp_________________ := m.Call("getMapInt32ImportedMessageMap")
+	for key, value := range mapInt32ImportedMessage {
 		mp_________________.Call("set", key, value)
 	}
 

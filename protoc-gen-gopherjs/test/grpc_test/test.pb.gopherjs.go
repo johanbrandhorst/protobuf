@@ -2,14 +2,14 @@
 // source: grpc_test/test.proto
 
 /*
-Package my_test is a generated protocol buffer package.
+	Package my_test is a generated protocol buffer package.
 
-It is generated from these files:
-	grpc_test/test.proto
+	It is generated from these files:
+		grpc_test/test.proto
 
-It has these top-level messages:
-	Simple
-	Complex
+	It has these top-level messages:
+		Simple
+		Complex
 */
 package my_test
 
@@ -56,7 +56,10 @@ type Simple struct {
 }
 
 // GetKey gets the Key of the Simple.
-func (m *Simple) GetKey() int64 {
+func (m *Simple) GetKey() (x int64) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getKey").Int64()
 }
 
@@ -66,7 +69,10 @@ func (m *Simple) SetKey(v int64) {
 }
 
 // GetDeadline gets the Deadline of the Simple.
-func (m *Simple) GetDeadline() float32 {
+func (m *Simple) GetDeadline() (x float32) {
+	if m == nil {
+		return x
+	}
 	return float32(m.Call("getDeadline").Float())
 }
 
@@ -76,7 +82,10 @@ func (m *Simple) SetDeadline(v float32) {
 }
 
 // GetDay gets the Day of the Simple.
-func (m *Simple) GetDay() Days {
+func (m *Simple) GetDay() (x Days) {
+	if m == nil {
+		return x
+	}
 	return Days(m.Call("getDay").Int())
 }
 
@@ -86,7 +95,10 @@ func (m *Simple) SetDay(v Days) {
 }
 
 // GetName gets the Name of the Simple.
-func (m *Simple) GetName() string {
+func (m *Simple) GetName() (x string) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getName").String()
 }
 
@@ -134,8 +146,10 @@ type Complex struct {
 // GetCommunique gets the Communique of the Complex.
 // Warning: mutating the returned slice will not be reflected in the message.
 // Use the setter to make changes to the slice in the message.
-func (m *Complex) GetCommunique() []*Complex_Communique {
-	x := []*Complex_Communique{}
+func (m *Complex) GetCommunique() (x []*Complex_Communique) {
+	if m == nil {
+		return x
+	}
 	arrFunc := func(value *js.Object) {
 		x = append(x, &Complex_Communique{Object: value})
 	}
@@ -163,8 +177,11 @@ func (m *Complex) ClearCommunique() {
 }
 
 // GetCompactKeys gets the CompactKeys of the Complex.
-func (m *Complex) GetCompactKeys() map[int32]string {
-	x := map[int32]string{}
+func (m *Complex) GetCompactKeys() (x map[int32]string) {
+	if m == nil {
+		return x
+	}
+	x = map[int32]string{}
 	mapFunc := func(value *js.Object, key *js.Object) {
 		x[int32(key.Int())] = value.String()
 	}
@@ -188,7 +205,10 @@ func (m *Complex) ClearCompactKeys() {
 
 // GetMulti gets the Multi of the Complex.
 // Multi is imported
-func (m *Complex) GetMulti() *multitest2.Multi1 {
+func (m *Complex) GetMulti() (x *multitest2.Multi1) {
+	if m == nil {
+		return x
+	}
 	return &multitest2.Multi1{Object: m.Call("getMulti")}
 }
 
@@ -205,6 +225,9 @@ func (m *Complex) SetMulti(v *multitest2.Multi1) {
 // HasMulti indicates whether the Multi of the Complex is set.
 // Multi is imported
 func (m *Complex) HasMulti() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasMulti").Bool()
 }
 
@@ -375,7 +398,10 @@ func (m *Complex_Communique) SetUnionThing(union_thing isComplex_Communique_Unio
 }
 
 // GetMakeMeCry gets the MakeMeCry of the Complex_Communique.
-func (m *Complex_Communique) GetMakeMeCry() bool {
+func (m *Complex_Communique) GetMakeMeCry() (x bool) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getMakeMeCry").Bool()
 }
 
@@ -385,7 +411,10 @@ func (m *Complex_Communique) SetMakeMeCry(v bool) {
 }
 
 // GetNumber gets the Number of the Complex_Communique.
-func (m *Complex_Communique) GetNumber() int32 {
+func (m *Complex_Communique) GetNumber() (x int32) {
+	if m == nil {
+		return x
+	}
 	return int32(m.Call("getNumber").Int())
 }
 
@@ -396,6 +425,9 @@ func (m *Complex_Communique) SetNumber(v int32) {
 
 // HasNumber indicates whether the Number of the Complex_Communique is set.
 func (m *Complex_Communique) HasNumber() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasNumber").Bool()
 }
 
@@ -405,7 +437,10 @@ func (m *Complex_Communique) ClearNumber() {
 }
 
 // GetName gets the Name of the Complex_Communique.
-func (m *Complex_Communique) GetName() string {
+func (m *Complex_Communique) GetName() (x string) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getName").String()
 }
 
@@ -416,6 +451,9 @@ func (m *Complex_Communique) SetName(v string) {
 
 // HasName indicates whether the Name of the Complex_Communique is set.
 func (m *Complex_Communique) HasName() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasName").Bool()
 }
 
@@ -425,7 +463,10 @@ func (m *Complex_Communique) ClearName() {
 }
 
 // GetData gets the Data of the Complex_Communique.
-func (m *Complex_Communique) GetData() []byte {
+func (m *Complex_Communique) GetData() (x []byte) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getData_asU8").Interface().([]byte)
 }
 
@@ -436,6 +477,9 @@ func (m *Complex_Communique) SetData(v []byte) {
 
 // HasData indicates whether the Data of the Complex_Communique is set.
 func (m *Complex_Communique) HasData() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasData").Bool()
 }
 
@@ -445,7 +489,10 @@ func (m *Complex_Communique) ClearData() {
 }
 
 // GetTempC gets the TempC of the Complex_Communique.
-func (m *Complex_Communique) GetTempC() float64 {
+func (m *Complex_Communique) GetTempC() (x float64) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getTempC").Float()
 }
 
@@ -456,6 +503,9 @@ func (m *Complex_Communique) SetTempC(v float64) {
 
 // HasTempC indicates whether the TempC of the Complex_Communique is set.
 func (m *Complex_Communique) HasTempC() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasTempC").Bool()
 }
 
@@ -465,7 +515,10 @@ func (m *Complex_Communique) ClearTempC() {
 }
 
 // GetHeight gets the Height of the Complex_Communique.
-func (m *Complex_Communique) GetHeight() float32 {
+func (m *Complex_Communique) GetHeight() (x float32) {
+	if m == nil {
+		return x
+	}
 	return float32(m.Call("getHeight").Float())
 }
 
@@ -476,6 +529,9 @@ func (m *Complex_Communique) SetHeight(v float32) {
 
 // HasHeight indicates whether the Height of the Complex_Communique is set.
 func (m *Complex_Communique) HasHeight() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasHeight").Bool()
 }
 
@@ -485,7 +541,10 @@ func (m *Complex_Communique) ClearHeight() {
 }
 
 // GetToday gets the Today of the Complex_Communique.
-func (m *Complex_Communique) GetToday() Days {
+func (m *Complex_Communique) GetToday() (x Days) {
+	if m == nil {
+		return x
+	}
 	return Days(m.Call("getToday").Int())
 }
 
@@ -496,6 +555,9 @@ func (m *Complex_Communique) SetToday(v Days) {
 
 // HasToday indicates whether the Today of the Complex_Communique is set.
 func (m *Complex_Communique) HasToday() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasToday").Bool()
 }
 
@@ -505,7 +567,10 @@ func (m *Complex_Communique) ClearToday() {
 }
 
 // GetMaybe gets the Maybe of the Complex_Communique.
-func (m *Complex_Communique) GetMaybe() bool {
+func (m *Complex_Communique) GetMaybe() (x bool) {
+	if m == nil {
+		return x
+	}
 	return m.Call("getMaybe").Bool()
 }
 
@@ -516,6 +581,9 @@ func (m *Complex_Communique) SetMaybe(v bool) {
 
 // HasMaybe indicates whether the Maybe of the Complex_Communique is set.
 func (m *Complex_Communique) HasMaybe() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasMaybe").Bool()
 }
 
@@ -525,7 +593,10 @@ func (m *Complex_Communique) ClearMaybe() {
 }
 
 // GetDelta gets the Delta of the Complex_Communique.
-func (m *Complex_Communique) GetDelta() int32 {
+func (m *Complex_Communique) GetDelta() (x int32) {
+	if m == nil {
+		return x
+	}
 	return int32(m.Call("getDelta").Int())
 }
 
@@ -536,6 +607,9 @@ func (m *Complex_Communique) SetDelta(v int32) {
 
 // HasDelta indicates whether the Delta of the Complex_Communique is set.
 func (m *Complex_Communique) HasDelta() bool {
+	if m == nil {
+		return false
+	}
 	return m.Call("hasDelta").Bool()
 }
 

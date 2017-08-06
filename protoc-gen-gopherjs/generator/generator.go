@@ -1582,11 +1582,16 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			g.P(`// Warning: mutating the returned slice will not be reflected in the message.`)
 			g.P(`// Use the setter to make changes to the slice in the message.`)
 		}
-		g.P("func (m *", ccTypeName, ") ", getterName, "() ", typename, ` {`)
+		g.P("func (m *", ccTypeName, ") ", getterName, "() (x ", typename, `) {`)
 		g.In()
+		g.P(`if m == nil {`)
+		g.In()
+		g.P(`return x`)
+		g.Out()
+		g.P(`}`)
 		if d := g.getMapDescriptor(field); d != nil {
 			// Special case for maps
-			g.P(`x := `, mapFieldTypes[field], `{}`)
+			g.P(`x = `, mapFieldTypes[field], `{}`)
 			g.P(`mapFunc := func(value *js.Object, key *js.Object) {`)
 			g.In()
 			// Figure out the key and value types
@@ -1640,7 +1645,6 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			default:
 				valueConversion = fmt.Sprintf(`value.%s`, typeFunc)
 			}
-			g.P(`x := `, typename, `{}`)
 			g.P(`arrFunc := func(value *js.Object) {`)
 			g.In()
 			g.P(`x = append(x, `, valueConversion, `)`)
@@ -1736,6 +1740,12 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
 			g.P(`func (m *` + ccTypeName + `) ` + haserName + `() bool {`)
 			g.In()
+			g.In()
+			g.P(`if m == nil {`)
+			g.In()
+			g.P(`return false`)
+			g.Out()
+			g.P(`}`)
 			g.P(`return m.Call("has`, fname, `").Bool()`)
 			g.Out()
 			g.P(`}`)

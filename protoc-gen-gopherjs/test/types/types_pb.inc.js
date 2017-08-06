@@ -62,7 +62,7 @@ proto.types.TestAllTypes.OneofFieldCase = {
   ONEOF_NESTED_MESSAGE: 112,
   ONEOF_STRING: 113,
   ONEOF_BYTES: 114,
-  ONEOF_IMPORTED: 115
+  ONEOF_IMPORTED_MESSAGE: 115
 };
 
 /**
@@ -115,7 +115,7 @@ proto.types.TestAllTypes.toObject = function(includeInstance, msg) {
     singleBool: jspb.Message.getFieldWithDefault(msg, 13, false),
     singleString: jspb.Message.getFieldWithDefault(msg, 14, ""),
     singleBytes: msg.getSingleBytes_asB64(),
-    singleImported: (f = msg.getSingleImported()) && multi_multi1_pb.Multi1.toObject(includeInstance, f),
+    singleImportedMessage: (f = msg.getSingleImportedMessage()) && multi_multi1_pb.Multi1.toObject(includeInstance, f),
     singleNestedMessage: (f = msg.getSingleNestedMessage()) && proto.types.TestAllTypes.NestedMessage.toObject(includeInstance, f),
     singleForeignMessage: (f = msg.getSingleForeignMessage()) && proto.types.ForeignMessage.toObject(includeInstance, f),
     singleNestedEnum: jspb.Message.getFieldWithDefault(msg, 21, 0),
@@ -135,7 +135,7 @@ proto.types.TestAllTypes.toObject = function(includeInstance, msg) {
     repeatedBoolList: jspb.Message.getField(msg, 43),
     repeatedStringList: jspb.Message.getField(msg, 44),
     repeatedBytesList: msg.getRepeatedBytesList_asB64(),
-    repeatedImportedList: jspb.Message.toObjectList(msg.getRepeatedImportedList(),
+    repeatedImportedMessageList: jspb.Message.toObjectList(msg.getRepeatedImportedMessageList(),
     multi_multi1_pb.Multi1.toObject, includeInstance),
     repeatedNestedMessageList: jspb.Message.toObjectList(msg.getRepeatedNestedMessageList(),
     proto.types.TestAllTypes.NestedMessage.toObject, includeInstance),
@@ -147,7 +147,7 @@ proto.types.TestAllTypes.toObject = function(includeInstance, msg) {
     oneofNestedMessage: (f = msg.getOneofNestedMessage()) && proto.types.TestAllTypes.NestedMessage.toObject(includeInstance, f),
     oneofString: jspb.Message.getFieldWithDefault(msg, 113, ""),
     oneofBytes: msg.getOneofBytes_asB64(),
-    oneofImported: (f = msg.getOneofImported()) && multi_multi1_pb.Multi1.toObject(includeInstance, f)
+    oneofImportedMessage: (f = msg.getOneofImportedMessage()) && multi_multi1_pb.Multi1.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -247,7 +247,7 @@ proto.types.TestAllTypes.deserializeBinaryFromReader = function(msg, reader) {
     case 16:
       var value = new multi_multi1_pb.Multi1;
       reader.readMessage(value,multi_multi1_pb.Multi1.deserializeBinaryFromReader);
-      msg.setSingleImported(value);
+      msg.setSingleImportedMessage(value);
       break;
     case 18:
       var value = new proto.types.TestAllTypes.NestedMessage;
@@ -330,7 +330,7 @@ proto.types.TestAllTypes.deserializeBinaryFromReader = function(msg, reader) {
     case 46:
       var value = new multi_multi1_pb.Multi1;
       reader.readMessage(value,multi_multi1_pb.Multi1.deserializeBinaryFromReader);
-      msg.addRepeatedImported(value);
+      msg.addRepeatedImportedMessage(value);
       break;
     case 48:
       var value = new proto.types.TestAllTypes.NestedMessage;
@@ -370,7 +370,7 @@ proto.types.TestAllTypes.deserializeBinaryFromReader = function(msg, reader) {
     case 115:
       var value = new multi_multi1_pb.Multi1;
       reader.readMessage(value,multi_multi1_pb.Multi1.deserializeBinaryFromReader);
-      msg.setOneofImported(value);
+      msg.setOneofImportedMessage(value);
       break;
     default:
       reader.skipField();
@@ -505,7 +505,7 @@ proto.types.TestAllTypes.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getSingleImported();
+  f = message.getSingleImportedMessage();
   if (f != null) {
     writer.writeMessage(
       16,
@@ -648,7 +648,7 @@ proto.types.TestAllTypes.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getRepeatedImportedList();
+  f = message.getRepeatedImportedMessageList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       46,
@@ -715,7 +715,7 @@ proto.types.TestAllTypes.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getOneofImported();
+  f = message.getOneofImportedMessage();
   if (f != null) {
     writer.writeMessage(
       115,
@@ -1129,23 +1129,23 @@ proto.types.TestAllTypes.prototype.setSingleBytes = function(value) {
 
 
 /**
- * optional multitest.Multi1 single_imported = 16;
+ * optional multitest.Multi1 single_imported_message = 16;
  * @return {?proto.multitest.Multi1}
  */
-proto.types.TestAllTypes.prototype.getSingleImported = function() {
+proto.types.TestAllTypes.prototype.getSingleImportedMessage = function() {
   return /** @type{?proto.multitest.Multi1} */ (
     jspb.Message.getWrapperField(this, multi_multi1_pb.Multi1, 16));
 };
 
 
 /** @param {?proto.multitest.Multi1|undefined} value */
-proto.types.TestAllTypes.prototype.setSingleImported = function(value) {
+proto.types.TestAllTypes.prototype.setSingleImportedMessage = function(value) {
   jspb.Message.setWrapperField(this, 16, value);
 };
 
 
-proto.types.TestAllTypes.prototype.clearSingleImported = function() {
-  this.setSingleImported(undefined);
+proto.types.TestAllTypes.prototype.clearSingleImportedMessage = function() {
+  this.setSingleImportedMessage(undefined);
 };
 
 
@@ -1153,7 +1153,7 @@ proto.types.TestAllTypes.prototype.clearSingleImported = function() {
  * Returns whether this field is set.
  * @return {!boolean}
  */
-proto.types.TestAllTypes.prototype.hasSingleImported = function() {
+proto.types.TestAllTypes.prototype.hasSingleImportedMessage = function() {
   return jspb.Message.getField(this, 16) != null;
 };
 
@@ -1744,19 +1744,19 @@ proto.types.TestAllTypes.prototype.clearRepeatedBytesList = function() {
 
 
 /**
- * repeated multitest.Multi1 repeated_imported = 46;
+ * repeated multitest.Multi1 repeated_imported_message = 46;
  * If you change this array by adding, removing or replacing elements, or if you
  * replace the array itself, then you must call the setter to update it.
  * @return {!Array.<!proto.multitest.Multi1>}
  */
-proto.types.TestAllTypes.prototype.getRepeatedImportedList = function() {
+proto.types.TestAllTypes.prototype.getRepeatedImportedMessageList = function() {
   return /** @type{!Array.<!proto.multitest.Multi1>} */ (
     jspb.Message.getRepeatedWrapperField(this, multi_multi1_pb.Multi1, 46));
 };
 
 
 /** @param {!Array.<!proto.multitest.Multi1>} value */
-proto.types.TestAllTypes.prototype.setRepeatedImportedList = function(value) {
+proto.types.TestAllTypes.prototype.setRepeatedImportedMessageList = function(value) {
   jspb.Message.setRepeatedWrapperField(this, 46, value);
 };
 
@@ -1766,13 +1766,13 @@ proto.types.TestAllTypes.prototype.setRepeatedImportedList = function(value) {
  * @param {number=} opt_index
  * @return {!proto.multitest.Multi1}
  */
-proto.types.TestAllTypes.prototype.addRepeatedImported = function(opt_value, opt_index) {
+proto.types.TestAllTypes.prototype.addRepeatedImportedMessage = function(opt_value, opt_index) {
   return jspb.Message.addToRepeatedWrapperField(this, 46, opt_value, proto.multitest.Multi1, opt_index);
 };
 
 
-proto.types.TestAllTypes.prototype.clearRepeatedImportedList = function() {
-  this.setRepeatedImportedList([]);
+proto.types.TestAllTypes.prototype.clearRepeatedImportedMessageList = function() {
+  this.setRepeatedImportedMessageList([]);
 };
 
 
@@ -2046,23 +2046,23 @@ proto.types.TestAllTypes.prototype.hasOneofBytes = function() {
 
 
 /**
- * optional multitest.Multi1 oneof_imported = 115;
+ * optional multitest.Multi1 oneof_imported_message = 115;
  * @return {?proto.multitest.Multi1}
  */
-proto.types.TestAllTypes.prototype.getOneofImported = function() {
+proto.types.TestAllTypes.prototype.getOneofImportedMessage = function() {
   return /** @type{?proto.multitest.Multi1} */ (
     jspb.Message.getWrapperField(this, multi_multi1_pb.Multi1, 115));
 };
 
 
 /** @param {?proto.multitest.Multi1|undefined} value */
-proto.types.TestAllTypes.prototype.setOneofImported = function(value) {
+proto.types.TestAllTypes.prototype.setOneofImportedMessage = function(value) {
   jspb.Message.setOneofWrapperField(this, 115, proto.types.TestAllTypes.oneofGroups_[0], value);
 };
 
 
-proto.types.TestAllTypes.prototype.clearOneofImported = function() {
-  this.setOneofImported(undefined);
+proto.types.TestAllTypes.prototype.clearOneofImportedMessage = function() {
+  this.setOneofImportedMessage(undefined);
 };
 
 
@@ -2070,7 +2070,7 @@ proto.types.TestAllTypes.prototype.clearOneofImported = function() {
  * Returns whether this field is set.
  * @return {!boolean}
  */
-proto.types.TestAllTypes.prototype.hasOneofImported = function() {
+proto.types.TestAllTypes.prototype.hasOneofImportedMessage = function() {
   return jspb.Message.getField(this, 115) != null;
 };
 
@@ -2534,7 +2534,7 @@ proto.types.TestMap.toObject = function(includeInstance, msg) {
     mapInt32BytesMap: (f = msg.getMapInt32BytesMap()) ? f.toObject(includeInstance, undefined) : [],
     mapInt32EnumMap: (f = msg.getMapInt32EnumMap()) ? f.toObject(includeInstance, undefined) : [],
     mapInt32ForeignMessageMap: (f = msg.getMapInt32ForeignMessageMap()) ? f.toObject(includeInstance, proto.types.ForeignMessage.toObject) : [],
-    mapInt32ImportedMap: (f = msg.getMapInt32ImportedMap()) ? f.toObject(includeInstance, proto.multitest.Multi1.toObject) : []
+    mapInt32ImportedMessageMap: (f = msg.getMapInt32ImportedMessageMap()) ? f.toObject(includeInstance, proto.multitest.Multi1.toObject) : []
   };
 
   if (includeInstance) {
@@ -2674,7 +2674,7 @@ proto.types.TestMap.deserializeBinaryFromReader = function(msg, reader) {
          });
       break;
     case 18:
-      var value = msg.getMapInt32ImportedMap();
+      var value = msg.getMapInt32ImportedMessageMap();
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readInt32, jspb.BinaryReader.prototype.readMessage, proto.multitest.Multi1.deserializeBinaryFromReader);
          });
@@ -2775,7 +2775,7 @@ proto.types.TestMap.serializeBinaryToWriter = function(message, writer) {
   if (f && f.getLength() > 0) {
     f.serializeBinary(17, writer, jspb.BinaryWriter.prototype.writeInt32, jspb.BinaryWriter.prototype.writeMessage, proto.types.ForeignMessage.serializeBinaryToWriter);
   }
-  f = message.getMapInt32ImportedMap(true);
+  f = message.getMapInt32ImportedMessageMap(true);
   if (f && f.getLength() > 0) {
     f.serializeBinary(18, writer, jspb.BinaryWriter.prototype.writeInt32, jspb.BinaryWriter.prototype.writeMessage, proto.multitest.Multi1.serializeBinaryToWriter);
   }
@@ -3089,20 +3089,20 @@ proto.types.TestMap.prototype.clearMapInt32ForeignMessageMap = function() {
 
 
 /**
- * map<int32, multitest.Multi1> map_int32_imported = 18;
+ * map<int32, multitest.Multi1> map_int32_imported_message = 18;
  * @param {boolean=} opt_noLazyCreate Do not create the map if
  * empty, instead returning `undefined`
  * @return {!jspb.Map<number,!proto.multitest.Multi1>}
  */
-proto.types.TestMap.prototype.getMapInt32ImportedMap = function(opt_noLazyCreate) {
+proto.types.TestMap.prototype.getMapInt32ImportedMessageMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<number,!proto.multitest.Multi1>} */ (
       jspb.Message.getMapField(this, 18, opt_noLazyCreate,
       proto.multitest.Multi1));
 };
 
 
-proto.types.TestMap.prototype.clearMapInt32ImportedMap = function() {
-  this.getMapInt32ImportedMap().clear();
+proto.types.TestMap.prototype.clearMapInt32ImportedMessageMap = function() {
+  this.getMapInt32ImportedMessageMap().clear();
 };
 
 
