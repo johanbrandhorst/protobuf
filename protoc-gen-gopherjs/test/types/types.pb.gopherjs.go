@@ -524,10 +524,12 @@ func (m *TestAllTypes) SetRepeatedInt32(v []int32) {
 	m.Call("setRepeatedInt32List", arr)
 }
 
-// AddRepeatedInt32 appends an entry to the RepeatedInt32 slice of the TestAllTypes.
+// AddRepeatedInt32 adds an entry to the RepeatedInt32 slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
 // Repeated
-func (m *TestAllTypes) AddRepeatedInt32(v int32) {
-	m.Call("addRepeatedInt32", v)
+func (m *TestAllTypes) AddRepeatedInt32(v int32, index int) {
+	m.Call("addRepeatedInt32", v, index)
 }
 
 // ClearRepeatedInt32 clears the RepeatedInt32 of the TestAllTypes.
@@ -559,9 +561,11 @@ func (m *TestAllTypes) SetRepeatedInt64(v []int64) {
 	m.Call("setRepeatedInt64List", arr)
 }
 
-// AddRepeatedInt64 appends an entry to the RepeatedInt64 slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedInt64(v int64) {
-	m.Call("addRepeatedInt64", v)
+// AddRepeatedInt64 adds an entry to the RepeatedInt64 slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedInt64(v int64, index int) {
+	m.Call("addRepeatedInt64", v, index)
 }
 
 // ClearRepeatedInt64 clears the RepeatedInt64 of the TestAllTypes.
@@ -592,9 +596,11 @@ func (m *TestAllTypes) SetRepeatedUint32(v []uint32) {
 	m.Call("setRepeatedUint32List", arr)
 }
 
-// AddRepeatedUint32 appends an entry to the RepeatedUint32 slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedUint32(v uint32) {
-	m.Call("addRepeatedUint32", v)
+// AddRepeatedUint32 adds an entry to the RepeatedUint32 slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedUint32(v uint32, index int) {
+	m.Call("addRepeatedUint32", v, index)
 }
 
 // ClearRepeatedUint32 clears the RepeatedUint32 of the TestAllTypes.
@@ -625,9 +631,11 @@ func (m *TestAllTypes) SetRepeatedUint64(v []uint64) {
 	m.Call("setRepeatedUint64List", arr)
 }
 
-// AddRepeatedUint64 appends an entry to the RepeatedUint64 slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedUint64(v uint64) {
-	m.Call("addRepeatedUint64", v)
+// AddRepeatedUint64 adds an entry to the RepeatedUint64 slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedUint64(v uint64, index int) {
+	m.Call("addRepeatedUint64", v, index)
 }
 
 // ClearRepeatedUint64 clears the RepeatedUint64 of the TestAllTypes.
@@ -658,9 +666,11 @@ func (m *TestAllTypes) SetRepeatedSint32(v []int32) {
 	m.Call("setRepeatedSint32List", arr)
 }
 
-// AddRepeatedSint32 appends an entry to the RepeatedSint32 slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedSint32(v int32) {
-	m.Call("addRepeatedSint32", v)
+// AddRepeatedSint32 adds an entry to the RepeatedSint32 slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedSint32(v int32, index int) {
+	m.Call("addRepeatedSint32", v, index)
 }
 
 // ClearRepeatedSint32 clears the RepeatedSint32 of the TestAllTypes.
@@ -691,9 +701,11 @@ func (m *TestAllTypes) SetRepeatedSint64(v []int64) {
 	m.Call("setRepeatedSint64List", arr)
 }
 
-// AddRepeatedSint64 appends an entry to the RepeatedSint64 slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedSint64(v int64) {
-	m.Call("addRepeatedSint64", v)
+// AddRepeatedSint64 adds an entry to the RepeatedSint64 slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedSint64(v int64, index int) {
+	m.Call("addRepeatedSint64", v, index)
 }
 
 // ClearRepeatedSint64 clears the RepeatedSint64 of the TestAllTypes.
@@ -724,9 +736,11 @@ func (m *TestAllTypes) SetRepeatedFixed32(v []uint32) {
 	m.Call("setRepeatedFixed32List", arr)
 }
 
-// AddRepeatedFixed32 appends an entry to the RepeatedFixed32 slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedFixed32(v uint32) {
-	m.Call("addRepeatedFixed32", v)
+// AddRepeatedFixed32 adds an entry to the RepeatedFixed32 slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedFixed32(v uint32, index int) {
+	m.Call("addRepeatedFixed32", v, index)
 }
 
 // ClearRepeatedFixed32 clears the RepeatedFixed32 of the TestAllTypes.
@@ -757,9 +771,11 @@ func (m *TestAllTypes) SetRepeatedFixed64(v []uint64) {
 	m.Call("setRepeatedFixed64List", arr)
 }
 
-// AddRepeatedFixed64 appends an entry to the RepeatedFixed64 slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedFixed64(v uint64) {
-	m.Call("addRepeatedFixed64", v)
+// AddRepeatedFixed64 adds an entry to the RepeatedFixed64 slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedFixed64(v uint64, index int) {
+	m.Call("addRepeatedFixed64", v, index)
 }
 
 // ClearRepeatedFixed64 clears the RepeatedFixed64 of the TestAllTypes.
@@ -790,9 +806,11 @@ func (m *TestAllTypes) SetRepeatedSfixed32(v []int32) {
 	m.Call("setRepeatedSfixed32List", arr)
 }
 
-// AddRepeatedSfixed32 appends an entry to the RepeatedSfixed32 slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedSfixed32(v int32) {
-	m.Call("addRepeatedSfixed32", v)
+// AddRepeatedSfixed32 adds an entry to the RepeatedSfixed32 slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedSfixed32(v int32, index int) {
+	m.Call("addRepeatedSfixed32", v, index)
 }
 
 // ClearRepeatedSfixed32 clears the RepeatedSfixed32 of the TestAllTypes.
@@ -823,9 +841,11 @@ func (m *TestAllTypes) SetRepeatedSfixed64(v []int64) {
 	m.Call("setRepeatedSfixed64List", arr)
 }
 
-// AddRepeatedSfixed64 appends an entry to the RepeatedSfixed64 slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedSfixed64(v int64) {
-	m.Call("addRepeatedSfixed64", v)
+// AddRepeatedSfixed64 adds an entry to the RepeatedSfixed64 slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedSfixed64(v int64, index int) {
+	m.Call("addRepeatedSfixed64", v, index)
 }
 
 // ClearRepeatedSfixed64 clears the RepeatedSfixed64 of the TestAllTypes.
@@ -856,9 +876,11 @@ func (m *TestAllTypes) SetRepeatedFloat(v []float32) {
 	m.Call("setRepeatedFloatList", arr)
 }
 
-// AddRepeatedFloat appends an entry to the RepeatedFloat slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedFloat(v float32) {
-	m.Call("addRepeatedFloat", v)
+// AddRepeatedFloat adds an entry to the RepeatedFloat slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedFloat(v float32, index int) {
+	m.Call("addRepeatedFloat", v, index)
 }
 
 // ClearRepeatedFloat clears the RepeatedFloat of the TestAllTypes.
@@ -889,9 +911,11 @@ func (m *TestAllTypes) SetRepeatedDouble(v []float64) {
 	m.Call("setRepeatedDoubleList", arr)
 }
 
-// AddRepeatedDouble appends an entry to the RepeatedDouble slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedDouble(v float64) {
-	m.Call("addRepeatedDouble", v)
+// AddRepeatedDouble adds an entry to the RepeatedDouble slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedDouble(v float64, index int) {
+	m.Call("addRepeatedDouble", v, index)
 }
 
 // ClearRepeatedDouble clears the RepeatedDouble of the TestAllTypes.
@@ -922,9 +946,11 @@ func (m *TestAllTypes) SetRepeatedBool(v []bool) {
 	m.Call("setRepeatedBoolList", arr)
 }
 
-// AddRepeatedBool appends an entry to the RepeatedBool slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedBool(v bool) {
-	m.Call("addRepeatedBool", v)
+// AddRepeatedBool adds an entry to the RepeatedBool slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedBool(v bool, index int) {
+	m.Call("addRepeatedBool", v, index)
 }
 
 // ClearRepeatedBool clears the RepeatedBool of the TestAllTypes.
@@ -955,9 +981,11 @@ func (m *TestAllTypes) SetRepeatedString(v []string) {
 	m.Call("setRepeatedStringList", arr)
 }
 
-// AddRepeatedString appends an entry to the RepeatedString slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedString(v string) {
-	m.Call("addRepeatedString", v)
+// AddRepeatedString adds an entry to the RepeatedString slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedString(v string, index int) {
+	m.Call("addRepeatedString", v, index)
 }
 
 // ClearRepeatedString clears the RepeatedString of the TestAllTypes.
@@ -988,9 +1016,11 @@ func (m *TestAllTypes) SetRepeatedBytes(v [][]byte) {
 	m.Call("setRepeatedBytesList", arr)
 }
 
-// AddRepeatedBytes appends an entry to the RepeatedBytes slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedBytes(v []byte) {
-	m.Call("addRepeatedBytes", v)
+// AddRepeatedBytes adds an entry to the RepeatedBytes slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedBytes(v []byte, index int) {
+	m.Call("addRepeatedBytes", v, index)
 }
 
 // ClearRepeatedBytes clears the RepeatedBytes of the TestAllTypes.
@@ -1021,9 +1051,11 @@ func (m *TestAllTypes) SetRepeatedImportedMessage(v []*multitest2.Multi1) {
 	m.Call("setRepeatedImportedMessageList", arr)
 }
 
-// AddRepeatedImportedMessage appends an entry to the RepeatedImportedMessage slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedImportedMessage(v *multitest2.Multi1) {
-	m.Call("addRepeatedImportedMessage", v)
+// AddRepeatedImportedMessage adds an entry to the RepeatedImportedMessage slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedImportedMessage(v *multitest2.Multi1, index int) {
+	m.Call("addRepeatedImportedMessage", v, index)
 }
 
 // ClearRepeatedImportedMessage clears the RepeatedImportedMessage of the TestAllTypes.
@@ -1054,9 +1086,11 @@ func (m *TestAllTypes) SetRepeatedNestedMessage(v []*TestAllTypes_NestedMessage)
 	m.Call("setRepeatedNestedMessageList", arr)
 }
 
-// AddRepeatedNestedMessage appends an entry to the RepeatedNestedMessage slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedNestedMessage(v *TestAllTypes_NestedMessage) {
-	m.Call("addRepeatedNestedMessage", v)
+// AddRepeatedNestedMessage adds an entry to the RepeatedNestedMessage slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedNestedMessage(v *TestAllTypes_NestedMessage, index int) {
+	m.Call("addRepeatedNestedMessage", v, index)
 }
 
 // ClearRepeatedNestedMessage clears the RepeatedNestedMessage of the TestAllTypes.
@@ -1087,9 +1121,11 @@ func (m *TestAllTypes) SetRepeatedForeignMessage(v []*ForeignMessage) {
 	m.Call("setRepeatedForeignMessageList", arr)
 }
 
-// AddRepeatedForeignMessage appends an entry to the RepeatedForeignMessage slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedForeignMessage(v *ForeignMessage) {
-	m.Call("addRepeatedForeignMessage", v)
+// AddRepeatedForeignMessage adds an entry to the RepeatedForeignMessage slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedForeignMessage(v *ForeignMessage, index int) {
+	m.Call("addRepeatedForeignMessage", v, index)
 }
 
 // ClearRepeatedForeignMessage clears the RepeatedForeignMessage of the TestAllTypes.
@@ -1120,9 +1156,11 @@ func (m *TestAllTypes) SetRepeatedNestedEnum(v []TestAllTypes_NestedEnum) {
 	m.Call("setRepeatedNestedEnumList", arr)
 }
 
-// AddRepeatedNestedEnum appends an entry to the RepeatedNestedEnum slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedNestedEnum(v TestAllTypes_NestedEnum) {
-	m.Call("addRepeatedNestedEnum", v)
+// AddRepeatedNestedEnum adds an entry to the RepeatedNestedEnum slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedNestedEnum(v TestAllTypes_NestedEnum, index int) {
+	m.Call("addRepeatedNestedEnum", v, index)
 }
 
 // ClearRepeatedNestedEnum clears the RepeatedNestedEnum of the TestAllTypes.
@@ -1153,9 +1191,11 @@ func (m *TestAllTypes) SetRepeatedForeignEnum(v []ForeignEnum) {
 	m.Call("setRepeatedForeignEnumList", arr)
 }
 
-// AddRepeatedForeignEnum appends an entry to the RepeatedForeignEnum slice of the TestAllTypes.
-func (m *TestAllTypes) AddRepeatedForeignEnum(v ForeignEnum) {
-	m.Call("addRepeatedForeignEnum", v)
+// AddRepeatedForeignEnum adds an entry to the RepeatedForeignEnum slice of the TestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *TestAllTypes) AddRepeatedForeignEnum(v ForeignEnum, index int) {
+	m.Call("addRepeatedForeignEnum", v, index)
 }
 
 // ClearRepeatedForeignEnum clears the RepeatedForeignEnum of the TestAllTypes.
@@ -1636,9 +1676,11 @@ func (m *NestedTestAllTypes) SetRepeatedChild(v []*NestedTestAllTypes) {
 	m.Call("setRepeatedChildList", arr)
 }
 
-// AddRepeatedChild appends an entry to the RepeatedChild slice of the NestedTestAllTypes.
-func (m *NestedTestAllTypes) AddRepeatedChild(v *NestedTestAllTypes) {
-	m.Call("addRepeatedChild", v)
+// AddRepeatedChild adds an entry to the RepeatedChild slice of the NestedTestAllTypes
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *NestedTestAllTypes) AddRepeatedChild(v *NestedTestAllTypes, index int) {
+	m.Call("addRepeatedChild", v, index)
 }
 
 // ClearRepeatedChild clears the RepeatedChild of the NestedTestAllTypes.

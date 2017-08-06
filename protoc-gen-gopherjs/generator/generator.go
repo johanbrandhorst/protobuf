@@ -1717,14 +1717,16 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		// Generate Adder (Only for repeated types)
 		if isRepeated(field) && g.getMapDescriptor(field) == nil {
 			adderName := fieldAdderNames[field]
-			g.P(`// `, adderName, ` appends an entry to the `, fname, ` slice of the `, ccTypeName, `.`)
+			g.P(`// `, adderName, ` adds an entry to the `, fname, ` slice of the `, ccTypeName)
+			g.P(`// at the specified index. If index is negative, inserts the element`)
+			g.P(`// at the index counted from the end of the slice, with origin 1.`)
 			g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
 			// Spent a good 30 minutes trying to figure out how to turn a repeated field
 			// into a non-repeated field for g.GoType before realising this little hack.
 			nonRepeatedTypeName := strings.TrimPrefix(typename, "[]")
-			g.P(`func (m *`+ccTypeName+`) `+adderName+`(v `, nonRepeatedTypeName, `) {`)
+			g.P(`func (m *`+ccTypeName+`) `+adderName+`(v `, nonRepeatedTypeName, `, index int) {`)
 			g.In()
-			g.P(`m.Call("add` + fname + `", v)`)
+			g.P(`m.Call("add` + fname + `", v, index)`)
 			g.Out()
 			g.P(`}`)
 			g.P()

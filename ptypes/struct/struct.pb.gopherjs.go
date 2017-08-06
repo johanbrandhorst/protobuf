@@ -481,10 +481,12 @@ func (m *ListValue) SetValues(v []*Value) {
 	m.Call("setValuesList", arr)
 }
 
-// AddValues appends an entry to the Values slice of the ListValue.
+// AddValues adds an entry to the Values slice of the ListValue
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
 // Repeated field of dynamically typed values.
-func (m *ListValue) AddValues(v *Value) {
-	m.Call("addValues", v)
+func (m *ListValue) AddValues(v *Value, index int) {
+	m.Call("addValues", v, index)
 }
 
 // ClearValues clears the Values of the ListValue.

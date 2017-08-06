@@ -200,9 +200,11 @@ func (m *ExtraStuff) SetCardNumbers(v []uint32) {
 	m.Call("setCardNumbersList", arr)
 }
 
-// AddCardNumbers appends an entry to the CardNumbers slice of the ExtraStuff.
-func (m *ExtraStuff) AddCardNumbers(v uint32) {
-	m.Call("addCardNumbers", v)
+// AddCardNumbers adds an entry to the CardNumbers slice of the ExtraStuff
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *ExtraStuff) AddCardNumbers(v uint32, index int) {
+	m.Call("addCardNumbers", v, index)
 }
 
 // ClearCardNumbers clears the CardNumbers of the ExtraStuff.
