@@ -34,7 +34,11 @@ func (m *Multi1) GetMulti2() *Multi2 {
 
 // SetMulti2 sets the Multi2 of the Multi1.
 func (m *Multi1) SetMulti2(v *Multi2) {
-	m.Call("setMulti2", v.Call("toArray"))
+	if v != nil {
+		m.Call("setMulti2", v)
+	} else {
+		m.ClearMulti2()
+	}
 }
 
 // HasMulti2 indicates whether the Multi2 of the Multi1 is set.
@@ -71,11 +75,13 @@ func (m *Multi1) SetHatType(v Multi3_HatType) {
 func (m *Multi1) New(multi2 *Multi2, color Multi2_Color, hatType Multi3_HatType) *Multi1 {
 	m = &Multi1{
 		Object: js.Global.Get("proto").Get("multitest").Get("Multi1").New([]interface{}{
-			multi2.Call("toArray"),
+			js.Undefined,
 			color,
 			hatType,
 		}),
 	}
+
+	m.SetMulti2(multi2)
 
 	return m
 }

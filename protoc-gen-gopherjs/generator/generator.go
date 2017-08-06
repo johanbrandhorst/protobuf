@@ -1694,7 +1694,15 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			g.P(`}`)
 			g.P(`m.Call("set`, fname, `List", arr)`)
 		} else if *field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
-			g.P(`m.Call("set` + fname + `", v.Call("toArray"))`)
+			g.P(`if v != nil {`)
+			g.In()
+			g.P(`m.Call("set` + fname + `", v)`)
+			g.Out()
+			g.P(`} else {`)
+			g.In()
+			g.P(`m.`, fieldClearerNames[field], `()`)
+			g.Out()
+			g.P(`}`)
 		} else {
 			g.P(`m.Call("set` + fname + `", v)`)
 		}
@@ -1712,11 +1720,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			nonRepeatedTypeName := strings.TrimPrefix(typename, "[]")
 			g.P(`func (m *`+ccTypeName+`) `+adderName+`(v `, nonRepeatedTypeName, `) {`)
 			g.In()
-			if *field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
-				g.P(`m.Call("add` + fname + `", v.Call("toArray"))`)
-			} else {
-				g.P(`m.Call("add` + fname + `", v)`)
-			}
+			g.P(`m.Call("add` + fname + `", v)`)
 			g.Out()
 			g.P(`}`)
 			g.P()
@@ -1804,8 +1808,8 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			// Handle slice values separately
 			g.P(`js.Undefined,`)
 		} else if *field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
-			// Convert messages to array type
-			g.P(sanitiseIdentifier(field.GetJsonName()), `.Call("toArray"),`)
+			// Handle messages separately
+			g.P(`js.Undefined,`)
 		} else {
 			g.P(sanitiseIdentifier(field.GetJsonName()), `,`)
 		}
@@ -1824,7 +1828,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		g.P()
 	}
 
-	// Special handling for map and slice fields
+	// Special handling for map, slice and message fields
 	locallyUsedNames := make(map[string]bool)
 	for _, field := range message.GetField() {
 		if d := g.getMapDescriptor(field); d != nil {
@@ -1853,6 +1857,9 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			g.Out()
 			g.P(`}`)
 			g.P(`m.Call("set`, CamelCase(field.GetName()), `List", `, varName, `)`)
+			g.P()
+		} else if *field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE && field.OneofIndex == nil {
+			g.P(`m.Set`, CamelCase(field.GetName()), `(`, sanitiseIdentifier(field.GetJsonName()), `)`)
 			g.P()
 		}
 	}

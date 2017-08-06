@@ -154,7 +154,7 @@ func (m *Complex) SetCommunique(v []*Complex_Communique) {
 
 // AddCommunique appends an entry to the Communique slice of the Complex.
 func (m *Complex) AddCommunique(v *Complex_Communique) {
-	m.Call("addCommunique", v.Call("toArray"))
+	m.Call("addCommunique", v)
 }
 
 // ClearCommunique clears the Communique of the Complex.
@@ -195,7 +195,11 @@ func (m *Complex) GetMulti() *multitest2.Multi1 {
 // SetMulti sets the Multi of the Complex.
 // Multi is imported
 func (m *Complex) SetMulti(v *multitest2.Multi1) {
-	m.Call("setMulti", v.Call("toArray"))
+	if v != nil {
+		m.Call("setMulti", v)
+	} else {
+		m.ClearMulti()
+	}
 }
 
 // HasMulti indicates whether the Multi of the Complex is set.
@@ -217,7 +221,7 @@ func (m *Complex) New(communique []*Complex_Communique, compactKeys map[int32]st
 		Object: js.Global.Get("proto").Get("my").Get("test").Get("Complex").New([]interface{}{
 			js.Undefined,
 			js.Undefined,
-			multi.Call("toArray"),
+			js.Undefined,
 		}),
 	}
 
@@ -231,6 +235,8 @@ func (m *Complex) New(communique []*Complex_Communique, compactKeys map[int32]st
 	for key, value := range compactKeys {
 		mp.Call("set", key, value)
 	}
+
+	m.SetMulti(multi)
 
 	return m
 }

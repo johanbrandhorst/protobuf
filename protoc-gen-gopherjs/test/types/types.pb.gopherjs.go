@@ -345,7 +345,11 @@ func (m *TestAllTypes) GetSingleImported() *multitest2.Multi1 {
 
 // SetSingleImported sets the SingleImported of the TestAllTypes.
 func (m *TestAllTypes) SetSingleImported(v *multitest2.Multi1) {
-	m.Call("setSingleImported", v.Call("toArray"))
+	if v != nil {
+		m.Call("setSingleImported", v)
+	} else {
+		m.ClearSingleImported()
+	}
 }
 
 // HasSingleImported indicates whether the SingleImported of the TestAllTypes is set.
@@ -365,7 +369,11 @@ func (m *TestAllTypes) GetSingleNestedMessage() *TestAllTypes_NestedMessage {
 
 // SetSingleNestedMessage sets the SingleNestedMessage of the TestAllTypes.
 func (m *TestAllTypes) SetSingleNestedMessage(v *TestAllTypes_NestedMessage) {
-	m.Call("setSingleNestedMessage", v.Call("toArray"))
+	if v != nil {
+		m.Call("setSingleNestedMessage", v)
+	} else {
+		m.ClearSingleNestedMessage()
+	}
 }
 
 // HasSingleNestedMessage indicates whether the SingleNestedMessage of the TestAllTypes is set.
@@ -385,7 +393,11 @@ func (m *TestAllTypes) GetSingleForeignMessage() *ForeignMessage {
 
 // SetSingleForeignMessage sets the SingleForeignMessage of the TestAllTypes.
 func (m *TestAllTypes) SetSingleForeignMessage(v *ForeignMessage) {
-	m.Call("setSingleForeignMessage", v.Call("toArray"))
+	if v != nil {
+		m.Call("setSingleForeignMessage", v)
+	} else {
+		m.ClearSingleForeignMessage()
+	}
 }
 
 // HasSingleForeignMessage indicates whether the SingleForeignMessage of the TestAllTypes is set.
@@ -910,7 +922,7 @@ func (m *TestAllTypes) SetRepeatedImported(v []*multitest2.Multi1) {
 
 // AddRepeatedImported appends an entry to the RepeatedImported slice of the TestAllTypes.
 func (m *TestAllTypes) AddRepeatedImported(v *multitest2.Multi1) {
-	m.Call("addRepeatedImported", v.Call("toArray"))
+	m.Call("addRepeatedImported", v)
 }
 
 // ClearRepeatedImported clears the RepeatedImported of the TestAllTypes.
@@ -941,7 +953,7 @@ func (m *TestAllTypes) SetRepeatedNestedMessage(v []*TestAllTypes_NestedMessage)
 
 // AddRepeatedNestedMessage appends an entry to the RepeatedNestedMessage slice of the TestAllTypes.
 func (m *TestAllTypes) AddRepeatedNestedMessage(v *TestAllTypes_NestedMessage) {
-	m.Call("addRepeatedNestedMessage", v.Call("toArray"))
+	m.Call("addRepeatedNestedMessage", v)
 }
 
 // ClearRepeatedNestedMessage clears the RepeatedNestedMessage of the TestAllTypes.
@@ -972,7 +984,7 @@ func (m *TestAllTypes) SetRepeatedForeignMessage(v []*ForeignMessage) {
 
 // AddRepeatedForeignMessage appends an entry to the RepeatedForeignMessage slice of the TestAllTypes.
 func (m *TestAllTypes) AddRepeatedForeignMessage(v *ForeignMessage) {
-	m.Call("addRepeatedForeignMessage", v.Call("toArray"))
+	m.Call("addRepeatedForeignMessage", v)
 }
 
 // ClearRepeatedForeignMessage clears the RepeatedForeignMessage of the TestAllTypes.
@@ -1069,7 +1081,11 @@ func (m *TestAllTypes) GetOneofNestedMessage() *TestAllTypes_NestedMessage {
 
 // SetOneofNestedMessage sets the OneofNestedMessage of the TestAllTypes.
 func (m *TestAllTypes) SetOneofNestedMessage(v *TestAllTypes_NestedMessage) {
-	m.Call("setOneofNestedMessage", v.Call("toArray"))
+	if v != nil {
+		m.Call("setOneofNestedMessage", v)
+	} else {
+		m.ClearOneofNestedMessage()
+	}
 }
 
 // HasOneofNestedMessage indicates whether the OneofNestedMessage of the TestAllTypes is set.
@@ -1129,7 +1145,11 @@ func (m *TestAllTypes) GetOneofImported() *multitest2.Multi1 {
 
 // SetOneofImported sets the OneofImported of the TestAllTypes.
 func (m *TestAllTypes) SetOneofImported(v *multitest2.Multi1) {
-	m.Call("setOneofImported", v.Call("toArray"))
+	if v != nil {
+		m.Call("setOneofImported", v)
+	} else {
+		m.ClearOneofImported()
+	}
 }
 
 // HasOneofImported indicates whether the OneofImported of the TestAllTypes is set.
@@ -1163,9 +1183,9 @@ func (m *TestAllTypes) New(singleInt32 int32, singleInt64 int64, singleUint32 ui
 			singleBool,
 			singleString,
 			singleBytes,
-			singleImported.Call("toArray"),
-			singleNestedMessage.Call("toArray"),
-			singleForeignMessage.Call("toArray"),
+			js.Undefined,
+			js.Undefined,
+			js.Undefined,
 			singleNestedEnum,
 			singleForeignEnum,
 			js.Undefined,
@@ -1197,6 +1217,12 @@ func (m *TestAllTypes) New(singleInt32 int32, singleInt64 int64, singleUint32 ui
 	}
 
 	m.SetOneofField(oneof_field)
+
+	m.SetSingleImported(singleImported)
+
+	m.SetSingleNestedMessage(singleNestedMessage)
+
+	m.SetSingleForeignMessage(singleForeignMessage)
 
 	arr := js.Global.Get("Array").New(len(repeatedInt32))
 	for i, value := range repeatedInt32 {
@@ -1392,7 +1418,11 @@ func (m *NestedTestAllTypes) GetChild() *NestedTestAllTypes {
 
 // SetChild sets the Child of the NestedTestAllTypes.
 func (m *NestedTestAllTypes) SetChild(v *NestedTestAllTypes) {
-	m.Call("setChild", v.Call("toArray"))
+	if v != nil {
+		m.Call("setChild", v)
+	} else {
+		m.ClearChild()
+	}
 }
 
 // HasChild indicates whether the Child of the NestedTestAllTypes is set.
@@ -1412,7 +1442,11 @@ func (m *NestedTestAllTypes) GetPayload() *TestAllTypes {
 
 // SetPayload sets the Payload of the NestedTestAllTypes.
 func (m *NestedTestAllTypes) SetPayload(v *TestAllTypes) {
-	m.Call("setPayload", v.Call("toArray"))
+	if v != nil {
+		m.Call("setPayload", v)
+	} else {
+		m.ClearPayload()
+	}
 }
 
 // HasPayload indicates whether the Payload of the NestedTestAllTypes is set.
@@ -1448,7 +1482,7 @@ func (m *NestedTestAllTypes) SetRepeatedChild(v []*NestedTestAllTypes) {
 
 // AddRepeatedChild appends an entry to the RepeatedChild slice of the NestedTestAllTypes.
 func (m *NestedTestAllTypes) AddRepeatedChild(v *NestedTestAllTypes) {
-	m.Call("addRepeatedChild", v.Call("toArray"))
+	m.Call("addRepeatedChild", v)
 }
 
 // ClearRepeatedChild clears the RepeatedChild of the NestedTestAllTypes.
@@ -1460,11 +1494,15 @@ func (m *NestedTestAllTypes) ClearRepeatedChild() {
 func (m *NestedTestAllTypes) New(child *NestedTestAllTypes, payload *TestAllTypes, repeatedChild []*NestedTestAllTypes) *NestedTestAllTypes {
 	m = &NestedTestAllTypes{
 		Object: js.Global.Get("proto").Get("types").Get("NestedTestAllTypes").New([]interface{}{
-			child.Call("toArray"),
-			payload.Call("toArray"),
+			js.Undefined,
+			js.Undefined,
 			js.Undefined,
 		}),
 	}
+
+	m.SetChild(child)
+
+	m.SetPayload(payload)
 
 	arr := js.Global.Get("Array").New(len(repeatedChild))
 	for i, value := range repeatedChild {

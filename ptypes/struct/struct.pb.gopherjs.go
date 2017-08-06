@@ -327,7 +327,11 @@ func (m *Value) GetStructValue() *Struct {
 // SetStructValue sets the StructValue of the Value.
 // Represents a structured value.
 func (m *Value) SetStructValue(v *Struct) {
-	m.Call("setStructValue", v.Call("toArray"))
+	if v != nil {
+		m.Call("setStructValue", v)
+	} else {
+		m.ClearStructValue()
+	}
 }
 
 // HasStructValue indicates whether the StructValue of the Value is set.
@@ -351,7 +355,11 @@ func (m *Value) GetListValue() *ListValue {
 // SetListValue sets the ListValue of the Value.
 // Represents a repeated `Value`.
 func (m *Value) SetListValue(v *ListValue) {
-	m.Call("setListValue", v.Call("toArray"))
+	if v != nil {
+		m.Call("setListValue", v)
+	} else {
+		m.ClearListValue()
+	}
 }
 
 // HasListValue indicates whether the ListValue of the Value is set.
@@ -435,7 +443,7 @@ func (m *ListValue) SetValues(v []*Value) {
 // AddValues appends an entry to the Values slice of the ListValue.
 // Repeated field of dynamically typed values.
 func (m *ListValue) AddValues(v *Value) {
-	m.Call("addValues", v.Call("toArray"))
+	m.Call("addValues", v)
 }
 
 // ClearValues clears the Values of the ListValue.
