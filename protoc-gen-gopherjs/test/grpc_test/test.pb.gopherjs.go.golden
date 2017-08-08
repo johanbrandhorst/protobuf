@@ -166,9 +166,11 @@ func (m *Complex) SetCommunique(v []*Complex_Communique) {
 	m.Call("setCommuniqueList", arr)
 }
 
-// AddCommunique appends an entry to the Communique slice of the Complex.
-func (m *Complex) AddCommunique(v *Complex_Communique) {
-	m.Call("addCommunique", v)
+// AddCommunique adds an entry to the Communique slice of the Complex
+// at the specified index. If index is negative, inserts the element
+// at the index counted from the end of the slice, with origin 1.
+func (m *Complex) AddCommunique(v *Complex_Communique, index int) {
+	m.Call("addCommunique", v, index)
 }
 
 // ClearCommunique clears the Communique of the Complex.
