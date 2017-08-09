@@ -76,7 +76,7 @@ Any imports in your protofiles will need
 to be added to `externals` to prevent duplicate code in your final JS file.
 `google-protobuf` should always be included like so, and for other imports
 we have to find the export target used, it'll typically be
-`window.proto.`+<proto package name>. More examples of webpack files can be found
+`window.proto.`+`<proto package name>`. More examples of webpack files can be found
 [in](./test/multi/webpack.config.js)
 [other](./test/grpc_test/webpack.config.js)
 [parts](../ptypes/webpack.config.js) [of](../test/client/proto/test/webpack.config.js) this repo.
