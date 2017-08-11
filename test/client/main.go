@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"reflect"
 	"strings"
 
 	"github.com/gopherjs/gopherjs/js"
@@ -23,7 +24,7 @@ import (
 	"github.com/johanbrandhorst/protobuf/test/shared"
 )
 
-//go:generate gopherjs build main.go -m -o html/index.js
+//go:generate gopherjs build main.go -o html/index.js
 
 var uri = strings.TrimSuffix(dom.GetWindow().Document().BaseURI(), shared.GopherJSServer+"/")
 
@@ -45,12 +46,20 @@ func typeTests() {
 	})
 
 	qunit.Test("Complex type factory", func(assert qunit.QUnitAssert) {
-		qunit.Expect(7)
+		qunit.Expect(8)
 
-		es := new(test.ExtraStuff).New(
-			map[int32]string{1234: "The White House", 5678: "The Empire State Building"},
-			&test.ExtraStuff_FirstName{FirstName: "Allison"},
-			[]uint32{1234, 5678})
+		es := &test.ExtraStuff{
+			Addresses: map[int32]string{
+				1234: "The White House",
+				5678: "The Empire State Building",
+			},
+			Title: &test.ExtraStuff_FirstName{
+				FirstName: "Allison",
+			},
+			CardNumbers: []uint32{
+				1234, 5678,
+			},
+		}
 		addrs := es.GetAddresses()
 		assert.Equal(addrs[1234], "The White House", "Address 1234 is set as expected")
 		assert.Equal(addrs[5678], "The Empire State Building", "Address 5678 is set as expected")
@@ -63,6 +72,17 @@ func typeTests() {
 			assert.Ok(false, "GetTitle did not return a struct of type *test.ExtraStuff_FirstName as expected")
 		} else {
 			assert.Ok(true, "GetTitle did return a struct of type *test.ExtraStuff_FirstName as expected")
+		}
+
+		serialized := es.Serialize()
+		newEs, err := es.Deserialize(serialized)
+		if err != nil {
+			assert.Ok(false, "Unexpected error returned: "+err.Error())
+		}
+		if !reflect.DeepEqual(es, newEs) {
+			assert.Ok(false, fmt.Sprintf("Objects were not the same: New: %v, Old: %v", newEs, es))
+		} else {
+			assert.Ok(true, "Struct was the same before and after deserialization")
 		}
 	})
 
@@ -108,56 +128,48 @@ func typeTests() {
 	qunit.Test("Map getters and setters", func(assert qunit.QUnitAssert) {
 		qunit.Expect(5)
 
-		req := &test.ExtraStuff{
-			Object: js.Global.Get("proto").Get("test").Get("ExtraStuff").New(),
-		}
+		req := &test.ExtraStuff{}
 		assert.Equal(len(req.GetAddresses()), 0, "Addresses was unset")
-		req.SetAddresses(map[int32]string{
+		req.Addresses = map[int32]string{
 			1234: "The White House",
 			5678: "The Empire State Building",
-		})
+		}
 		addrs := req.GetAddresses()
 		assert.Equal(len(addrs), 2, "Addresses was the correct size")
 		assert.Equal(addrs[1234], "The White House", "Address 1234 was set correctly")
 		assert.Equal(addrs[5678], "The Empire State Building", "Address 5678 was set correctly")
 
-		req.ClearAddresses()
+		req.Addresses = nil
 		assert.Equal(len(req.GetAddresses()), 0, "Addresses aws unset")
 	})
 
 	qunit.Test("Array getters and setters", func(assert qunit.QUnitAssert) {
 		qunit.Expect(5)
 
-		req := &test.ExtraStuff{
-			Object: js.Global.Get("proto").Get("test").Get("ExtraStuff").New(),
-		}
+		req := &test.ExtraStuff{}
 		assert.Equal(len(req.GetCardNumbers()), 0, "CardNumbers was unset")
-		req.SetCardNumbers([]uint32{
+		req.CardNumbers = []uint32{
 			1234,
 			5678,
-		})
+		}
 		crdnrs := req.GetCardNumbers()
 		assert.Equal(len(crdnrs), 2, "CardNumbers was the correct size")
 		assert.Equal(crdnrs[0], 1234, "CardNumber #1 was set correctly")
 		assert.Equal(crdnrs[1], 5678, "CardNumber #2 was set correctly")
 
-		req.ClearCardNumbers()
+		req.CardNumbers = nil
 		assert.Equal(len(req.GetCardNumbers()), 0, "CardNumbers was unset")
 	})
 
 	qunit.Test("Oneof getters and setters", func(assert qunit.QUnitAssert) {
-		qunit.Expect(20)
+		qunit.Expect(12)
 
-		req := &test.ExtraStuff{
-			Object: js.Global.Get("proto").Get("test").Get("ExtraStuff").New(),
-		}
+		req := &test.ExtraStuff{}
 		assert.Equal(req.GetTitle(), nil, "Title was unset")
 		assert.Equal(req.GetFirstName(), "", "FirstName was unset")
 		assert.Equal(req.GetIdNumber(), 0, "IdNumber was unset")
-		assert.Equal(req.HasFirstName(), false, "HasFirstName was false")
-		assert.Equal(req.HasIdNumber(), false, "HasIdNumber was false")
 
-		req.SetTitle(&test.ExtraStuff_FirstName{FirstName: "Allison"})
+		req.Title = &test.ExtraStuff_FirstName{FirstName: "Allison"}
 		fn, ok := req.GetTitle().(*test.ExtraStuff_FirstName)
 		if !ok {
 			assert.Ok(false, "Title was not of type *test.ExtraStuff_FirstName")
@@ -166,11 +178,9 @@ func typeTests() {
 			assert.Equal(fn.FirstName, "Allison", "Title FirstName was set correctly")
 			assert.Equal(req.GetFirstName(), "Allison", "FirstName was set correctly")
 			assert.Equal(req.GetIdNumber(), 0, "IdNumber was still unset")
-			assert.Equal(req.HasFirstName(), true, "HasFirstName was true")
-			assert.Equal(req.HasIdNumber(), false, "HasIdNumber was false")
 		}
 
-		req.SetIdNumber(100)
+		req.Title = &test.ExtraStuff_IdNumber{IdNumber: 100}
 		id, ok := req.GetTitle().(*test.ExtraStuff_IdNumber)
 		if !ok {
 			assert.Ok(false, "Title was not of type *test.ExtraStuff_IdNumber")
@@ -179,14 +189,10 @@ func typeTests() {
 			assert.Equal(id.IdNumber, 100, "Title IdNumber was set correctly")
 			assert.Equal(req.GetFirstName(), "", "FirstName was unset")
 			assert.Equal(req.GetIdNumber(), 100, "IdNumber was set correctly")
-			assert.Equal(req.HasIdNumber(), true, "HasIdNumber was true")
-			assert.Equal(req.HasFirstName(), false, "HasFirstName was false")
 		}
 
-		req.ClearIdNumber()
+		req.Title = nil
 		assert.Equal(req.GetTitle(), nil, "Title was unset")
-		assert.Equal(req.HasFirstName(), false, "HasFirstName was false")
-		assert.Equal(req.HasIdNumber(), false, "HasIdNumber was false")
 	})
 }
 
