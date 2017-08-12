@@ -7,7 +7,6 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/gopherjs/gopherjs/js"
 	"github.com/rusco/qunit"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -32,9 +31,18 @@ func typeTests() {
 	qunit.Module("Integration Types tests")
 
 	qunit.Test("Simple type factory", func(assert qunit.QUnitAssert) {
-		qunit.Expect(8)
+		qunit.Expect(9)
 
-		req := new(test.PingRequest).New("1234", 10, 1, test.PingRequest_CODE, true, true, true, 100)
+		req := &test.PingRequest{
+			Value:             "1234",
+			ResponseCount:     10,
+			ErrorCodeReturned: 1,
+			FailureType:       test.PingRequest_CODE,
+			CheckMetadata:     true,
+			SendHeaders:       true,
+			SendTrailers:      true,
+			MessageLatencyMs:  100,
+		}
 		assert.Equal(req.GetValue(), "1234", "Value is set as expected")
 		assert.Equal(req.GetResponseCount(), 10, "ResponseCount is set as expected")
 		assert.Equal(req.GetErrorCodeReturned(), 1, "ErrorCodeReturned is set as expected")
@@ -43,6 +51,17 @@ func typeTests() {
 		assert.Equal(req.GetSendHeaders(), true, "SendHeaders is set as expected")
 		assert.Equal(req.GetSendTrailers(), true, "SendTrailers is set as expected")
 		assert.Equal(req.GetMessageLatencyMs(), 100, "MessageLatencyMs is set as expected")
+
+		serialized := req.Marshal()
+		newReq, err := new(test.PingRequest).Unmarshal(serialized)
+		if err != nil {
+			assert.Ok(false, "Unexpected error returned: "+err.Error())
+		}
+		if !reflect.DeepEqual(req, newReq) {
+			assert.Ok(false, fmt.Sprintf("Objects were not the same: New: %v, Old: %v", newReq, req))
+		} else {
+			assert.Ok(true, "Struct was the same before and after deserialization")
+		}
 	})
 
 	qunit.Test("Complex type factory", func(assert qunit.QUnitAssert) {
@@ -74,8 +93,8 @@ func typeTests() {
 			assert.Ok(true, "GetTitle did return a struct of type *test.ExtraStuff_FirstName as expected")
 		}
 
-		serialized := es.Serialize()
-		newEs, err := es.Deserialize(serialized)
+		serialized := es.Marshal()
+		newEs, err := new(test.ExtraStuff).Unmarshal(serialized)
 		if err != nil {
 			assert.Ok(false, "Unexpected error returned: "+err.Error())
 		}
@@ -89,39 +108,37 @@ func typeTests() {
 	qunit.Test("Simple setters and getters", func(assert qunit.QUnitAssert) {
 		qunit.Expect(16)
 
-		req := &test.PingRequest{
-			Object: js.Global.Get("proto").Get("test").Get("PingRequest").New(),
-		}
+		req := &test.PingRequest{}
 		assert.Equal(req.GetCheckMetadata(), false, "CheckMetadata was unset")
-		req.SetCheckMetadata(true)
+		req.CheckMetadata = true
 		assert.Equal(req.GetCheckMetadata(), true, "CheckMetadata was set correctly")
 
 		assert.Equal(req.GetErrorCodeReturned(), 0, "ErrorCodeReturned was unset")
-		req.SetErrorCodeReturned(1)
+		req.ErrorCodeReturned = 1
 		assert.Equal(req.GetErrorCodeReturned(), 1, "ErrorCodeReturned was set correctly")
 
 		assert.Equal(req.GetFailureType(), test.PingRequest_NONE, "FailureType was unset")
-		req.SetFailureType(test.PingRequest_DROP)
+		req.FailureType = test.PingRequest_DROP
 		assert.Equal(req.GetFailureType(), test.PingRequest_DROP, "FailureType was set correctly")
 
 		assert.Equal(req.GetMessageLatencyMs(), 0, "MessageLatencyMs was unset")
-		req.SetMessageLatencyMs(1)
+		req.MessageLatencyMs = 1
 		assert.Equal(req.GetMessageLatencyMs(), 1, "MessageLatencyMs was set correctly")
 
 		assert.Equal(req.GetResponseCount(), 0, "ResponseCount was unset")
-		req.SetResponseCount(1)
+		req.ResponseCount = 1
 		assert.Equal(req.GetResponseCount(), 1, "ResponseCount was set correctly")
 
 		assert.Equal(req.GetSendHeaders(), false, "SendHeaders was unset")
-		req.SetSendHeaders(true)
+		req.SendHeaders = true
 		assert.Equal(req.GetSendHeaders(), true, "SendHeaders was set correctly")
 
 		assert.Equal(req.GetSendTrailers(), false, "SendTrailers was unset")
-		req.SetSendTrailers(true)
+		req.SendTrailers = true
 		assert.Equal(req.GetSendTrailers(), true, "SendTrailers was set correctly")
 
 		assert.Equal(req.GetValue(), "", "Value was unset")
-		req.SetValue("something")
+		req.Value = "something"
 		assert.Equal(req.GetValue(), "something", "Value was set correctly")
 	})
 
@@ -206,8 +223,16 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
-			req := new(test.PingRequest).New(
-				"test", 1, 0, test.PingRequest_NONE, false, false, false, 0)
+			req := &test.PingRequest{
+				Value:             "test",
+				ResponseCount:     1,
+				ErrorCodeReturned: 0,
+				FailureType:       test.PingRequest_NONE,
+				CheckMetadata:     false,
+				SendHeaders:       false,
+				SendTrailers:      false,
+				MessageLatencyMs:  0,
+			}
 			resp, err := c.Ping(context.Background(), req)
 			if err != nil {
 				st := status.FromError(err)
@@ -234,8 +259,16 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
-			req := new(test.PingRequest).New(
-				"test", 1, 0, test.PingRequest_NONE, true, false, false, 0)
+			req := &test.PingRequest{
+				Value:             "test",
+				ResponseCount:     1,
+				ErrorCodeReturned: 0,
+				FailureType:       test.PingRequest_NONE,
+				CheckMetadata:     true,
+				SendHeaders:       false,
+				SendTrailers:      false,
+				MessageLatencyMs:  0,
+			}
 			ctx := metadata.NewOutgoingContext(context.Background(), metadata.Pairs(shared.ClientMDTestKey, shared.ClientMDTestValue))
 			resp, err := c.Ping(ctx, req)
 			if err != nil {
@@ -263,8 +296,16 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
-			req := new(test.PingRequest).New(
-				"test", 1, 0, test.PingRequest_NONE, false, true, true, 0)
+			req := &test.PingRequest{
+				Value:             "test",
+				ResponseCount:     1,
+				ErrorCodeReturned: 0,
+				FailureType:       test.PingRequest_NONE,
+				CheckMetadata:     false,
+				SendHeaders:       true,
+				SendTrailers:      true,
+				MessageLatencyMs:  0,
+			}
 			headers, trailers := metadata.New(nil), metadata.New(nil)
 			resp, err := c.Ping(context.Background(), req, grpcweb.Header(&headers), grpcweb.Trailer(&trailers))
 			if err != nil {
@@ -319,8 +360,16 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
-			req := new(test.PingRequest).New(
-				"test", 1, 0, test.PingRequest_NONE, false, true, false, 0)
+			req := &test.PingRequest{
+				Value:             "test",
+				ResponseCount:     1,
+				ErrorCodeReturned: 0,
+				FailureType:       test.PingRequest_NONE,
+				CheckMetadata:     false,
+				SendHeaders:       true,
+				SendTrailers:      false,
+				MessageLatencyMs:  0,
+			}
 			headers, trailers := metadata.New(nil), metadata.New(nil)
 			resp, err := c.Ping(context.Background(), req, grpcweb.Header(&headers), grpcweb.Trailer(&trailers))
 			if err != nil {
@@ -367,8 +416,16 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
-			req := new(test.PingRequest).New(
-				"test", 1, 0, test.PingRequest_NONE, false, false, true, 0)
+			req := &test.PingRequest{
+				Value:             "test",
+				ResponseCount:     1,
+				ErrorCodeReturned: 0,
+				FailureType:       test.PingRequest_NONE,
+				CheckMetadata:     false,
+				SendHeaders:       false,
+				SendTrailers:      true,
+				MessageLatencyMs:  0,
+			}
 			headers, trailers := metadata.New(nil), metadata.New(nil)
 			resp, err := c.Ping(context.Background(), req, grpcweb.Header(&headers), grpcweb.Trailer(&trailers))
 			if err != nil {
@@ -415,8 +472,16 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
-			req := new(test.PingRequest).New(
-				"", 0, uint32(codes.InvalidArgument), test.PingRequest_CODE, false, false, false, 0)
+			req := &test.PingRequest{
+				Value:             "",
+				ResponseCount:     0,
+				ErrorCodeReturned: uint32(codes.InvalidArgument),
+				FailureType:       test.PingRequest_CODE,
+				CheckMetadata:     false,
+				SendHeaders:       false,
+				SendTrailers:      false,
+				MessageLatencyMs:  0,
+			}
 			_, err := c.PingError(context.Background(), req)
 			if err == nil {
 				qunit.Ok(false, "Expected error, returned nil")
@@ -441,8 +506,16 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
-			req := new(test.PingRequest).New(
-				"", 0, 0, test.PingRequest_DROP, false, false, false, 0)
+			req := &test.PingRequest{
+				Value:             "",
+				ResponseCount:     0,
+				ErrorCodeReturned: 0,
+				FailureType:       test.PingRequest_DROP,
+				CheckMetadata:     false,
+				SendHeaders:       false,
+				SendTrailers:      false,
+				MessageLatencyMs:  0,
+			}
 			_, err := c.PingError(context.Background(), req)
 			if err == nil {
 				qunit.Ok(false, "Expected error, returned nil")
@@ -471,8 +544,16 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			defer qunit.Start()
 
 			// Send 20 messages with 1ms wait before each
-			req := new(test.PingRequest).New(
-				"test", 20, 0, test.PingRequest_NONE, false, false, false, 1)
+			req := &test.PingRequest{
+				Value:             "test",
+				ResponseCount:     20,
+				ErrorCodeReturned: 0,
+				FailureType:       test.PingRequest_NONE,
+				CheckMetadata:     false,
+				SendHeaders:       false,
+				SendTrailers:      false,
+				MessageLatencyMs:  1,
+			}
 			srv, err := c.PingList(context.Background(), req)
 			if err != nil {
 				st := status.FromError(err)
@@ -523,8 +604,16 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			defer qunit.Start()
 
 			// Send 20 messages with 1ms wait before each
-			req := new(test.PingRequest).New(
-				"test", 20, 0, test.PingRequest_NONE, true, false, false, 1)
+			req := &test.PingRequest{
+				Value:             "test",
+				ResponseCount:     20,
+				ErrorCodeReturned: 0,
+				FailureType:       test.PingRequest_NONE,
+				CheckMetadata:     true,
+				SendHeaders:       false,
+				SendTrailers:      false,
+				MessageLatencyMs:  1,
+			}
 			ctx := metadata.NewOutgoingContext(context.Background(), metadata.Pairs(shared.ClientMDTestKey, shared.ClientMDTestValue))
 			srv, err := c.PingList(ctx, req)
 			if err != nil {
@@ -576,8 +665,16 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			defer qunit.Start()
 
 			// Send 20 messages with 1ms wait before each
-			req := new(test.PingRequest).New(
-				"test", 20, 0, test.PingRequest_NONE, false, true, true, 1)
+			req := &test.PingRequest{
+				Value:             "test",
+				ResponseCount:     20,
+				ErrorCodeReturned: 0,
+				FailureType:       test.PingRequest_NONE,
+				CheckMetadata:     false,
+				SendHeaders:       true,
+				SendTrailers:      true,
+				MessageLatencyMs:  1,
+			}
 			headers, trailers := metadata.New(nil), metadata.New(nil)
 			srv, err := c.PingList(context.Background(), req, grpcweb.Header(&headers), grpcweb.Trailer(&trailers))
 			if err != nil {
@@ -655,8 +752,16 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			defer qunit.Start()
 
 			// Send 20 messages with 1ms wait before each
-			req := new(test.PingRequest).New(
-				"test", 20, 0, test.PingRequest_NONE, false, true, false, 1)
+			req := &test.PingRequest{
+				Value:             "test",
+				ResponseCount:     20,
+				ErrorCodeReturned: 0,
+				FailureType:       test.PingRequest_NONE,
+				CheckMetadata:     false,
+				SendHeaders:       true,
+				SendTrailers:      false,
+				MessageLatencyMs:  1,
+			}
 			headers, trailers := metadata.New(nil), metadata.New(nil)
 			srv, err := c.PingList(context.Background(), req, grpcweb.Header(&headers), grpcweb.Trailer(&trailers))
 			if err != nil {
@@ -726,8 +831,16 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			defer qunit.Start()
 
 			// Send 20 messages with 1ms wait before each
-			req := new(test.PingRequest).New(
-				"test", 20, 0, test.PingRequest_NONE, false, false, true, 1)
+			req := &test.PingRequest{
+				Value:             "test",
+				ResponseCount:     20,
+				ErrorCodeReturned: 0,
+				FailureType:       test.PingRequest_NONE,
+				CheckMetadata:     false,
+				SendHeaders:       false,
+				SendTrailers:      true,
+				MessageLatencyMs:  1,
+			}
 			headers, trailers := metadata.New(nil), metadata.New(nil)
 			srv, err := c.PingList(context.Background(), req, grpcweb.Header(&headers), grpcweb.Trailer(&trailers))
 			if err != nil {
@@ -797,8 +910,16 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			defer qunit.Start()
 
 			// Send 20 messages with 1ms wait before each
-			req := new(test.PingRequest).New(
-				"test", 20, 0, test.PingRequest_DROP, false, false, false, 1)
+			req := &test.PingRequest{
+				Value:             "test",
+				ResponseCount:     20,
+				ErrorCodeReturned: 0,
+				FailureType:       test.PingRequest_DROP,
+				CheckMetadata:     false,
+				SendHeaders:       false,
+				SendTrailers:      false,
+				MessageLatencyMs:  1,
+			}
 			srv, err := c.PingList(context.Background(), req)
 			if err != nil {
 				st := status.FromError(err)
