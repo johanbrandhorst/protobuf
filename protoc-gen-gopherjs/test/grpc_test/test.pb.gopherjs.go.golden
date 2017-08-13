@@ -2,14 +2,14 @@
 // source: grpc_test/test.proto
 
 /*
-Package my_test is a generated protocol buffer package.
+	Package my_test is a generated protocol buffer package.
 
-It is generated from these files:
-	grpc_test/test.proto
+	It is generated from these files:
+		grpc_test/test.proto
 
-It has these top-level messages:
-	Simple
-	Complex
+	It has these top-level messages:
+		Simple
+		Complex
 */
 package my_test
 
@@ -95,18 +95,24 @@ func (m *Simple) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if m.Key != 0 {
 		writer.WriteInt64(1, m.Key)
 	}
+
 	if m.Deadline != 0 {
 		writer.WriteFloat32(2, m.Deadline)
 	}
+
 	if int(m.Day) != 0 {
 		writer.WriteEnum(3, int(m.Day))
 	}
+
 	if len(m.Name) > 0 {
 		writer.WriteString(4, m.Name)
 	}
+
+	return
 }
 
 // Marshal marshals Simple to a slice of bytes.
@@ -190,22 +196,29 @@ func (m *Complex) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	for _, msg := range m.Communique {
 		writer.WriteMessage(1, func() {
 			msg.MarshalToWriter(writer)
 		})
 	}
+
 	if len(m.CompactKeys) > 0 {
-		writer.WriteMessage(2, func() {
-			for key, value := range m.CompactKeys {
+		for key, value := range m.CompactKeys {
+			writer.WriteMessage(2, func() {
 				writer.WriteInt32(1, key)
 				writer.WriteString(2, value)
-			}
+			})
+		}
+	}
+
+	if m.Multi != nil {
+		writer.WriteMessage(3, func() {
+			m.Multi.MarshalToWriter(writer)
 		})
 	}
-	writer.WriteMessage(3, func() {
-		m.Multi.MarshalToWriter(writer)
-	})
+
+	return
 }
 
 // Marshal marshals Complex to a slice of bytes.
@@ -228,7 +241,9 @@ func (m *Complex) UnmarshalFromReader(reader jspb.Reader) *Complex {
 				m.Communique = append(m.Communique, new(Complex_Communique).UnmarshalFromReader(reader))
 			})
 		case 2:
-			m.CompactKeys = map[int32]string{}
+			if m.CompactKeys == nil {
+				m.CompactKeys = map[int32]string{}
+			}
 			reader.ReadMessage(func() {
 				var key int32
 				var value string
@@ -422,6 +437,7 @@ func (m *Complex_Communique) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	switch t := m.UnionThing.(type) {
 	case *Complex_Communique_Number:
 		if t.Number != 0 {
@@ -456,9 +472,12 @@ func (m *Complex_Communique) MarshalToWriter(writer jspb.Writer) {
 			writer.WriteSint32(9, t.Delta)
 		}
 	}
+
 	if m.MakeMeCry {
 		writer.WriteBool(1, m.MakeMeCry)
 	}
+
+	return
 }
 
 // Marshal marshals Complex_Communique to a slice of bytes.
@@ -539,6 +558,8 @@ func (m *Complex_Communique_Delta) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
+	return
 }
 
 // Marshal marshals Complex_Communique_Delta to a slice of bytes.
