@@ -650,7 +650,7 @@ func newDescriptor(desc *descriptor.DescriptorProto, parent *Descriptor, file *d
 	if parent != nil {
 		parts := d.TypeName()
 		if file.Package != nil {
-			parts = append([]string{*file.Package}, parts...)
+			parts = append([]string{file.GetPackage()}, parts...)
 		}
 		exp := "." + strings.Join(parts, ".")
 		for _, field := range parent.Field {
@@ -1199,7 +1199,7 @@ func (g *Generator) TypeNameWithPackage(obj Object) string {
 // GoType returns a string representing the type name, and the wire type
 func (g *Generator) GoType(message *Descriptor, field *descriptor.FieldDescriptorProto) (typ string) {
 	// TODO: Options.
-	switch *field.Type {
+	switch field.GetType() {
 	case descriptor.FieldDescriptorProto_TYPE_DOUBLE:
 		typ = "float64"
 	case descriptor.FieldDescriptorProto_TYPE_FLOAT:
@@ -1248,14 +1248,15 @@ func (g *Generator) GoType(message *Descriptor, field *descriptor.FieldDescripto
 		return
 	} else if field.OneofIndex != nil && message != nil {
 		return
-	} else if needsStar(*field.Type) {
+	} else if needsStar(field.GetType()) {
 		typ = "*" + typ
 	}
 	return
 }
 
+// JSPBTypeFunc gets the jspb function type suffix
 func (g *Generator) JSPBTypeFunc(field *descriptor.FieldDescriptorProto) string {
-	switch *field.Type {
+	switch field.GetType() {
 	case descriptor.FieldDescriptorProto_TYPE_INT32:
 		return "Int32"
 	case descriptor.FieldDescriptorProto_TYPE_SFIXED32:
@@ -1314,15 +1315,30 @@ func (g *Generator) generateMessage(message *Descriptor) {
 	// The full type name
 	typeName := message.TypeName()
 	// The full type name, CamelCased.
-	ccTypeName := CamelCaseSlice(typeName)
+	messageType := CamelCaseSlice(typeName)
 
 	usedNames := make(map[string]bool)
 	for _, n := range methodNames {
 		usedNames[n] = true
 	}
+
+	// Maps populated during first message field iteration
+	// CamelCased field name
+	fieldNames := make(map[*descriptor.FieldDescriptorProto]string)
+	// Getter name
 	fieldGetterNames := make(map[*descriptor.FieldDescriptorProto]string)
+	// Field Go type
 	fieldTypes := make(map[*descriptor.FieldDescriptorProto]string)
-	mapFieldTypes := make(map[*descriptor.FieldDescriptorProto]string)
+	// Field Number as a string
+	fieldNumbers := make(map[*descriptor.FieldDescriptorProto]string)
+	// Field map fields, if field is a map
+	fieldMapFields := make(map[*descriptor.FieldDescriptorProto]struct {
+		Key, Value *descriptor.FieldDescriptorProto
+	})
+	// Field map types, if field if a map
+	fieldMapTypes := make(map[*descriptor.FieldDescriptorProto]struct {
+		Key, Value string
+	})
 
 	oneofFieldName := make(map[int32]string)                           // indexed by oneof_index field of FieldDescriptorProto
 	oneofDisc := make(map[int32]string)                                // name of discriminator method
@@ -1351,75 +1367,83 @@ func (g *Generator) generateMessage(message *Descriptor) {
 	}
 
 	g.PrintComments(message.path)
-	g.P("type ", ccTypeName, " struct {")
+	g.P("type ", messageType, " struct {")
 	g.In()
 
+	// Write out fields of the message
 	for i, field := range message.Field {
 		// Allocate the getter and the field at the same time so name
 		// collisions create field/method consistent names.
 		// TODO: This allocation occurs based on the order of the fields
 		// in the proto file, meaning that a change in the field
 		// ordering can change generated Method/Field names.
-		base := CamelCase(*field.Name)
-		ns := allocNames(base, "Get"+base)
-		fieldName, fieldGetterName := ns[0], ns[1]
-		typename := g.GoType(message, field)
-
-		fieldTypes[field] = typename
-		fieldGetterNames[field] = fieldGetterName
+		ns := allocNames(CamelCase(field.GetName()), "Get"+CamelCase(field.GetName()))
+		fieldNames[field], fieldGetterNames[field] = ns[0], ns[1]
+		fieldTypes[field] = g.GoType(message, field)
+		fieldNumbers[field] = strconv.Itoa(int(field.GetNumber()))
 
 		g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
 
-		oneof := field.OneofIndex != nil
-		if oneof && oneofFieldName[*field.OneofIndex] == "" {
-			odp := message.OneofDecl[int(*field.OneofIndex)]
-			fname := allocNames(CamelCase(odp.GetName()))[0]
-
+		// Populate field oneof metadata maps
+		if field.OneofIndex != nil && oneofFieldName[field.GetOneofIndex()] == "" {
 			// This is the first field of a oneof we haven't seen before.
 			// Generate the union field.
-			com := g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageOneofPath, *field.OneofIndex))
+			odp := message.OneofDecl[int(field.GetOneofIndex())]
+			oneofFieldName[field.GetOneofIndex()] = allocNames(CamelCase(odp.GetName()))[0]
+
+			com := g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageOneofPath, field.GetOneofIndex()))
 			if com {
 				g.P("//")
 			}
-			g.P("// Types that are valid to be assigned to ", fname, ":")
+			g.P("// Types that are valid to be assigned to ", oneofFieldName[field.GetOneofIndex()], ":")
 			// Generate the rest of this comment later,
 			// when we've computed any disambiguation.
-			oneofInsertPoints[*field.OneofIndex] = g.Buffer.Len()
+			oneofInsertPoints[field.GetOneofIndex()] = g.Buffer.Len()
 
-			dname := "is" + ccTypeName + "_" + fname
-			oneofFieldName[*field.OneofIndex] = fname
-			oneofDisc[*field.OneofIndex] = dname
-			g.P(fname, ` `, dname)
+			oneofDisc[field.GetOneofIndex()] = "is" + messageType + "_" + oneofFieldName[field.GetOneofIndex()]
+			g.P(oneofFieldName[field.GetOneofIndex()], " ", oneofDisc[field.GetOneofIndex()])
 		}
 
+		// Populate field metadata maps
 		if d := g.getMapDescriptor(field); d != nil {
 			// Figure out the Go types and tags for the key and value types.
-			keyField, valField := d.Field[0], d.Field[1]
-			keyType := g.GoType(d, keyField)
-			valType := g.GoType(d, valField)
+			fieldMapFields[field] = struct {
+				Key, Value *descriptor.FieldDescriptorProto
+			}{
+				Key:   d.Field[0],
+				Value: d.Field[1],
+			}
 
-			// We don't use stars, except for message-typed values.
+			valType := g.GoType(d, fieldMapFields[field].Value)
+
 			// Message and enum types are the only two possibly foreign types used in maps,
-			// so record their use. They are not permitted as map keys.
-			keyType = strings.TrimPrefix(keyType, "*")
-			switch *valField.Type {
-			case descriptor.FieldDescriptorProto_TYPE_ENUM:
-				valType = strings.TrimPrefix(valType, "*")
-				g.RecordTypeUse(valField.GetTypeName())
+			// so record their use.
+			switch fieldMapFields[field].Value.GetType() {
 			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-				g.RecordTypeUse(valField.GetTypeName())
+				g.RecordTypeUse(fieldMapFields[field].Value.GetTypeName())
+			case descriptor.FieldDescriptorProto_TYPE_ENUM:
+				g.RecordTypeUse(fieldMapFields[field].Value.GetTypeName())
+				fallthrough
 			default:
 				valType = strings.TrimPrefix(valType, "*")
 			}
 
-			argType := fmt.Sprintf("map[%s]%s", keyType, valType)
-			mapFieldTypes[field] = argType // record for the getter generation
-			g.P(fieldName, ` `, argType)
-			continue
+			fieldMapTypes[field] = struct {
+				Key, Value string
+			}{
+				// We don't use stars, except for message-typed values.
+				// They are not permitted as map keys.
+				Key:   strings.TrimPrefix(g.GoType(d, fieldMapFields[field].Key), "*"),
+				Value: valType,
+			}
+
+			argType := fmt.Sprintf("map[%s]%s", fieldMapTypes[field].Key, fieldMapTypes[field].Value)
+			fieldTypes[field] = argType
 		}
 
-		if oneof {
-			tname := ccTypeName + "_" + base
+		// Change oneof typenames if they collide with enums= or message types
+		if field.OneofIndex != nil {
+			tname := messageType + "_" + fieldNames[field]
 			// It is possible for this to collide with a message or enum
 			// nested in this message. Check for collisions.
 			for {
@@ -1447,14 +1471,14 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			continue
 		}
 
-		g.P(fieldName, ` `, typename)
+		g.P(fieldNames[field], " ", fieldTypes[field])
 	}
 
 	g.Out()
 	g.P("}")
 	g.P()
 
-	// Update g.Buffer to list valid oneof types.
+	// Update g.Buffer to list valid oneof types in comment.
 	// We do this down here, after we've disambiguated the oneof type names.
 	// We go in reverse order of insertion point to avoid invalidating offsets.
 	for oi := int32(len(message.OneofDecl)); oi >= 0; oi-- {
@@ -1463,7 +1487,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		rem := all[ip:]
 		g.Buffer = bytes.NewBuffer(all[:ip:ip]) // set cap so we don't scribble on rem
 		for _, field := range message.Field {
-			if field.OneofIndex == nil || *field.OneofIndex != oi {
+			if field.OneofIndex == nil || field.GetOneofIndex() != oi {
 				continue
 			}
 			g.P("//\t*", oneofTypeName[field])
@@ -1474,446 +1498,409 @@ func (g *Generator) generateMessage(message *Descriptor) {
 	// Oneof per-field types, discriminants and getters.
 	//
 	// Generate unexported named types for the discriminant interfaces.
-	// We shouldn't have to do this, but there was (~19 Aug 2015) a compiler/linker bug
-	// that was triggered by using anonymous interfaces here.
-	// TODO: Revisit this and consider reverting back to anonymous interfaces.
 	for oi := range message.OneofDecl {
-		dname := oneofDisc[int32(oi)]
-		fname := oneofFieldName[int32(oi)]
-		g.P(`// `, dname, ` is used to distinguish types assignable to `, fname)
-		g.P("type ", dname, " interface { ", dname, "() }")
+		g.P("// ", oneofDisc[int32(oi)], " is used to distinguish types assignable to ", oneofFieldName[int32(oi)])
+		g.P("type ", oneofDisc[int32(oi)], " interface { ", oneofDisc[int32(oi)], "() }")
 	}
 	g.P()
+
+	// Generate Oneof field structs
 	for i, field := range message.Field {
 		if field.OneofIndex == nil {
 			continue
 		}
-		typeName := g.GoType(message, field)
-		fname := oneofFieldName[*field.OneofIndex]
-		g.P(`// `, oneofTypeName[field], ` is assignable to `, fname)
+		g.P("// ", oneofTypeName[field], " is assignable to ", oneofFieldName[field.GetOneofIndex()])
 		g.P("type ", oneofTypeName[field], " struct {")
 		g.In()
 		g.PrintComments(fmt.Sprintf("%s,%d,%d", message.path, messageFieldPath, i))
-		g.P(CamelCase(*field.Name), " ", typeName)
+		g.P(fieldNames[field], " ", fieldTypes[field])
 		g.Out()
 		g.P("}")
 		g.RecordTypeUse(field.GetTypeName())
 	}
 	g.P()
+
+	// Ensure all Oneof fields satisfy discriminant interface
 	for _, field := range message.Field {
 		if field.OneofIndex == nil {
 			continue
 		}
-		g.P("func (*", oneofTypeName[field], ") ", oneofDisc[*field.OneofIndex], "() {}")
+		g.P("func (*", oneofTypeName[field], ") ", oneofDisc[field.GetOneofIndex()], "() {}")
 	}
 	g.P()
 
 	// Generate Oneof Getter
 	for oi := range message.OneofDecl {
-		fname := oneofFieldName[int32(oi)]
-		getter := allocNames("Get" + fname)
-		g.P("// ", getter[0], " gets the ", fname, " of the ", ccTypeName, ".")
-		g.P("func (m *", ccTypeName, ") ", getter[0], "() (x ", oneofDisc[int32(oi)], ") {")
-		g.In()
-		g.P(`if m == nil {`)
-		g.In()
-		g.P(`return x`)
-		g.Out()
-		g.P(`}`)
-		g.P(`return m.` + fname)
-		g.P("}")
-		g.P()
+		getter := allocNames("Get" + oneofFieldName[int32(oi)])[0]
+		g.generateGetter(getter, oneofFieldName[int32(oi)], messageType, oneofDisc[int32(oi)])
 	}
-	g.P()
 
 	// Field getters
 	for _, field := range message.Field {
-		fname := CamelCase(field.GetName())
-		typename := g.GoType(message, field)
-		if t, ok := mapFieldTypes[field]; ok {
-			typename = t
-		}
-		getterName := fieldGetterNames[field]
-
 		// Generate Getter
-		g.P(`// `, getterName, ` gets the `, fname, ` of the `, ccTypeName, `.`)
-		g.P("func (m *", ccTypeName, ") ", getterName, "() (x ", typename, `) {`)
-
 		if field.OneofIndex != nil {
-			uname := oneofFieldName[*field.OneofIndex]
-			tname := oneofTypeName[field]
-			g.P("if v, ok := m.Get", uname, "().(*", tname, "); ok {")
+			g.P("// ", fieldGetterNames[field], " gets the ", fieldNames[field], " of the ", messageType, ".")
+			g.P("func (m *", messageType, ") ", fieldGetterNames[field], "() (x ", fieldTypes[field], ") {")
+			g.P("if v, ok := m.Get", oneofFieldName[field.GetOneofIndex()], "().(*", oneofTypeName[field], "); ok {")
 			g.In()
-			g.P("return v.", fname)
+			g.P("return v.", fieldNames[field])
 			g.Out()
 			g.P("}")
-			g.P(`return x`)
-		} else {
-			g.In()
-			g.P(`if m == nil {`)
-			g.In()
-			g.P(`return x`)
+			g.P("return x")
 			g.Out()
-			g.P(`}`)
-			g.P(`return m.` + fname)
+			g.P("}")
+			g.P()
+		} else {
+			g.generateGetter(fieldGetterNames[field], fieldNames[field], messageType, fieldTypes[field])
 		}
-		g.Out()
-		g.P(`}`)
-		g.P()
 	}
 
 	// Add MarshalToWriter
-	g.P(`// MarshalToWriter marshals `, ccTypeName, ` to the provided writer.`)
-	g.P(`func (m *` + ccTypeName + `) MarshalToWriter(writer jspb.Writer) {`)
+	g.P("// MarshalToWriter marshals ", messageType, " to the provided writer.")
+	g.P("func (m *" + messageType + ") MarshalToWriter(writer jspb.Writer) {")
 	g.In()
-	g.P(`if m == nil {`)
+	g.P("if m == nil {")
 	g.In()
-	g.P(`return`)
+	g.P("return")
 	g.Out()
-	g.P(`}`)
+	g.P("}")
+	g.P()
 	// Write Oneof fields first
 	for oi := range message.OneofDecl {
-		fname := oneofFieldName[int32(oi)]
-		g.P(`switch t := m.`, fname, `.(type) {`)
+		g.P("switch t := m.", oneofFieldName[int32(oi)], ".(type) {")
 		for _, field := range message.Field {
-			if field.OneofIndex == nil || *field.OneofIndex != int32(oi) {
+			if field.OneofIndex == nil || field.GetOneofIndex() != int32(oi) {
 				continue
 			}
-			g.P(`case *`, oneofTypeName[field], `:`)
-			g.In()
-			fname := CamelCase(field.GetName())
-			switch *field.Type {
-			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-				g.RecordTypeUse(field.GetTypeName())
-				g.P(`writer.WriteMessage(`, strconv.Itoa(int(*field.Number)), `, func () {`)
-				g.In()
-				g.P(`t.`, fname, `.MarshalToWriter(writer)`)
-				g.Out()
-				g.P(`})`)
-			case descriptor.FieldDescriptorProto_TYPE_ENUM:
-				g.RecordTypeUse(field.GetTypeName())
-				g.P(`if int(t.`, fname, `) != 0 {`)
-				g.In()
-				g.P(`writer.WriteEnum(`, strconv.Itoa(int(*field.Number)), `, int(t.`, fname, `))`)
-				g.Out()
-				g.P(`}`)
-			case descriptor.FieldDescriptorProto_TYPE_BOOL:
-				g.P(`if t.`, fname, ` {`)
-				g.In()
-				g.P(`writer.WriteBool(`, strconv.Itoa(int(*field.Number)), `, t.`, fname, `)`)
-				g.Out()
-				g.P(`}`)
-			case descriptor.FieldDescriptorProto_TYPE_STRING,
-				descriptor.FieldDescriptorProto_TYPE_BYTES:
-				g.P(`if len(t.`, fname, `) > 0 {`)
-				g.In()
-				g.P(`writer.Write`, g.JSPBTypeFunc(field), `(`, strconv.Itoa(int(*field.Number)), `, t.`, fname, `)`)
-				g.Out()
-				g.P(`}`)
-			default:
-				g.P(`if t.`, fname, ` != 0 {`)
-				g.In()
-				g.P(`writer.Write`, g.JSPBTypeFunc(field), `(`, strconv.Itoa(int(*field.Number)), `, t.`, fname, `)`)
-				g.Out()
-				g.P(`}`)
-			}
-			g.Out()
+			g.P("case *", oneofTypeName[field], ":")
+			g.generateFieldWriter(field, fieldNames[field], fieldNumbers[field], "t")
 		}
 		g.P("}")
+		g.P()
 	}
 	for _, field := range message.Field {
 		if field.OneofIndex != nil {
 			// Oneofs have already been dealt with
 			continue
 		}
-		fname := CamelCase(field.GetName())
-		if d := g.getMapDescriptor(field); d != nil {
+		if fieldMapFields[field].Key != nil {
 			// Special case for maps
-			g.P(`if len(m.`, fname, `) > 0 {`)
+			g.P("if len(m.", fieldNames[field], ") > 0 {")
 			g.In()
-			g.P(`writer.WriteMessage(`, strconv.Itoa(int(*field.Number)), `, func() {`)
+			g.P("writer.WriteMessage(", fieldNumbers[field], ", func() {")
 			g.In()
-			g.P(`for key, value := range m.`, fname, ` {`)
+			g.P("for key, value := range m.", fieldNames[field], " {")
 			g.In()
+			g.P("writer.Write", g.JSPBTypeFunc(fieldMapFields[field].Key), "(1, key)")
 
-			// Figure out the key and value types
-			keyField, valField := d.Field[0], d.Field[1]
-			g.P(`writer.Write`, g.JSPBTypeFunc(keyField), `(1, key)`)
-			switch *valField.Type {
+			// Because Messages and Enums can be map values we need special handling
+			switch fieldMapFields[field].Value.GetType() {
 			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-				g.RecordTypeUse(valField.GetTypeName())
-				g.P(`writer.WriteMessage(2, func () {`)
+				g.P("writer.WriteMessage(2, func () {")
 				g.In()
-				g.P(`value.MarshalToWriter(writer)`)
+				g.P("value.MarshalToWriter(writer)")
 				g.Out()
-				g.P(`})`)
+				g.P("})")
 			case descriptor.FieldDescriptorProto_TYPE_ENUM:
-				g.RecordTypeUse(valField.GetTypeName())
-				g.P(`writer.WriteEnum(2, int(value))`)
+				g.P("writer.WriteEnum(2, int(value))")
 			default:
-				g.P(`writer.Write`, g.JSPBTypeFunc(valField), `(2, value)`)
+				g.P("writer.Write", g.JSPBTypeFunc(fieldMapFields[field].Value), "(2, value)")
 			}
+
 			g.Out()
-			g.P(`}`)
+			g.P("}")
 			g.Out()
-			g.P(`})`)
+			g.P("})")
 			g.Out()
-			g.P(`}`)
+			g.P("}")
 		} else if isRepeated(field) {
 			// Special handling for slices
-			switch *field.Type {
+			switch field.GetType() {
 			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 				g.RecordTypeUse(field.GetTypeName())
-				g.P(`for _, msg := range m.`, fname, ` {`)
+				g.P("for _, msg := range m.", fieldNames[field], " {")
 				g.In()
-				g.P(`writer.WriteMessage(`, strconv.Itoa(int(*field.Number)), `, func () {`)
+				g.P("writer.WriteMessage(", fieldNumbers[field], ", func () {")
 				g.In()
-				g.P(`msg.MarshalToWriter(writer)`)
+				g.P("msg.MarshalToWriter(writer)")
 				g.Out()
-				g.P(`})`)
+				g.P("})")
 				g.Out()
-				g.P(`}`)
+				g.P("}")
 			case descriptor.FieldDescriptorProto_TYPE_ENUM:
 				g.RecordTypeUse(field.GetTypeName())
-				g.P(`if len(m.`, fname, `) > 0 {`)
+				g.P("if len(m.", fieldNames[field], ") > 0 {")
 				g.In()
-				g.P(`var ints []int`)
-				g.P(`for _, enum := range m.`, fname, ` {`)
+				g.P("var ints []int")
+				g.P("for _, enum := range m.", fieldNames[field], " {")
 				g.In()
-				g.P(`ints = append(ints, int(enum))`)
+				g.P("ints = append(ints, int(enum))")
 				g.Out()
-				g.P(`}`)
-				g.P(`writer.WriteEnumSlice(`, strconv.Itoa(int(*field.Number)), `, ints)`)
+				g.P("}")
+				g.P("writer.WriteEnumSlice(", fieldNumbers[field], ", ints)")
 				g.Out()
-				g.P(`}`)
+				g.P("}")
 			case descriptor.FieldDescriptorProto_TYPE_STRING,
 				descriptor.FieldDescriptorProto_TYPE_BYTES:
-				g.P(`for _, val := range m.`, fname, ` {`)
+				g.P("for _, val := range m.", fieldNames[field], " {")
 				g.In()
-				g.P(`writer.Write`, g.JSPBTypeFunc(field), `(`, strconv.Itoa(int(*field.Number)), `, val)`)
+				g.P("writer.Write", g.JSPBTypeFunc(field), "(", fieldNumbers[field], ", val)")
 				g.Out()
-				g.P(`}`)
+				g.P("}")
 			default:
-				g.P(`if len(m.`, fname, `) > 0 {`)
+				g.P("if len(m.", fieldNames[field], ") > 0 {")
 				g.In()
-				g.P(`writer.Write`, g.JSPBTypeFunc(field), `Slice(`, strconv.Itoa(int(*field.Number)), `, m.`, fname, `)`)
+				g.P("writer.Write", g.JSPBTypeFunc(field), "Slice(", fieldNumbers[field], ", m.", fieldNames[field], ")")
 				g.Out()
-				g.P(`}`)
+				g.P("}")
 			}
 		} else {
-			switch *field.Type {
-			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-				g.RecordTypeUse(field.GetTypeName())
-				g.P(`writer.WriteMessage(`, strconv.Itoa(int(*field.Number)), `, func () {`)
-				g.In()
-				g.P(`m.`, fname, `.MarshalToWriter(writer)`)
-				g.Out()
-				g.P(`})`)
-			case descriptor.FieldDescriptorProto_TYPE_ENUM:
-				g.RecordTypeUse(field.GetTypeName())
-				g.P(`if int(m.`, fname, `) != 0 {`)
-				g.In()
-				g.P(`writer.WriteEnum(`, strconv.Itoa(int(*field.Number)), `, int(m.`, fname, `))`)
-				g.Out()
-				g.P(`}`)
-			case descriptor.FieldDescriptorProto_TYPE_BOOL:
-				g.P(`if m.`, fname, ` {`)
-				g.In()
-				g.P(`writer.WriteBool(`, strconv.Itoa(int(*field.Number)), `, m.`, fname, `)`)
-				g.Out()
-				g.P(`}`)
-			case descriptor.FieldDescriptorProto_TYPE_STRING,
-				descriptor.FieldDescriptorProto_TYPE_BYTES:
-				g.P(`if len(m.`, fname, `) > 0 {`)
-				g.In()
-				g.P(`writer.Write`, g.JSPBTypeFunc(field), `(`, strconv.Itoa(int(*field.Number)), `, m.`, fname, `)`)
-				g.Out()
-				g.P(`}`)
-			default:
-				g.P(`if m.`, fname, ` != 0 {`)
-				g.In()
-				g.P(`writer.Write`, g.JSPBTypeFunc(field), `(`, strconv.Itoa(int(*field.Number)), `, m.`, fname, `)`)
-				g.Out()
-				g.P(`}`)
-			}
+			g.generateFieldWriter(field, fieldNames[field], fieldNumbers[field], "m")
 		}
+		g.P()
 	}
 	g.Out()
-	g.P(`}`)
+	g.P("return")
+	g.P("}")
 	g.P()
 
 	// Add Marshal
-	g.P(`// Marshal marshals `, ccTypeName, ` to a slice of bytes.`)
-	g.P(`func (m *` + ccTypeName + `) Marshal() []byte {`)
+	g.P("// Marshal marshals ", messageType, " to a slice of bytes.")
+	g.P("func (m *" + messageType + ") Marshal() []byte {")
 	g.In()
-	g.P(`writer := jspb.NewWriter()`)
-	g.P(`m.MarshalToWriter(writer)`)
-	g.P(`return writer.GetResult()`)
+	g.P("writer := jspb.NewWriter()")
+	g.P("m.MarshalToWriter(writer)")
+	g.P("return writer.GetResult()")
 	g.Out()
-	g.P(`}`)
+	g.P("}")
 	g.P()
 
 	// Add UnmarshalFromReader
-	g.P(`// UnmarshalFromReader unmarshals a `, ccTypeName, ` from the provided reader.`)
-	g.P(`func (m *`+ccTypeName+`) UnmarshalFromReader(reader jspb.Reader) *`, ccTypeName, ` {`)
+	g.P("// UnmarshalFromReader unmarshals a ", messageType, " from the provided reader.")
+	g.P("func (m *"+messageType+") UnmarshalFromReader(reader jspb.Reader) *", messageType, " {")
 	g.In()
-	g.P(`for reader.Next() {`)
+	g.P("for reader.Next() {")
 	g.In()
-	g.P(`if m == nil {`)
+	g.P("if m == nil {")
 	g.In()
-	g.P(`m = &`, ccTypeName, `{}`)
+	g.P("m = &", messageType, "{}")
 	g.Out()
-	g.P(`}`)
+	g.P("}")
 	g.P()
-	g.P(`switch reader.GetFieldNumber() {`)
+	g.P("switch reader.GetFieldNumber() {")
 	// Fields
 	for _, field := range message.Field {
-		g.P(`case `, strconv.Itoa(int(*field.Number)), `:`)
+		g.P("case ", fieldNumbers[field], ":")
 		g.In()
-		fname := CamelCase(field.GetName())
-		if d := g.getMapDescriptor(field); d != nil {
+		if fieldMapFields[field].Key != nil {
 			// Special case for maps
-			keyField, valField := d.Field[0], d.Field[1]
-			g.P(`m.`, fname, ` = `, mapFieldTypes[field], `{}`)
-			g.P(`reader.ReadMessage(func() {`)
+			g.P("m.", fieldNames[field], " = ", fieldTypes[field], "{}")
+			g.P("reader.ReadMessage(func() {")
 			g.In()
-			g.P(`var key `, g.GoType(message, keyField))
-			g.P(`var value `, g.GoType(message, valField))
-			g.P(`for reader.Next() {`)
+			g.P("var key ", fieldMapTypes[field].Key)
+			g.P("var value ", fieldMapTypes[field].Value)
+			g.P("for reader.Next() {")
 			g.In()
-			g.P(`switch reader.GetFieldNumber() {`)
-			g.P(`case 1:`)
+			g.P("switch reader.GetFieldNumber() {")
+			g.P("case 1:")
 			g.In()
-			g.P(`key = reader.Read`, g.JSPBTypeFunc(keyField), `()`)
+			g.P("key = reader.Read", g.JSPBTypeFunc(fieldMapFields[field].Key), "()")
 			g.Out()
-			g.P(`case 2:`)
+			g.P("case 2:")
 			g.In()
-			switch *valField.Type {
+
+			// Because Messages and Enums can be map values we need special handling
+			switch fieldMapFields[field].Value.GetType() {
 			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-				g.RecordTypeUse(field.GetTypeName())
-				g.P(`reader.ReadMessage(func() {`)
+				g.P("reader.ReadMessage(func() {")
 				g.In()
-				g.P(`value = new(`, strings.TrimPrefix(g.GoType(message, valField), `*`), `).UnmarshalFromReader(reader)`)
+				// Get underlying type by stripping pointer token
+				newTypeName := strings.TrimPrefix(g.GoType(message, fieldMapFields[field].Value), "*")
+				g.P("value = new(", newTypeName, ").UnmarshalFromReader(reader)")
 				g.Out()
-				g.P(`})`)
+				g.P("})")
 			case descriptor.FieldDescriptorProto_TYPE_ENUM:
-				g.RecordTypeUse(field.GetTypeName())
-				g.P(`value = `, g.GoType(message, valField), `(reader.ReadEnum())`)
+				g.P("value = ", g.GoType(message, fieldMapFields[field].Value), "(reader.ReadEnum())")
 			default:
-				g.P(`value = reader.Read`, g.JSPBTypeFunc(valField), `()`)
+				g.P("value = reader.Read", g.JSPBTypeFunc(fieldMapFields[field].Value), "()")
 			}
+
 			g.Out()
-			g.P(`}`)
-			g.P(`m.`, fname, `[key] = value`)
+			g.P("}")
+			g.P("m.", fieldNames[field], "[key] = value")
 			g.Out()
-			g.P(`}`)
+			g.P("}")
 			g.Out()
-			g.P(`})`)
+			g.P("})")
 		} else if isRepeated(field) {
 			// Special handling for slices
-			switch *field.Type {
+			switch field.GetType() {
 			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 				g.RecordTypeUse(field.GetTypeName())
-				g.P(`reader.ReadMessage(func() {`)
+				g.P("reader.ReadMessage(func() {")
 				g.In()
-				g.P(`m.`, fname, ` = append(m.`, fname, `, new(`, strings.TrimPrefix(g.GoType(message, field), `[]*`), `).UnmarshalFromReader(reader))`)
+				// Get underlying type by stripping slice and pointer tokens
+				newTypeName := strings.TrimPrefix(fieldTypes[field], "[]*")
+				g.P("m.", fieldNames[field], " = append(m.", fieldNames[field], ", new(", newTypeName, ").UnmarshalFromReader(reader))")
 				g.Out()
-				g.P(`})`)
+				g.P("})")
 			case descriptor.FieldDescriptorProto_TYPE_ENUM:
 				g.RecordTypeUse(field.GetTypeName())
-				g.P(`values := reader.ReadEnumSlice()`)
-				g.P(`for _, enum := range values {`)
+				g.P("values := reader.ReadEnumSlice()")
+				g.P("for _, enum := range values {")
 				g.In()
-				g.P(`m.`, fname, ` = append(m.`, fname, `, `, strings.TrimPrefix(g.GoType(message, field), `[]`), `(enum))`)
+				// Get underlying type by stripping slice token
+				newTypeName := strings.TrimPrefix(fieldTypes[field], "[]")
+				g.P("m.", fieldNames[field], " = append(m.", fieldNames[field], ", ", newTypeName, "(enum))")
 				g.Out()
-				g.P(`}`)
+				g.P("}")
 			case descriptor.FieldDescriptorProto_TYPE_STRING,
 				descriptor.FieldDescriptorProto_TYPE_BYTES:
-				g.P(`m.`, fname, ` = append(m.`, fname, `, reader.Read`, g.JSPBTypeFunc(field), `())`)
+				g.P("m.", fieldNames[field], " = append(m.", fieldNames[field], ", reader.Read", g.JSPBTypeFunc(field), "())")
 			default:
-				g.P(`m.`, fname, ` = reader.Read`, g.JSPBTypeFunc(field), `Slice()`)
+				g.P("m.", fieldNames[field], " = reader.Read", g.JSPBTypeFunc(field), "Slice()")
 			}
 		} else if field.OneofIndex != nil {
 			// Special handling for oneof fields
-			switch *field.Type {
+			switch field.GetType() {
 			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 				g.RecordTypeUse(field.GetTypeName())
-				g.P(`reader.ReadMessage(func() {`)
+				g.P("reader.ReadMessage(func() {")
 				g.In()
-				g.P(`m.`, oneofFieldName[*field.OneofIndex], ` = &`, oneofTypeName[field], `{`)
+				g.P("m.", oneofFieldName[field.GetOneofIndex()], " = &", oneofTypeName[field], "{")
 				g.In()
-				g.P(fname, `: new(`, strings.TrimPrefix(g.GoType(message, field), `*`), `).UnmarshalFromReader(reader),`)
+				// Get underlying type by stripping pointer token
+				newTypeName := strings.TrimPrefix(fieldTypes[field], "*")
+				g.P(fieldNames[field], ": new(", newTypeName, ").UnmarshalFromReader(reader),")
 				g.Out()
-				g.P(`}`)
+				g.P("}")
 				g.Out()
-				g.P(`})`)
+				g.P("})")
 			case descriptor.FieldDescriptorProto_TYPE_ENUM:
 				g.RecordTypeUse(field.GetTypeName())
-				g.P(`m.`, oneofFieldName[*field.OneofIndex], ` = &`, oneofTypeName[field], `{`)
+				g.P("m.", oneofFieldName[field.GetOneofIndex()], " = &", oneofTypeName[field], "{")
 				g.In()
-				g.P(fname, `: `, g.GoType(message, field), `(reader.ReadEnum()),`)
+				g.P(fieldNames[field], ": ", fieldTypes[field], "(reader.ReadEnum()),")
 				g.Out()
-				g.P(`}`)
+				g.P("}")
 			default:
-				g.P(`m.`, oneofFieldName[*field.OneofIndex], ` = &`, oneofTypeName[field], `{`)
+				g.P("m.", oneofFieldName[field.GetOneofIndex()], " = &", oneofTypeName[field], "{")
 				g.In()
-				g.P(fname, `: reader.Read`, g.JSPBTypeFunc(field), `(),`)
+				g.P(fieldNames[field], ": reader.Read", g.JSPBTypeFunc(field), "(),")
 				g.Out()
-				g.P(`}`)
+				g.P("}")
 			}
 		} else {
-			switch *field.Type {
+			switch field.GetType() {
 			case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 				g.RecordTypeUse(field.GetTypeName())
-				g.P(`reader.ReadMessage(func() {`)
+				g.P("reader.ReadMessage(func() {")
 				g.In()
-				g.P(`m.`, fname, ` = m.`, fname, `.UnmarshalFromReader(reader)`)
+				g.P("m.", fieldNames[field], " = m.", fieldNames[field], ".UnmarshalFromReader(reader)")
 				g.Out()
-				g.P(`})`)
+				g.P("})")
 			case descriptor.FieldDescriptorProto_TYPE_ENUM:
 				g.RecordTypeUse(field.GetTypeName())
-				g.P(`m.`, fname, ` = `, g.GoType(message, field), `(reader.ReadEnum())`)
+				g.P("m.", fieldNames[field], " = ", fieldTypes[field], "(reader.ReadEnum())")
 			default:
-				g.P(`m.`, fname, ` = reader.Read`, g.JSPBTypeFunc(field), `()`)
+				g.P("m.", fieldNames[field], " = reader.Read", g.JSPBTypeFunc(field), "()")
 			}
 		}
 		g.Out()
 	}
-	g.P(`default:`)
+	g.P("default:")
 	g.In()
-	g.P(`reader.SkipField()`)
+	g.P("reader.SkipField()")
 	g.Out()
-	g.P(`}`)
+	g.P("}")
 	g.Out()
-	g.P(`}`)
+	g.P("}")
 	g.P()
-	g.P(`return m`)
+	g.P("return m")
 	g.Out()
-	g.P(`}`)
+	g.P("}")
 	g.P()
 
 	// Add Unmarshal
-	g.P(`// Unmarshal unmarshals a `, ccTypeName, ` from a slice of bytes.`)
-	g.P(`func (m *`+ccTypeName+`) Unmarshal(rawBytes []byte) (*`, ccTypeName, `, error) {`)
+	g.P("// Unmarshal unmarshals a ", messageType, " from a slice of bytes.")
+	g.P("func (m *"+messageType+") Unmarshal(rawBytes []byte) (*", messageType, ", error) {")
 	g.In()
-	g.P(`reader := jspb.NewReader(rawBytes)`)
+	g.P("reader := jspb.NewReader(rawBytes)")
 	g.P()
-	g.P(`m = m.UnmarshalFromReader(reader)`)
+	g.P("m = m.UnmarshalFromReader(reader)")
 	g.P()
-	g.P(`if err := reader.Err(); err != nil {`)
+	g.P("if err := reader.Err(); err != nil {")
 	g.In()
-	g.P(`return nil, err`)
+	g.P("return nil, err")
 	g.Out()
-	g.P(`}`)
+	g.P("}")
 	g.P()
-	g.P(`return m, nil`)
+	g.P("return m, nil")
 	g.Out()
-	g.P(`}`)
+	g.P("}")
 	g.P()
 }
 
+func (g *Generator) generateGetter(getterName, fieldName, messageName, returnType string) {
+	g.P("// ", getterName, " gets the ", fieldName, " of the ", messageName, ".")
+	g.P("func (m *", messageName, ") ", getterName, "() (x ", returnType, ") {")
+	g.In()
+	g.P("if m == nil {")
+	g.In()
+	g.P("return x")
+	g.Out()
+	g.P("}")
+	g.P("return m." + fieldName)
+	g.P("}")
+	g.P()
+}
+
+func (g *Generator) generateFieldWriter(field *descriptor.FieldDescriptorProto, fieldName, fieldNumbers, messageVariable string) {
+	g.In()
+	switch field.GetType() {
+	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
+		g.RecordTypeUse(field.GetTypeName())
+		g.P("if ", messageVariable, ".", fieldName, " != nil {")
+		g.In()
+		g.P("writer.WriteMessage(", fieldNumbers, ", func () {")
+		g.In()
+		g.P(messageVariable, ".", fieldName, ".MarshalToWriter(writer)")
+		g.Out()
+		g.P("})")
+		g.Out()
+		g.P("}")
+	case descriptor.FieldDescriptorProto_TYPE_ENUM:
+		g.RecordTypeUse(field.GetTypeName())
+		g.P("if int(", messageVariable, ".", fieldName, ") != 0 {")
+		g.In()
+		g.P("writer.WriteEnum(", fieldNumbers, ", int(", messageVariable, ".", fieldName, "))")
+		g.Out()
+		g.P("}")
+	case descriptor.FieldDescriptorProto_TYPE_BOOL:
+		g.P("if ", messageVariable, ".", fieldName, " {")
+		g.In()
+		g.P("writer.WriteBool(", fieldNumbers, ", ", messageVariable, ".", fieldName, ")")
+		g.Out()
+		g.P("}")
+	case descriptor.FieldDescriptorProto_TYPE_STRING,
+		descriptor.FieldDescriptorProto_TYPE_BYTES:
+		g.P("if len(", messageVariable, ".", fieldName, ") > 0 {")
+		g.In()
+		g.P("writer.Write", g.JSPBTypeFunc(field), "(", fieldNumbers, ", ", messageVariable, ".", fieldName, ")")
+		g.Out()
+		g.P("}")
+	default:
+		g.P("if ", messageVariable, ".", fieldName, " != 0 {")
+		g.In()
+		g.P("writer.Write", g.JSPBTypeFunc(field), "(", fieldNumbers, ", ", messageVariable, ".", fieldName, ")")
+		g.Out()
+		g.P("}")
+	}
+	g.Out()
+}
+
 func (g *Generator) getMapDescriptor(field *descriptor.FieldDescriptorProto) *Descriptor {
-	if *field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
+	if field.GetType() == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
 		desc := g.ObjectNamed(field.GetTypeName())
 		if d, ok := desc.(*Descriptor); ok && d.GetOptions().GetMapEntry() {
 			return d
@@ -2005,7 +1992,7 @@ func dottedSlice(elem []string) string { return strings.Join(elem, ".") }
 
 // Is this field repeated?
 func isRepeated(field *descriptor.FieldDescriptorProto) bool {
-	return field.Label != nil && *field.Label == descriptor.FieldDescriptorProto_LABEL_REPEATED
+	return field.Label != nil && field.GetLabel() == descriptor.FieldDescriptorProto_LABEL_REPEATED
 }
 
 // Is this field a scalar numeric type?
@@ -2013,7 +2000,7 @@ func isScalar(field *descriptor.FieldDescriptorProto) bool {
 	if field.Type == nil {
 		return false
 	}
-	switch *field.Type {
+	switch field.GetType() {
 	case descriptor.FieldDescriptorProto_TYPE_DOUBLE,
 		descriptor.FieldDescriptorProto_TYPE_FLOAT,
 		descriptor.FieldDescriptorProto_TYPE_INT64,
