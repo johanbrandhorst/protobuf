@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"reflect"
 	"strings"
 
+	"github.com/gopherjs/gopherjs/js"
 	"github.com/rusco/qunit"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -30,9 +30,7 @@ var uri = strings.TrimSuffix(dom.GetWindow().Document().BaseURI(), shared.Gopher
 func typeTests() {
 	qunit.Module("Integration Types tests")
 
-	qunit.Test("Simple type factory", func(assert qunit.QUnitAssert) {
-		qunit.Expect(9)
-
+	qunit.Test("PingRequest Marshal and Unmarshal", func(assert qunit.QUnitAssert) {
 		req := &test.PingRequest{
 			Value:             "1234",
 			ResponseCount:     10,
@@ -43,31 +41,17 @@ func typeTests() {
 			SendTrailers:      true,
 			MessageLatencyMs:  100,
 		}
-		assert.Equal(req.GetValue(), "1234", "Value is set as expected")
-		assert.Equal(req.GetResponseCount(), 10, "ResponseCount is set as expected")
-		assert.Equal(req.GetErrorCodeReturned(), 1, "ErrorCodeReturned is set as expected")
-		assert.Equal(req.GetFailureType(), test.PingRequest_CODE, "ErrorCodeReturned is set as expected")
-		assert.Equal(req.GetCheckMetadata(), true, "CheckMetadata is set as expected")
-		assert.Equal(req.GetSendHeaders(), true, "SendHeaders is set as expected")
-		assert.Equal(req.GetSendTrailers(), true, "SendTrailers is set as expected")
-		assert.Equal(req.GetMessageLatencyMs(), 100, "MessageLatencyMs is set as expected")
 
-		serialized := req.Marshal()
-		newReq, err := new(test.PingRequest).Unmarshal(serialized)
+		marshalled := req.Marshal()
+		newReq, err := new(test.PingRequest).Unmarshal(marshalled)
 		if err != nil {
-			assert.Ok(false, "Unexpected error returned: "+err.Error())
+			assert.Ok(false, "Unexpected error returned: "+err.Error()+"\n"+err.(*js.Error).Stack())
 		}
-		if !reflect.DeepEqual(req, newReq) {
-			assert.Ok(false, fmt.Sprintf("Objects were not the same: New: %v, Old: %v", newReq, req))
-		} else {
-			assert.Ok(true, "Struct was the same before and after deserialization")
-		}
+		assert.DeepEqual(req, newReq, "Marshalling and unmarshalling results in the same struct")
 	})
 
-	qunit.Test("Complex type factory", func(assert qunit.QUnitAssert) {
-		qunit.Expect(8)
-
-		es := &test.ExtraStuff{
+	qunit.Test("ExtraStuff Marshal and Unmarshal", func(assert qunit.QUnitAssert) {
+		req := &test.ExtraStuff{
 			Addresses: map[int32]string{
 				1234: "The White House",
 				5678: "The Empire State Building",
@@ -79,137 +63,13 @@ func typeTests() {
 				1234, 5678,
 			},
 		}
-		addrs := es.GetAddresses()
-		assert.Equal(addrs[1234], "The White House", "Address 1234 is set as expected")
-		assert.Equal(addrs[5678], "The Empire State Building", "Address 5678 is set as expected")
-		crdnrs := es.GetCardNumbers()
-		assert.Equal(crdnrs[0], 1234, "CardNumber #1 is set as expected")
-		assert.Equal(crdnrs[1], 5678, "CardNumber #2 is set as expected")
-		assert.Equal(es.GetFirstName(), "Allison", "FirstName is set as expected")
-		assert.Equal(es.GetIdNumber(), 0, "IdNumber is not set, as expected")
-		if _, ok := es.GetTitle().(*test.ExtraStuff_FirstName); !ok {
-			assert.Ok(false, "GetTitle did not return a struct of type *test.ExtraStuff_FirstName as expected")
-		} else {
-			assert.Ok(true, "GetTitle did return a struct of type *test.ExtraStuff_FirstName as expected")
-		}
 
-		serialized := es.Marshal()
-		newEs, err := new(test.ExtraStuff).Unmarshal(serialized)
+		marshalled := req.Marshal()
+		newReq, err := new(test.ExtraStuff).Unmarshal(marshalled)
 		if err != nil {
-			assert.Ok(false, "Unexpected error returned: "+err.Error())
+			assert.Ok(false, "Unexpected error returned: "+err.Error()+"\n"+err.(*js.Error).Stack())
 		}
-		if !reflect.DeepEqual(es, newEs) {
-			assert.Ok(false, fmt.Sprintf("Objects were not the same: New: %v, Old: %v", newEs, es))
-		} else {
-			assert.Ok(true, "Struct was the same before and after deserialization")
-		}
-	})
-
-	qunit.Test("Simple setters and getters", func(assert qunit.QUnitAssert) {
-		qunit.Expect(16)
-
-		req := &test.PingRequest{}
-		assert.Equal(req.GetCheckMetadata(), false, "CheckMetadata was unset")
-		req.CheckMetadata = true
-		assert.Equal(req.GetCheckMetadata(), true, "CheckMetadata was set correctly")
-
-		assert.Equal(req.GetErrorCodeReturned(), 0, "ErrorCodeReturned was unset")
-		req.ErrorCodeReturned = 1
-		assert.Equal(req.GetErrorCodeReturned(), 1, "ErrorCodeReturned was set correctly")
-
-		assert.Equal(req.GetFailureType(), test.PingRequest_NONE, "FailureType was unset")
-		req.FailureType = test.PingRequest_DROP
-		assert.Equal(req.GetFailureType(), test.PingRequest_DROP, "FailureType was set correctly")
-
-		assert.Equal(req.GetMessageLatencyMs(), 0, "MessageLatencyMs was unset")
-		req.MessageLatencyMs = 1
-		assert.Equal(req.GetMessageLatencyMs(), 1, "MessageLatencyMs was set correctly")
-
-		assert.Equal(req.GetResponseCount(), 0, "ResponseCount was unset")
-		req.ResponseCount = 1
-		assert.Equal(req.GetResponseCount(), 1, "ResponseCount was set correctly")
-
-		assert.Equal(req.GetSendHeaders(), false, "SendHeaders was unset")
-		req.SendHeaders = true
-		assert.Equal(req.GetSendHeaders(), true, "SendHeaders was set correctly")
-
-		assert.Equal(req.GetSendTrailers(), false, "SendTrailers was unset")
-		req.SendTrailers = true
-		assert.Equal(req.GetSendTrailers(), true, "SendTrailers was set correctly")
-
-		assert.Equal(req.GetValue(), "", "Value was unset")
-		req.Value = "something"
-		assert.Equal(req.GetValue(), "something", "Value was set correctly")
-	})
-
-	qunit.Test("Map getters and setters", func(assert qunit.QUnitAssert) {
-		qunit.Expect(5)
-
-		req := &test.ExtraStuff{}
-		assert.Equal(len(req.GetAddresses()), 0, "Addresses was unset")
-		req.Addresses = map[int32]string{
-			1234: "The White House",
-			5678: "The Empire State Building",
-		}
-		addrs := req.GetAddresses()
-		assert.Equal(len(addrs), 2, "Addresses was the correct size")
-		assert.Equal(addrs[1234], "The White House", "Address 1234 was set correctly")
-		assert.Equal(addrs[5678], "The Empire State Building", "Address 5678 was set correctly")
-
-		req.Addresses = nil
-		assert.Equal(len(req.GetAddresses()), 0, "Addresses aws unset")
-	})
-
-	qunit.Test("Array getters and setters", func(assert qunit.QUnitAssert) {
-		qunit.Expect(5)
-
-		req := &test.ExtraStuff{}
-		assert.Equal(len(req.GetCardNumbers()), 0, "CardNumbers was unset")
-		req.CardNumbers = []uint32{
-			1234,
-			5678,
-		}
-		crdnrs := req.GetCardNumbers()
-		assert.Equal(len(crdnrs), 2, "CardNumbers was the correct size")
-		assert.Equal(crdnrs[0], 1234, "CardNumber #1 was set correctly")
-		assert.Equal(crdnrs[1], 5678, "CardNumber #2 was set correctly")
-
-		req.CardNumbers = nil
-		assert.Equal(len(req.GetCardNumbers()), 0, "CardNumbers was unset")
-	})
-
-	qunit.Test("Oneof getters and setters", func(assert qunit.QUnitAssert) {
-		qunit.Expect(12)
-
-		req := &test.ExtraStuff{}
-		assert.Equal(req.GetTitle(), nil, "Title was unset")
-		assert.Equal(req.GetFirstName(), "", "FirstName was unset")
-		assert.Equal(req.GetIdNumber(), 0, "IdNumber was unset")
-
-		req.Title = &test.ExtraStuff_FirstName{FirstName: "Allison"}
-		fn, ok := req.GetTitle().(*test.ExtraStuff_FirstName)
-		if !ok {
-			assert.Ok(false, "Title was not of type *test.ExtraStuff_FirstName")
-		} else {
-			assert.Ok(true, "Title was of type *test.ExtraStuff_FirstName")
-			assert.Equal(fn.FirstName, "Allison", "Title FirstName was set correctly")
-			assert.Equal(req.GetFirstName(), "Allison", "FirstName was set correctly")
-			assert.Equal(req.GetIdNumber(), 0, "IdNumber was still unset")
-		}
-
-		req.Title = &test.ExtraStuff_IdNumber{IdNumber: 100}
-		id, ok := req.GetTitle().(*test.ExtraStuff_IdNumber)
-		if !ok {
-			assert.Ok(false, "Title was not of type *test.ExtraStuff_IdNumber")
-		} else {
-			assert.Ok(true, "Title was of type *test.ExtraStuff_IdNumber")
-			assert.Equal(id.IdNumber, 100, "Title IdNumber was set correctly")
-			assert.Equal(req.GetFirstName(), "", "FirstName was unset")
-			assert.Equal(req.GetIdNumber(), 100, "IdNumber was set correctly")
-		}
-
-		req.Title = nil
-		assert.Equal(req.GetTitle(), nil, "Title was unset")
+		assert.DeepEqual(req, newReq, "Marshalling and unmarshalling results in the same struct")
 	})
 }
 
@@ -953,7 +813,7 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			defer recoverer.Recover() // recovers any panics and fails tests
 			defer qunit.Start()
 
-			_, err := c.PingEmpty(context.Background(), new(empty.Empty).New())
+			_, err := c.PingEmpty(context.Background(), &empty.Empty{})
 			if err == nil {
 				qunit.Ok(false, "Expected error, returned nil")
 				return
