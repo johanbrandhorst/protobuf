@@ -61,9 +61,11 @@ func (m *DoubleValue) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a DoubleValue from the provided reader.
 func (m *DoubleValue) UnmarshalFromReader(reader jspb.Reader) *DoubleValue {
-	m = &DoubleValue{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &DoubleValue{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			m.Value = reader.ReadFloat64()
@@ -123,9 +125,11 @@ func (m *FloatValue) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a FloatValue from the provided reader.
 func (m *FloatValue) UnmarshalFromReader(reader jspb.Reader) *FloatValue {
-	m = &FloatValue{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &FloatValue{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			m.Value = reader.ReadFloat32()
@@ -185,9 +189,11 @@ func (m *Int64Value) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a Int64Value from the provided reader.
 func (m *Int64Value) UnmarshalFromReader(reader jspb.Reader) *Int64Value {
-	m = &Int64Value{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &Int64Value{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			m.Value = reader.ReadInt64()
@@ -247,9 +253,11 @@ func (m *UInt64Value) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a UInt64Value from the provided reader.
 func (m *UInt64Value) UnmarshalFromReader(reader jspb.Reader) *UInt64Value {
-	m = &UInt64Value{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &UInt64Value{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			m.Value = reader.ReadUint64()
@@ -309,9 +317,11 @@ func (m *Int32Value) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a Int32Value from the provided reader.
 func (m *Int32Value) UnmarshalFromReader(reader jspb.Reader) *Int32Value {
-	m = &Int32Value{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &Int32Value{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			m.Value = reader.ReadInt32()
@@ -371,9 +381,11 @@ func (m *UInt32Value) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a UInt32Value from the provided reader.
 func (m *UInt32Value) UnmarshalFromReader(reader jspb.Reader) *UInt32Value {
-	m = &UInt32Value{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &UInt32Value{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			m.Value = reader.ReadUint32()
@@ -433,9 +445,11 @@ func (m *BoolValue) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a BoolValue from the provided reader.
 func (m *BoolValue) UnmarshalFromReader(reader jspb.Reader) *BoolValue {
-	m = &BoolValue{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &BoolValue{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			m.Value = reader.ReadBool()
@@ -495,9 +509,11 @@ func (m *StringValue) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a StringValue from the provided reader.
 func (m *StringValue) UnmarshalFromReader(reader jspb.Reader) *StringValue {
-	m = &StringValue{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &StringValue{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			m.Value = reader.ReadString()
@@ -557,9 +573,11 @@ func (m *BytesValue) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a BytesValue from the provided reader.
 func (m *BytesValue) UnmarshalFromReader(reader jspb.Reader) *BytesValue {
-	m = &BytesValue{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &BytesValue{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			m.Value = reader.ReadBytes()

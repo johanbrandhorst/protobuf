@@ -154,9 +154,11 @@ func (m *Any) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a Any from the provided reader.
 func (m *Any) UnmarshalFromReader(reader jspb.Reader) *Any {
-	m = &Any{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &Any{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			m.TypeUrl = reader.ReadString()

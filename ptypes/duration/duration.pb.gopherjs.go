@@ -130,9 +130,11 @@ func (m *Duration) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a Duration from the provided reader.
 func (m *Duration) UnmarshalFromReader(reader jspb.Reader) *Duration {
-	m = &Duration{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &Duration{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			m.Seconds = reader.ReadInt64()

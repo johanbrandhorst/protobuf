@@ -46,9 +46,11 @@ func (m *Empty) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a Empty from the provided reader.
 func (m *Empty) UnmarshalFromReader(reader jspb.Reader) *Empty {
-	m = &Empty{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &Empty{}
+		}
+
 		switch reader.GetFieldNumber() {
 		default:
 			reader.SkipField()

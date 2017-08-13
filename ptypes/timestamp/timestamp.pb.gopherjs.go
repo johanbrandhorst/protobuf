@@ -146,9 +146,11 @@ func (m *Timestamp) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a Timestamp from the provided reader.
 func (m *Timestamp) UnmarshalFromReader(reader jspb.Reader) *Timestamp {
-	m = &Timestamp{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &Timestamp{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			m.Seconds = reader.ReadInt64()

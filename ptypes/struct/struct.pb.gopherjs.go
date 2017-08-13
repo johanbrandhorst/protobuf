@@ -89,9 +89,11 @@ func (m *Struct) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a Struct from the provided reader.
 func (m *Struct) UnmarshalFromReader(reader jspb.Reader) *Struct {
-	m = &Struct{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &Struct{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			m.Fields = map[string]*Value{}
@@ -302,9 +304,11 @@ func (m *Value) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a Value from the provided reader.
 func (m *Value) UnmarshalFromReader(reader jspb.Reader) *Value {
-	m = &Value{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &Value{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			m.Kind = &Value_NullValue{
@@ -392,9 +396,11 @@ func (m *ListValue) Marshal() []byte {
 
 // UnmarshalFromReader unmarshals a ListValue from the provided reader.
 func (m *ListValue) UnmarshalFromReader(reader jspb.Reader) *ListValue {
-	m = &ListValue{}
-
 	for reader.Next() {
+		if m == nil {
+			m = &ListValue{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
 			reader.ReadMessage(func() {
