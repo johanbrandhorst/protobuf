@@ -204,12 +204,12 @@ func (m *Complex) MarshalToWriter(writer jspb.Writer) {
 	}
 
 	if len(m.CompactKeys) > 0 {
-		writer.WriteMessage(2, func() {
-			for key, value := range m.CompactKeys {
+		for key, value := range m.CompactKeys {
+			writer.WriteMessage(2, func() {
 				writer.WriteInt32(1, key)
 				writer.WriteString(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if m.Multi != nil {
@@ -241,7 +241,9 @@ func (m *Complex) UnmarshalFromReader(reader jspb.Reader) *Complex {
 				m.Communique = append(m.Communique, new(Complex_Communique).UnmarshalFromReader(reader))
 			})
 		case 2:
-			m.CompactKeys = map[int32]string{}
+			if m.CompactKeys == nil {
+				m.CompactKeys = map[int32]string{}
+			}
 			reader.ReadMessage(func() {
 				var key int32
 				var value string

@@ -18,6 +18,12 @@ package types
 import jspb "github.com/johanbrandhorst/protobuf/jspb"
 import multitest2 "github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/test/multi"
 
+import (
+	context "context"
+
+	grpcweb "github.com/johanbrandhorst/protobuf/grpcweb"
+)
+
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the jspb package it is being compiled against.
 const _ = jspb.JspbPackageIsVersion2
@@ -1341,169 +1347,169 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 	}
 
 	if len(m.MapInt32Int32) > 0 {
-		writer.WriteMessage(1, func() {
-			for key, value := range m.MapInt32Int32 {
+		for key, value := range m.MapInt32Int32 {
+			writer.WriteMessage(1, func() {
 				writer.WriteInt32(1, key)
 				writer.WriteInt32(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapInt64Int64) > 0 {
-		writer.WriteMessage(2, func() {
-			for key, value := range m.MapInt64Int64 {
+		for key, value := range m.MapInt64Int64 {
+			writer.WriteMessage(2, func() {
 				writer.WriteInt64(1, key)
 				writer.WriteInt64(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapUint32Uint32) > 0 {
-		writer.WriteMessage(3, func() {
-			for key, value := range m.MapUint32Uint32 {
+		for key, value := range m.MapUint32Uint32 {
+			writer.WriteMessage(3, func() {
 				writer.WriteUint32(1, key)
 				writer.WriteUint32(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapUint64Uint64) > 0 {
-		writer.WriteMessage(4, func() {
-			for key, value := range m.MapUint64Uint64 {
+		for key, value := range m.MapUint64Uint64 {
+			writer.WriteMessage(4, func() {
 				writer.WriteUint64(1, key)
 				writer.WriteUint64(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapSint32Sint32) > 0 {
-		writer.WriteMessage(5, func() {
-			for key, value := range m.MapSint32Sint32 {
+		for key, value := range m.MapSint32Sint32 {
+			writer.WriteMessage(5, func() {
 				writer.WriteSint32(1, key)
 				writer.WriteSint32(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapSint64Sint64) > 0 {
-		writer.WriteMessage(6, func() {
-			for key, value := range m.MapSint64Sint64 {
+		for key, value := range m.MapSint64Sint64 {
+			writer.WriteMessage(6, func() {
 				writer.WriteSint64(1, key)
 				writer.WriteSint64(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapFixed32Fixed32) > 0 {
-		writer.WriteMessage(7, func() {
-			for key, value := range m.MapFixed32Fixed32 {
+		for key, value := range m.MapFixed32Fixed32 {
+			writer.WriteMessage(7, func() {
 				writer.WriteFixed32(1, key)
 				writer.WriteFixed32(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapFixed64Fixed64) > 0 {
-		writer.WriteMessage(8, func() {
-			for key, value := range m.MapFixed64Fixed64 {
+		for key, value := range m.MapFixed64Fixed64 {
+			writer.WriteMessage(8, func() {
 				writer.WriteFixed64(1, key)
 				writer.WriteFixed64(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapSfixed32Sfixed32) > 0 {
-		writer.WriteMessage(9, func() {
-			for key, value := range m.MapSfixed32Sfixed32 {
+		for key, value := range m.MapSfixed32Sfixed32 {
+			writer.WriteMessage(9, func() {
 				writer.WriteSfixed32(1, key)
 				writer.WriteSfixed32(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapSfixed64Sfixed64) > 0 {
-		writer.WriteMessage(10, func() {
-			for key, value := range m.MapSfixed64Sfixed64 {
+		for key, value := range m.MapSfixed64Sfixed64 {
+			writer.WriteMessage(10, func() {
 				writer.WriteSfixed64(1, key)
 				writer.WriteSfixed64(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapInt32Float) > 0 {
-		writer.WriteMessage(11, func() {
-			for key, value := range m.MapInt32Float {
+		for key, value := range m.MapInt32Float {
+			writer.WriteMessage(11, func() {
 				writer.WriteInt32(1, key)
 				writer.WriteFloat32(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapInt32Double) > 0 {
-		writer.WriteMessage(12, func() {
-			for key, value := range m.MapInt32Double {
+		for key, value := range m.MapInt32Double {
+			writer.WriteMessage(12, func() {
 				writer.WriteInt32(1, key)
 				writer.WriteFloat64(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapBoolBool) > 0 {
-		writer.WriteMessage(13, func() {
-			for key, value := range m.MapBoolBool {
+		for key, value := range m.MapBoolBool {
+			writer.WriteMessage(13, func() {
 				writer.WriteBool(1, key)
 				writer.WriteBool(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapStringString) > 0 {
-		writer.WriteMessage(14, func() {
-			for key, value := range m.MapStringString {
+		for key, value := range m.MapStringString {
+			writer.WriteMessage(14, func() {
 				writer.WriteString(1, key)
 				writer.WriteString(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapInt32Bytes) > 0 {
-		writer.WriteMessage(15, func() {
-			for key, value := range m.MapInt32Bytes {
+		for key, value := range m.MapInt32Bytes {
+			writer.WriteMessage(15, func() {
 				writer.WriteInt32(1, key)
 				writer.WriteBytes(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapInt32Enum) > 0 {
-		writer.WriteMessage(16, func() {
-			for key, value := range m.MapInt32Enum {
+		for key, value := range m.MapInt32Enum {
+			writer.WriteMessage(16, func() {
 				writer.WriteInt32(1, key)
 				writer.WriteEnum(2, int(value))
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapInt32ForeignMessage) > 0 {
-		writer.WriteMessage(17, func() {
-			for key, value := range m.MapInt32ForeignMessage {
+		for key, value := range m.MapInt32ForeignMessage {
+			writer.WriteMessage(17, func() {
 				writer.WriteInt32(1, key)
 				writer.WriteMessage(2, func() {
 					value.MarshalToWriter(writer)
 				})
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.MapInt32ImportedMessage) > 0 {
-		writer.WriteMessage(18, func() {
-			for key, value := range m.MapInt32ImportedMessage {
+		for key, value := range m.MapInt32ImportedMessage {
+			writer.WriteMessage(18, func() {
 				writer.WriteInt32(1, key)
 				writer.WriteMessage(2, func() {
 					value.MarshalToWriter(writer)
 				})
-			}
-		})
+			})
+		}
 	}
 
 	return
@@ -1525,7 +1531,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 
 		switch reader.GetFieldNumber() {
 		case 1:
-			m.MapInt32Int32 = map[int32]int32{}
+			if m.MapInt32Int32 == nil {
+				m.MapInt32Int32 = map[int32]int32{}
+			}
 			reader.ReadMessage(func() {
 				var key int32
 				var value int32
@@ -1540,7 +1548,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 2:
-			m.MapInt64Int64 = map[int64]int64{}
+			if m.MapInt64Int64 == nil {
+				m.MapInt64Int64 = map[int64]int64{}
+			}
 			reader.ReadMessage(func() {
 				var key int64
 				var value int64
@@ -1555,7 +1565,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 3:
-			m.MapUint32Uint32 = map[uint32]uint32{}
+			if m.MapUint32Uint32 == nil {
+				m.MapUint32Uint32 = map[uint32]uint32{}
+			}
 			reader.ReadMessage(func() {
 				var key uint32
 				var value uint32
@@ -1570,7 +1582,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 4:
-			m.MapUint64Uint64 = map[uint64]uint64{}
+			if m.MapUint64Uint64 == nil {
+				m.MapUint64Uint64 = map[uint64]uint64{}
+			}
 			reader.ReadMessage(func() {
 				var key uint64
 				var value uint64
@@ -1585,7 +1599,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 5:
-			m.MapSint32Sint32 = map[int32]int32{}
+			if m.MapSint32Sint32 == nil {
+				m.MapSint32Sint32 = map[int32]int32{}
+			}
 			reader.ReadMessage(func() {
 				var key int32
 				var value int32
@@ -1600,7 +1616,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 6:
-			m.MapSint64Sint64 = map[int64]int64{}
+			if m.MapSint64Sint64 == nil {
+				m.MapSint64Sint64 = map[int64]int64{}
+			}
 			reader.ReadMessage(func() {
 				var key int64
 				var value int64
@@ -1615,7 +1633,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 7:
-			m.MapFixed32Fixed32 = map[uint32]uint32{}
+			if m.MapFixed32Fixed32 == nil {
+				m.MapFixed32Fixed32 = map[uint32]uint32{}
+			}
 			reader.ReadMessage(func() {
 				var key uint32
 				var value uint32
@@ -1630,7 +1650,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 8:
-			m.MapFixed64Fixed64 = map[uint64]uint64{}
+			if m.MapFixed64Fixed64 == nil {
+				m.MapFixed64Fixed64 = map[uint64]uint64{}
+			}
 			reader.ReadMessage(func() {
 				var key uint64
 				var value uint64
@@ -1645,7 +1667,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 9:
-			m.MapSfixed32Sfixed32 = map[int32]int32{}
+			if m.MapSfixed32Sfixed32 == nil {
+				m.MapSfixed32Sfixed32 = map[int32]int32{}
+			}
 			reader.ReadMessage(func() {
 				var key int32
 				var value int32
@@ -1660,7 +1684,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 10:
-			m.MapSfixed64Sfixed64 = map[int64]int64{}
+			if m.MapSfixed64Sfixed64 == nil {
+				m.MapSfixed64Sfixed64 = map[int64]int64{}
+			}
 			reader.ReadMessage(func() {
 				var key int64
 				var value int64
@@ -1675,7 +1701,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 11:
-			m.MapInt32Float = map[int32]float32{}
+			if m.MapInt32Float == nil {
+				m.MapInt32Float = map[int32]float32{}
+			}
 			reader.ReadMessage(func() {
 				var key int32
 				var value float32
@@ -1690,7 +1718,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 12:
-			m.MapInt32Double = map[int32]float64{}
+			if m.MapInt32Double == nil {
+				m.MapInt32Double = map[int32]float64{}
+			}
 			reader.ReadMessage(func() {
 				var key int32
 				var value float64
@@ -1705,7 +1735,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 13:
-			m.MapBoolBool = map[bool]bool{}
+			if m.MapBoolBool == nil {
+				m.MapBoolBool = map[bool]bool{}
+			}
 			reader.ReadMessage(func() {
 				var key bool
 				var value bool
@@ -1720,7 +1752,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 14:
-			m.MapStringString = map[string]string{}
+			if m.MapStringString == nil {
+				m.MapStringString = map[string]string{}
+			}
 			reader.ReadMessage(func() {
 				var key string
 				var value string
@@ -1735,7 +1769,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 15:
-			m.MapInt32Bytes = map[int32][]byte{}
+			if m.MapInt32Bytes == nil {
+				m.MapInt32Bytes = map[int32][]byte{}
+			}
 			reader.ReadMessage(func() {
 				var key int32
 				var value []byte
@@ -1750,7 +1786,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 16:
-			m.MapInt32Enum = map[int32]MapEnum{}
+			if m.MapInt32Enum == nil {
+				m.MapInt32Enum = map[int32]MapEnum{}
+			}
 			reader.ReadMessage(func() {
 				var key int32
 				var value MapEnum
@@ -1765,7 +1803,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 17:
-			m.MapInt32ForeignMessage = map[int32]*ForeignMessage{}
+			if m.MapInt32ForeignMessage == nil {
+				m.MapInt32ForeignMessage = map[int32]*ForeignMessage{}
+			}
 			reader.ReadMessage(func() {
 				var key int32
 				var value *ForeignMessage
@@ -1782,7 +1822,9 @@ func (m *TestMap) UnmarshalFromReader(reader jspb.Reader) *TestMap {
 				}
 			})
 		case 18:
-			m.MapInt32ImportedMessage = map[int32]*multitest2.Multi1{}
+			if m.MapInt32ImportedMessage == nil {
+				m.MapInt32ImportedMessage = map[int32]*multitest2.Multi1{}
+			}
 			reader.ReadMessage(func() {
 				var key int32
 				var value *multitest2.Multi1
@@ -1817,4 +1859,52 @@ func (m *TestMap) Unmarshal(rawBytes []byte) (*TestMap, error) {
 	}
 
 	return m, nil
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpcweb.Client
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpcweb package it is being compiled against.
+const _ = grpcweb.GrpcWebPackageIsVersion1
+
+// Client API for EchoService service
+
+type EchoServiceClient interface {
+	EchoAllTypes(ctx context.Context, in *TestAllTypes, opts ...grpcweb.CallOption) (*TestAllTypes, error)
+	EchoMaps(ctx context.Context, in *TestMap, opts ...grpcweb.CallOption) (*TestMap, error)
+}
+
+type echoServiceClient struct {
+	client *grpcweb.Client
+}
+
+// NewEchoServiceClient creates a new gRPC-Web client.
+func NewEchoServiceClient(hostname string, opts ...grpcweb.DialOption) EchoServiceClient {
+	return &echoServiceClient{
+		client: grpcweb.NewClient(hostname, "types.EchoService", opts...),
+	}
+}
+
+func (c *echoServiceClient) EchoAllTypes(ctx context.Context, in *TestAllTypes, opts ...grpcweb.CallOption) (*TestAllTypes, error) {
+	req := in.Marshal()
+
+	resp, err := c.client.RPCCall(ctx, "EchoAllTypes", req, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	return new(TestAllTypes).Unmarshal(resp)
+}
+
+func (c *echoServiceClient) EchoMaps(ctx context.Context, in *TestMap, opts ...grpcweb.CallOption) (*TestMap, error) {
+	req := in.Marshal()
+
+	resp, err := c.client.RPCCall(ctx, "EchoMaps", req, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	return new(TestMap).Unmarshal(resp)
 }

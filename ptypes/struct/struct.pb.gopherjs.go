@@ -70,14 +70,14 @@ func (m *Struct) MarshalToWriter(writer jspb.Writer) {
 	}
 
 	if len(m.Fields) > 0 {
-		writer.WriteMessage(1, func() {
-			for key, value := range m.Fields {
+		for key, value := range m.Fields {
+			writer.WriteMessage(1, func() {
 				writer.WriteString(1, key)
 				writer.WriteMessage(2, func() {
 					value.MarshalToWriter(writer)
 				})
-			}
-		})
+			})
+		}
 	}
 
 	return
@@ -99,7 +99,9 @@ func (m *Struct) UnmarshalFromReader(reader jspb.Reader) *Struct {
 
 		switch reader.GetFieldNumber() {
 		case 1:
-			m.Fields = map[string]*Value{}
+			if m.Fields == nil {
+				m.Fields = map[string]*Value{}
+			}
 			reader.ReadMessage(func() {
 				var key string
 				var value *Value

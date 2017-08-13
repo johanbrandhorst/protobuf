@@ -135,12 +135,12 @@ func (m *ExtraStuff) MarshalToWriter(writer jspb.Writer) {
 	}
 
 	if len(m.Addresses) > 0 {
-		writer.WriteMessage(1, func() {
-			for key, value := range m.Addresses {
+		for key, value := range m.Addresses {
+			writer.WriteMessage(1, func() {
 				writer.WriteInt32(1, key)
 				writer.WriteString(2, value)
-			}
-		})
+			})
+		}
 	}
 
 	if len(m.CardNumbers) > 0 {
@@ -166,7 +166,9 @@ func (m *ExtraStuff) UnmarshalFromReader(reader jspb.Reader) *ExtraStuff {
 
 		switch reader.GetFieldNumber() {
 		case 1:
-			m.Addresses = map[int32]string{}
+			if m.Addresses == nil {
+				m.Addresses = map[int32]string{}
+			}
 			reader.ReadMessage(func() {
 				var key int32
 				var value string
