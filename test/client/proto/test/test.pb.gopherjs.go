@@ -2,15 +2,15 @@
 // source: proto/test/test.proto
 
 /*
-	Package test is a generated protocol buffer package.
+Package test is a generated protocol buffer package.
 
-	It is generated from these files:
-		proto/test/test.proto
+It is generated from these files:
+	proto/test/test.proto
 
-	It has these top-level messages:
-		ExtraStuff
-		PingRequest
-		PingResponse
+It has these top-level messages:
+	ExtraStuff
+	PingRequest
+	PingResponse
 */
 package test
 
@@ -25,7 +25,7 @@ import (
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the jspb package it is being compiled against.
-const _ = jspb.JspbPackageIsVersion1
+const _ = jspb.JspbPackageIsVersion2
 
 type PingRequest_FailureType int
 
@@ -59,16 +59,17 @@ type ExtraStuff struct {
 	CardNumbers []uint32
 }
 
-// Types that are valid to be assigned to Title:
-//	*ExtraStuff_FirstName
-//	*ExtraStuff_IdNumber
+// isExtraStuff_Title is used to distinguish types assignable to Title
 type isExtraStuff_Title interface {
 	isExtraStuff_Title()
 }
 
+// ExtraStuff_FirstName is assignable to Title
 type ExtraStuff_FirstName struct {
 	FirstName string
 }
+
+// ExtraStuff_IdNumber is assignable to Title
 type ExtraStuff_IdNumber struct {
 	IdNumber int32
 }
@@ -77,46 +78,60 @@ func (*ExtraStuff_FirstName) isExtraStuff_Title() {}
 func (*ExtraStuff_IdNumber) isExtraStuff_Title()  {}
 
 // GetTitle gets the Title of the ExtraStuff.
-func (m *ExtraStuff) GetTitle() isExtraStuff_Title {
-	if m != nil {
-		return m.Title
+func (m *ExtraStuff) GetTitle() (x isExtraStuff_Title) {
+	if m == nil {
+		return x
 	}
-	return nil
+	return m.Title
 }
 
-func (m *ExtraStuff) GetAddresses() map[int32]string {
-	if m != nil {
-		return m.Addresses
+// GetAddresses gets the Addresses of the ExtraStuff.
+func (m *ExtraStuff) GetAddresses() (x map[int32]string) {
+	if m == nil {
+		return x
 	}
-	return nil
+	return m.Addresses
 }
 
-func (m *ExtraStuff) GetFirstName() string {
-	if x, ok := m.GetTitle().(*ExtraStuff_FirstName); ok {
-		return x.FirstName
+// GetFirstName gets the FirstName of the ExtraStuff.
+func (m *ExtraStuff) GetFirstName() (x string) {
+	if v, ok := m.GetTitle().(*ExtraStuff_FirstName); ok {
+		return v.FirstName
 	}
-	return ""
+	return x
 }
 
-func (m *ExtraStuff) GetIdNumber() int32 {
-	if x, ok := m.GetTitle().(*ExtraStuff_IdNumber); ok {
-		return x.IdNumber
+// GetIdNumber gets the IdNumber of the ExtraStuff.
+func (m *ExtraStuff) GetIdNumber() (x int32) {
+	if v, ok := m.GetTitle().(*ExtraStuff_IdNumber); ok {
+		return v.IdNumber
 	}
-	return 0
+	return x
 }
 
-func (m *ExtraStuff) GetCardNumbers() []uint32 {
-	if m != nil {
-		return m.CardNumbers
+// GetCardNumbers gets the CardNumbers of the ExtraStuff.
+func (m *ExtraStuff) GetCardNumbers() (x []uint32) {
+	if m == nil {
+		return x
 	}
-	return nil
+	return m.CardNumbers
 }
 
-// Marshal marshals ExtraStuff to a slice of bytes.
-func (m *ExtraStuff) Marshal() []byte {
-	writer := jspb.NewWriter()
-
-	// The Map, field 1
+// MarshalToWriter marshals ExtraStuff to the provided writer.
+func (m *ExtraStuff) MarshalToWriter(writer jspb.Writer) {
+	if m == nil {
+		return
+	}
+	switch t := m.Title.(type) {
+	case *ExtraStuff_FirstName:
+		if len(t.FirstName) > 0 {
+			writer.WriteString(2, t.FirstName)
+		}
+	case *ExtraStuff_IdNumber:
+		if t.IdNumber != 0 {
+			writer.WriteInt32(3, t.IdNumber)
+		}
+	}
 	if len(m.Addresses) > 0 {
 		writer.WriteMessage(1, func() {
 			for key, value := range m.Addresses {
@@ -125,32 +140,28 @@ func (m *ExtraStuff) Marshal() []byte {
 			}
 		})
 	}
-
-	// The Oneof, field 2, 3
-	switch t := m.Title.(type) {
-	case *ExtraStuff_FirstName:
-		writer.WriteString(2, t.FirstName)
-	case *ExtraStuff_IdNumber:
-		writer.WriteInt32(3, t.IdNumber)
-	}
-
-	// The Slice, field 4
 	if len(m.CardNumbers) > 0 {
 		writer.WriteUint32Slice(4, m.CardNumbers)
 	}
+}
 
+// Marshal marshals ExtraStuff to a slice of bytes.
+func (m *ExtraStuff) Marshal() []byte {
+	writer := jspb.NewWriter()
+	m.MarshalToWriter(writer)
 	return writer.GetResult()
 }
 
-// Unmarshal unmarshals a ExtraStuff from a slice of bytes.
-func (m *ExtraStuff) Unmarshal(rawBytes []byte) (x *ExtraStuff, err error) {
-	reader := jspb.NewReader(rawBytes)
-	x = &ExtraStuff{}
-
+// UnmarshalFromReader unmarshals a ExtraStuff from the provided reader.
+func (m *ExtraStuff) UnmarshalFromReader(reader jspb.Reader) *ExtraStuff {
 	for reader.Next() {
+		if m == nil {
+			m = &ExtraStuff{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
-			x.Addresses = map[int32]string{}
+			m.Addresses = map[int32]string{}
 			reader.ReadMessage(func() {
 				var key int32
 				var value string
@@ -161,29 +172,38 @@ func (m *ExtraStuff) Unmarshal(rawBytes []byte) (x *ExtraStuff, err error) {
 					case 2:
 						value = reader.ReadString()
 					}
-					x.Addresses[key] = value
+					m.Addresses[key] = value
 				}
 			})
 		case 2:
-			x.Title = &ExtraStuff_FirstName{
+			m.Title = &ExtraStuff_FirstName{
 				FirstName: reader.ReadString(),
 			}
 		case 3:
-			x.Title = &ExtraStuff_IdNumber{
+			m.Title = &ExtraStuff_IdNumber{
 				IdNumber: reader.ReadInt32(),
 			}
 		case 4:
-			x.CardNumbers = reader.ReadUint32Slice()
+			m.CardNumbers = reader.ReadUint32Slice()
 		default:
 			reader.SkipField()
 		}
 	}
 
+	return m
+}
+
+// Unmarshal unmarshals a ExtraStuff from a slice of bytes.
+func (m *ExtraStuff) Unmarshal(rawBytes []byte) (*ExtraStuff, error) {
+	reader := jspb.NewReader(rawBytes)
+
+	m = m.UnmarshalFromReader(reader)
+
 	if err := reader.Err(); err != nil {
 		return nil, err
 	}
 
-	return x, nil
+	return m, nil
 }
 
 type PingRequest struct {
@@ -197,134 +217,151 @@ type PingRequest struct {
 	MessageLatencyMs  int32
 }
 
-func (m *PingRequest) GetValue() string {
-	if m != nil {
-		return m.Value
+// GetValue gets the Value of the PingRequest.
+func (m *PingRequest) GetValue() (x string) {
+	if m == nil {
+		return x
 	}
-	return ""
+	return m.Value
 }
 
-func (m *PingRequest) GetResponseCount() int32 {
-	if m != nil {
-		return m.ResponseCount
+// GetResponseCount gets the ResponseCount of the PingRequest.
+func (m *PingRequest) GetResponseCount() (x int32) {
+	if m == nil {
+		return x
 	}
-	return 0
+	return m.ResponseCount
 }
 
-func (m *PingRequest) GetErrorCodeReturned() uint32 {
-	if m != nil {
-		return m.ErrorCodeReturned
+// GetErrorCodeReturned gets the ErrorCodeReturned of the PingRequest.
+func (m *PingRequest) GetErrorCodeReturned() (x uint32) {
+	if m == nil {
+		return x
 	}
-	return 0
+	return m.ErrorCodeReturned
 }
 
-func (m *PingRequest) GetFailureType() PingRequest_FailureType {
-	if m != nil {
-		return m.FailureType
+// GetFailureType gets the FailureType of the PingRequest.
+func (m *PingRequest) GetFailureType() (x PingRequest_FailureType) {
+	if m == nil {
+		return x
 	}
-	return PingRequest_NONE
+	return m.FailureType
 }
 
-func (m *PingRequest) GetCheckMetadata() bool {
-	if m != nil {
-		return m.CheckMetadata
+// GetCheckMetadata gets the CheckMetadata of the PingRequest.
+func (m *PingRequest) GetCheckMetadata() (x bool) {
+	if m == nil {
+		return x
 	}
-	return false
+	return m.CheckMetadata
 }
 
-func (m *PingRequest) GetSendHeaders() bool {
-	if m != nil {
-		return m.SendHeaders
+// GetSendHeaders gets the SendHeaders of the PingRequest.
+func (m *PingRequest) GetSendHeaders() (x bool) {
+	if m == nil {
+		return x
 	}
-	return false
+	return m.SendHeaders
 }
 
-func (m *PingRequest) GetSendTrailers() bool {
-	if m != nil {
-		return m.SendTrailers
+// GetSendTrailers gets the SendTrailers of the PingRequest.
+func (m *PingRequest) GetSendTrailers() (x bool) {
+	if m == nil {
+		return x
 	}
-	return false
+	return m.SendTrailers
 }
 
-func (m *PingRequest) GetMessageLatencyMs() int32 {
-	if m != nil {
-		return m.MessageLatencyMs
+// GetMessageLatencyMs gets the MessageLatencyMs of the PingRequest.
+func (m *PingRequest) GetMessageLatencyMs() (x int32) {
+	if m == nil {
+		return x
 	}
-	return 0
+	return m.MessageLatencyMs
+}
+
+// MarshalToWriter marshals PingRequest to the provided writer.
+func (m *PingRequest) MarshalToWriter(writer jspb.Writer) {
+	if m == nil {
+		return
+	}
+	if len(m.Value) > 0 {
+		writer.WriteString(1, m.Value)
+	}
+	if m.ResponseCount != 0 {
+		writer.WriteInt32(2, m.ResponseCount)
+	}
+	if m.ErrorCodeReturned != 0 {
+		writer.WriteUint32(3, m.ErrorCodeReturned)
+	}
+	if int(m.FailureType) != 0 {
+		writer.WriteEnum(4, int(m.FailureType))
+	}
+	if m.CheckMetadata {
+		writer.WriteBool(5, m.CheckMetadata)
+	}
+	if m.SendHeaders {
+		writer.WriteBool(6, m.SendHeaders)
+	}
+	if m.SendTrailers {
+		writer.WriteBool(7, m.SendTrailers)
+	}
+	if m.MessageLatencyMs != 0 {
+		writer.WriteInt32(8, m.MessageLatencyMs)
+	}
 }
 
 // Marshal marshals PingRequest to a slice of bytes.
 func (m *PingRequest) Marshal() []byte {
 	writer := jspb.NewWriter()
-
-	if len(m.Value) > 0 {
-		writer.WriteString(1, m.Value)
-	}
-
-	if m.ResponseCount != 0 {
-		writer.WriteInt32(2, m.ResponseCount)
-	}
-
-	if m.ErrorCodeReturned != 0 {
-		writer.WriteUint32(3, m.ErrorCodeReturned)
-	}
-
-	if m.FailureType != PingRequest_NONE {
-		writer.WriteEnum(4, int(m.FailureType))
-	}
-
-	if m.CheckMetadata {
-		writer.WriteBool(5, m.CheckMetadata)
-	}
-
-	if m.SendHeaders {
-		writer.WriteBool(6, m.SendHeaders)
-	}
-
-	if m.SendTrailers {
-		writer.WriteBool(7, m.SendTrailers)
-	}
-
-	if m.MessageLatencyMs != 0 {
-		writer.WriteInt32(8, m.MessageLatencyMs)
-	}
-
+	m.MarshalToWriter(writer)
 	return writer.GetResult()
 }
 
-// Unmarshal unmarshals a PingRequest from a slice of bytes.
-func (m *PingRequest) Unmarshal(rawBytes []byte) (x *PingRequest, err error) {
-	reader := jspb.NewReader(rawBytes)
-	x = &PingRequest{}
-
+// UnmarshalFromReader unmarshals a PingRequest from the provided reader.
+func (m *PingRequest) UnmarshalFromReader(reader jspb.Reader) *PingRequest {
 	for reader.Next() {
+		if m == nil {
+			m = &PingRequest{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
-			x.Value = reader.ReadString()
+			m.Value = reader.ReadString()
 		case 2:
-			x.ResponseCount = reader.ReadInt32()
+			m.ResponseCount = reader.ReadInt32()
 		case 3:
-			x.ErrorCodeReturned = reader.ReadUint32()
+			m.ErrorCodeReturned = reader.ReadUint32()
 		case 4:
-			x.FailureType = PingRequest_FailureType(reader.ReadEnum())
+			m.FailureType = PingRequest_FailureType(reader.ReadEnum())
 		case 5:
-			x.CheckMetadata = reader.ReadBool()
+			m.CheckMetadata = reader.ReadBool()
 		case 6:
-			x.SendHeaders = reader.ReadBool()
+			m.SendHeaders = reader.ReadBool()
 		case 7:
-			x.SendTrailers = reader.ReadBool()
+			m.SendTrailers = reader.ReadBool()
 		case 8:
-			x.MessageLatencyMs = reader.ReadInt32()
+			m.MessageLatencyMs = reader.ReadInt32()
 		default:
 			reader.SkipField()
 		}
 	}
 
+	return m
+}
+
+// Unmarshal unmarshals a PingRequest from a slice of bytes.
+func (m *PingRequest) Unmarshal(rawBytes []byte) (*PingRequest, error) {
+	reader := jspb.NewReader(rawBytes)
+
+	m = m.UnmarshalFromReader(reader)
+
 	if err := reader.Err(); err != nil {
 		return nil, err
 	}
 
-	return x, nil
+	return m, nil
 }
 
 type PingResponse struct {
@@ -332,56 +369,73 @@ type PingResponse struct {
 	Counter int32
 }
 
-func (m *PingResponse) GetValue() string {
-	if m != nil {
-		return m.Value
+// GetValue gets the Value of the PingResponse.
+func (m *PingResponse) GetValue() (x string) {
+	if m == nil {
+		return x
 	}
-	return ""
+	return m.Value
 }
 
-func (m *PingResponse) GetCounter() int32 {
-	if m != nil {
-		return m.Counter
+// GetCounter gets the Counter of the PingResponse.
+func (m *PingResponse) GetCounter() (x int32) {
+	if m == nil {
+		return x
 	}
-	return 0
+	return m.Counter
+}
+
+// MarshalToWriter marshals PingResponse to the provided writer.
+func (m *PingResponse) MarshalToWriter(writer jspb.Writer) {
+	if m == nil {
+		return
+	}
+	if len(m.Value) > 0 {
+		writer.WriteString(1, m.Value)
+	}
+	if m.Counter != 0 {
+		writer.WriteInt32(2, m.Counter)
+	}
 }
 
 // Marshal marshals PingResponse to a slice of bytes.
 func (m *PingResponse) Marshal() []byte {
 	writer := jspb.NewWriter()
-
-	if len(m.Value) > 0 {
-		writer.WriteString(1, m.Value)
-	}
-
-	if m.Counter != 0 {
-		writer.WriteInt32(2, m.Counter)
-	}
-
+	m.MarshalToWriter(writer)
 	return writer.GetResult()
 }
 
-// Unmarshal unmarshals a PingResponse from a slice of bytes.
-func (m *PingResponse) Unmarshal(rawBytes []byte) (x *PingResponse, err error) {
-	reader := jspb.NewReader(rawBytes)
-	x = &PingResponse{}
-
+// UnmarshalFromReader unmarshals a PingResponse from the provided reader.
+func (m *PingResponse) UnmarshalFromReader(reader jspb.Reader) *PingResponse {
 	for reader.Next() {
+		if m == nil {
+			m = &PingResponse{}
+		}
+
 		switch reader.GetFieldNumber() {
 		case 1:
-			x.Value = reader.ReadString()
+			m.Value = reader.ReadString()
 		case 2:
-			x.Counter = reader.ReadInt32()
+			m.Counter = reader.ReadInt32()
 		default:
 			reader.SkipField()
 		}
 	}
 
+	return m
+}
+
+// Unmarshal unmarshals a PingResponse from a slice of bytes.
+func (m *PingResponse) Unmarshal(rawBytes []byte) (*PingResponse, error) {
+	reader := jspb.NewReader(rawBytes)
+
+	m = m.UnmarshalFromReader(reader)
+
 	if err := reader.Err(); err != nil {
 		return nil, err
 	}
 
-	return x, nil
+	return m, nil
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -413,7 +467,7 @@ func NewTestServiceClient(hostname string, opts ...grpcweb.DialOption) TestServi
 }
 
 func (c *testServiceClient) PingEmpty(ctx context.Context, in *google_protobuf.Empty, opts ...grpcweb.CallOption) (*PingResponse, error) {
-	req := in.Serialize()
+	req := in.Marshal()
 
 	resp, err := c.client.RPCCall(ctx, "PingEmpty", req, opts...)
 	if err != nil {
@@ -442,7 +496,7 @@ func (c *testServiceClient) PingError(ctx context.Context, in *PingRequest, opts
 		return nil, err
 	}
 
-	return new(google_protobuf.Empty).Deserialize(resp)
+	return new(google_protobuf.Empty).Unmarshal(resp)
 }
 
 func (c *testServiceClient) PingList(ctx context.Context, in *PingRequest, opts ...grpcweb.CallOption) (TestService_PingListClient, error) {
