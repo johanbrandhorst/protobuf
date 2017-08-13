@@ -289,13 +289,17 @@ func (m *Value) MarshalToWriter(writer jspb.Writer) {
 			writer.WriteBool(4, t.BoolValue)
 		}
 	case *Value_StructValue:
-		writer.WriteMessage(5, func() {
-			t.StructValue.MarshalToWriter(writer)
-		})
+		if t.StructValue != nil {
+			writer.WriteMessage(5, func() {
+				t.StructValue.MarshalToWriter(writer)
+			})
+		}
 	case *Value_ListValue:
-		writer.WriteMessage(6, func() {
-			t.ListValue.MarshalToWriter(writer)
-		})
+		if t.ListValue != nil {
+			writer.WriteMessage(6, func() {
+				t.ListValue.MarshalToWriter(writer)
+			})
+		}
 	}
 
 	return

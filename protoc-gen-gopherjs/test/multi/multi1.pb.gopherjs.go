@@ -58,9 +58,11 @@ func (m *Multi1) MarshalToWriter(writer jspb.Writer) {
 		return
 	}
 
-	writer.WriteMessage(1, func() {
-		m.Multi2.MarshalToWriter(writer)
-	})
+	if m.Multi2 != nil {
+		writer.WriteMessage(1, func() {
+			m.Multi2.MarshalToWriter(writer)
+		})
+	}
 
 	if int(m.Color) != 0 {
 		writer.WriteEnum(2, int(m.Color))

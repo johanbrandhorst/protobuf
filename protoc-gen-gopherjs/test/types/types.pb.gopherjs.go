@@ -572,9 +572,11 @@ func (m *TestAllTypes) MarshalToWriter(writer jspb.Writer) {
 			writer.WriteUint32(111, t.OneofUint32)
 		}
 	case *TestAllTypes_OneofNestedMessage:
-		writer.WriteMessage(112, func() {
-			t.OneofNestedMessage.MarshalToWriter(writer)
-		})
+		if t.OneofNestedMessage != nil {
+			writer.WriteMessage(112, func() {
+				t.OneofNestedMessage.MarshalToWriter(writer)
+			})
+		}
 	case *TestAllTypes_OneofString:
 		if len(t.OneofString) > 0 {
 			writer.WriteString(113, t.OneofString)
@@ -584,9 +586,11 @@ func (m *TestAllTypes) MarshalToWriter(writer jspb.Writer) {
 			writer.WriteBytes(114, t.OneofBytes)
 		}
 	case *TestAllTypes_OneofImportedMessage:
-		writer.WriteMessage(115, func() {
-			t.OneofImportedMessage.MarshalToWriter(writer)
-		})
+		if t.OneofImportedMessage != nil {
+			writer.WriteMessage(115, func() {
+				t.OneofImportedMessage.MarshalToWriter(writer)
+			})
+		}
 	}
 
 	if m.SingleInt32 != 0 {
@@ -649,17 +653,23 @@ func (m *TestAllTypes) MarshalToWriter(writer jspb.Writer) {
 		writer.WriteBytes(15, m.SingleBytes)
 	}
 
-	writer.WriteMessage(16, func() {
-		m.SingleImportedMessage.MarshalToWriter(writer)
-	})
+	if m.SingleImportedMessage != nil {
+		writer.WriteMessage(16, func() {
+			m.SingleImportedMessage.MarshalToWriter(writer)
+		})
+	}
 
-	writer.WriteMessage(18, func() {
-		m.SingleNestedMessage.MarshalToWriter(writer)
-	})
+	if m.SingleNestedMessage != nil {
+		writer.WriteMessage(18, func() {
+			m.SingleNestedMessage.MarshalToWriter(writer)
+		})
+	}
 
-	writer.WriteMessage(19, func() {
-		m.SingleForeignMessage.MarshalToWriter(writer)
-	})
+	if m.SingleForeignMessage != nil {
+		writer.WriteMessage(19, func() {
+			m.SingleForeignMessage.MarshalToWriter(writer)
+		})
+	}
 
 	if int(m.SingleNestedEnum) != 0 {
 		writer.WriteEnum(21, int(m.SingleNestedEnum))
@@ -1024,13 +1034,17 @@ func (m *NestedTestAllTypes) MarshalToWriter(writer jspb.Writer) {
 		return
 	}
 
-	writer.WriteMessage(1, func() {
-		m.Child.MarshalToWriter(writer)
-	})
+	if m.Child != nil {
+		writer.WriteMessage(1, func() {
+			m.Child.MarshalToWriter(writer)
+		})
+	}
 
-	writer.WriteMessage(2, func() {
-		m.Payload.MarshalToWriter(writer)
-	})
+	if m.Payload != nil {
+		writer.WriteMessage(2, func() {
+			m.Payload.MarshalToWriter(writer)
+		})
+	}
 
 	for _, msg := range m.RepeatedChild {
 		writer.WriteMessage(3, func() {

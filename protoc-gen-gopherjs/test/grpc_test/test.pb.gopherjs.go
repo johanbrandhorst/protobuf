@@ -212,9 +212,11 @@ func (m *Complex) MarshalToWriter(writer jspb.Writer) {
 		})
 	}
 
-	writer.WriteMessage(3, func() {
-		m.Multi.MarshalToWriter(writer)
-	})
+	if m.Multi != nil {
+		writer.WriteMessage(3, func() {
+			m.Multi.MarshalToWriter(writer)
+		})
+	}
 
 	return
 }
