@@ -1587,9 +1587,9 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			// Special case for maps
 			g.P("if len(m.", fieldNames[field], ") > 0 {")
 			g.In()
-			g.P("writer.WriteMessage(", fieldNumbers[field], ", func() {")
-			g.In()
 			g.P("for key, value := range m.", fieldNames[field], " {")
+			g.In()
+			g.P("writer.WriteMessage(", fieldNumbers[field], ", func() {")
 			g.In()
 			g.P("writer.Write", g.JSPBTypeFunc(fieldMapFields[field].Key), "(1, key)")
 
@@ -1608,9 +1608,9 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			}
 
 			g.Out()
-			g.P("}")
-			g.Out()
 			g.P("})")
+			g.Out()
+			g.P("}")
 			g.Out()
 			g.P("}")
 		} else if isRepeated(field) {
@@ -1694,7 +1694,11 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		g.In()
 		if fieldMapFields[field].Key != nil {
 			// Special case for maps
+			g.P("if m.", fieldNames[field], " == nil {")
+			g.In()
 			g.P("m.", fieldNames[field], " = ", fieldTypes[field], "{}")
+			g.Out()
+			g.P("}")
 			g.P("reader.ReadMessage(func() {")
 			g.In()
 			g.P("var key ", fieldMapTypes[field].Key)
