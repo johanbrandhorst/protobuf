@@ -2,16 +2,16 @@
 // source: types/types.proto
 
 /*
-Package types is a generated protocol buffer package.
+	Package types is a generated protocol buffer package.
 
-It is generated from these files:
-	types/types.proto
+	It is generated from these files:
+		types/types.proto
 
-It has these top-level messages:
-	TestAllTypes
-	NestedTestAllTypes
-	ForeignMessage
-	TestMap
+	It has these top-level messages:
+		TestAllTypes
+		NestedTestAllTypes
+		ForeignMessage
+		TestMap
 */
 package types
 

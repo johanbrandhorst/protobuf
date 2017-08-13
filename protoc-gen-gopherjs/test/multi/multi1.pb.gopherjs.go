@@ -2,17 +2,17 @@
 // source: multi/multi1.proto
 
 /*
-Package multitest is a generated protocol buffer package.
+	Package multitest is a generated protocol buffer package.
 
-It is generated from these files:
-	multi/multi1.proto
-	multi/multi2.proto
-	multi/multi3.proto
+	It is generated from these files:
+		multi/multi1.proto
+		multi/multi2.proto
+		multi/multi3.proto
 
-It has these top-level messages:
-	Multi1
-	Multi2
-	Multi3
+	It has these top-level messages:
+		Multi1
+		Multi2
+		Multi3
 */
 package multitest
 

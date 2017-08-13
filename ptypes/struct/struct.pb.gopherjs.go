@@ -2,15 +2,15 @@
 // source: struct/struct.proto
 
 /*
-Package structpb is a generated protocol buffer package.
+	Package structpb is a generated protocol buffer package.
 
-It is generated from these files:
-	struct/struct.proto
+	It is generated from these files:
+		struct/struct.proto
 
-It has these top-level messages:
-	Struct
-	Value
-	ListValue
+	It has these top-level messages:
+		Struct
+		Value
+		ListValue
 */
 package structpb
 

@@ -2,14 +2,14 @@
 // source: grpc_test/test.proto
 
 /*
-Package my_test is a generated protocol buffer package.
+	Package my_test is a generated protocol buffer package.
 
-It is generated from these files:
-	grpc_test/test.proto
+	It is generated from these files:
+		grpc_test/test.proto
 
-It has these top-level messages:
-	Simple
-	Complex
+	It has these top-level messages:
+		Simple
+		Complex
 */
 package my_test
 

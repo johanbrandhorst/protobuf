@@ -2,21 +2,21 @@
 // source: wrappers/wrappers.proto
 
 /*
-Package wrappers is a generated protocol buffer package.
+	Package wrappers is a generated protocol buffer package.
 
-It is generated from these files:
-	wrappers/wrappers.proto
+	It is generated from these files:
+		wrappers/wrappers.proto
 
-It has these top-level messages:
-	DoubleValue
-	FloatValue
-	Int64Value
-	UInt64Value
-	Int32Value
-	UInt32Value
-	BoolValue
-	StringValue
-	BytesValue
+	It has these top-level messages:
+		DoubleValue
+		FloatValue
+		Int64Value
+		UInt64Value
+		Int32Value
+		UInt32Value
+		BoolValue
+		StringValue
+		BytesValue
 */
 package wrappers
 

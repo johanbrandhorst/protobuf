@@ -2,13 +2,13 @@
 // source: any/any.proto
 
 /*
-Package any is a generated protocol buffer package.
+	Package any is a generated protocol buffer package.
 
-It is generated from these files:
-	any/any.proto
+	It is generated from these files:
+		any/any.proto
 
-It has these top-level messages:
-	Any
+	It has these top-level messages:
+		Any
 */
 package any
 

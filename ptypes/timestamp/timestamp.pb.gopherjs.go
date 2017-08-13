@@ -2,13 +2,13 @@
 // source: timestamp/timestamp.proto
 
 /*
-Package timestamp is a generated protocol buffer package.
+	Package timestamp is a generated protocol buffer package.
 
-It is generated from these files:
-	timestamp/timestamp.proto
+	It is generated from these files:
+		timestamp/timestamp.proto
 
-It has these top-level messages:
-	Timestamp
+	It has these top-level messages:
+		Timestamp
 */
 package timestamp
 

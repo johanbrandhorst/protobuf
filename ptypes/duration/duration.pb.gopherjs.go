@@ -2,13 +2,13 @@
 // source: duration/duration.proto
 
 /*
-Package duration is a generated protocol buffer package.
+	Package duration is a generated protocol buffer package.
 
-It is generated from these files:
-	duration/duration.proto
+	It is generated from these files:
+		duration/duration.proto
 
-It has these top-level messages:
-	Duration
+	It has these top-level messages:
+		Duration
 */
 package duration
 

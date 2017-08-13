@@ -2,15 +2,15 @@
 // source: proto/test/test.proto
 
 /*
-Package test is a generated protocol buffer package.
+	Package test is a generated protocol buffer package.
 
-It is generated from these files:
-	proto/test/test.proto
+	It is generated from these files:
+		proto/test/test.proto
 
-It has these top-level messages:
-	ExtraStuff
-	PingRequest
-	PingResponse
+	It has these top-level messages:
+		ExtraStuff
+		PingRequest
+		PingResponse
 */
 package test
 
