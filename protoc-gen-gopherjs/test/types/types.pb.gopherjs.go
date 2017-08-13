@@ -565,6 +565,7 @@ func (m *TestAllTypes) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	switch t := m.OneofField.(type) {
 	case *TestAllTypes_OneofUint32:
 		if t.OneofUint32 != 0 {
@@ -587,126 +588,165 @@ func (m *TestAllTypes) MarshalToWriter(writer jspb.Writer) {
 			t.OneofImportedMessage.MarshalToWriter(writer)
 		})
 	}
+
 	if m.SingleInt32 != 0 {
 		writer.WriteInt32(1, m.SingleInt32)
 	}
+
 	if m.SingleInt64 != 0 {
 		writer.WriteInt64(2, m.SingleInt64)
 	}
+
 	if m.SingleUint32 != 0 {
 		writer.WriteUint32(3, m.SingleUint32)
 	}
+
 	if m.SingleUint64 != 0 {
 		writer.WriteUint64(4, m.SingleUint64)
 	}
+
 	if m.SingleSint32 != 0 {
 		writer.WriteSint32(5, m.SingleSint32)
 	}
+
 	if m.SingleSint64 != 0 {
 		writer.WriteSint64(6, m.SingleSint64)
 	}
+
 	if m.SingleFixed32 != 0 {
 		writer.WriteFixed32(7, m.SingleFixed32)
 	}
+
 	if m.SingleFixed64 != 0 {
 		writer.WriteFixed64(8, m.SingleFixed64)
 	}
+
 	if m.SingleSfixed32 != 0 {
 		writer.WriteSfixed32(9, m.SingleSfixed32)
 	}
+
 	if m.SingleSfixed64 != 0 {
 		writer.WriteSfixed64(10, m.SingleSfixed64)
 	}
+
 	if m.SingleFloat != 0 {
 		writer.WriteFloat32(11, m.SingleFloat)
 	}
+
 	if m.SingleDouble != 0 {
 		writer.WriteFloat64(12, m.SingleDouble)
 	}
+
 	if m.SingleBool {
 		writer.WriteBool(13, m.SingleBool)
 	}
+
 	if len(m.SingleString) > 0 {
 		writer.WriteString(14, m.SingleString)
 	}
+
 	if len(m.SingleBytes) > 0 {
 		writer.WriteBytes(15, m.SingleBytes)
 	}
+
 	writer.WriteMessage(16, func() {
 		m.SingleImportedMessage.MarshalToWriter(writer)
 	})
+
 	writer.WriteMessage(18, func() {
 		m.SingleNestedMessage.MarshalToWriter(writer)
 	})
+
 	writer.WriteMessage(19, func() {
 		m.SingleForeignMessage.MarshalToWriter(writer)
 	})
+
 	if int(m.SingleNestedEnum) != 0 {
 		writer.WriteEnum(21, int(m.SingleNestedEnum))
 	}
+
 	if int(m.SingleForeignEnum) != 0 {
 		writer.WriteEnum(22, int(m.SingleForeignEnum))
 	}
+
 	if len(m.RepeatedInt32) > 0 {
 		writer.WriteInt32Slice(31, m.RepeatedInt32)
 	}
+
 	if len(m.RepeatedInt64) > 0 {
 		writer.WriteInt64Slice(32, m.RepeatedInt64)
 	}
+
 	if len(m.RepeatedUint32) > 0 {
 		writer.WriteUint32Slice(33, m.RepeatedUint32)
 	}
+
 	if len(m.RepeatedUint64) > 0 {
 		writer.WriteUint64Slice(34, m.RepeatedUint64)
 	}
+
 	if len(m.RepeatedSint32) > 0 {
 		writer.WriteSint32Slice(35, m.RepeatedSint32)
 	}
+
 	if len(m.RepeatedSint64) > 0 {
 		writer.WriteSint64Slice(36, m.RepeatedSint64)
 	}
+
 	if len(m.RepeatedFixed32) > 0 {
 		writer.WriteFixed32Slice(37, m.RepeatedFixed32)
 	}
+
 	if len(m.RepeatedFixed64) > 0 {
 		writer.WriteFixed64Slice(38, m.RepeatedFixed64)
 	}
+
 	if len(m.RepeatedSfixed32) > 0 {
 		writer.WriteSfixed32Slice(39, m.RepeatedSfixed32)
 	}
+
 	if len(m.RepeatedSfixed64) > 0 {
 		writer.WriteSfixed64Slice(40, m.RepeatedSfixed64)
 	}
+
 	if len(m.RepeatedFloat) > 0 {
 		writer.WriteFloat32Slice(41, m.RepeatedFloat)
 	}
+
 	if len(m.RepeatedDouble) > 0 {
 		writer.WriteFloat64Slice(42, m.RepeatedDouble)
 	}
+
 	if len(m.RepeatedBool) > 0 {
 		writer.WriteBoolSlice(43, m.RepeatedBool)
 	}
+
 	for _, val := range m.RepeatedString {
 		writer.WriteString(44, val)
 	}
+
 	for _, val := range m.RepeatedBytes {
 		writer.WriteBytes(45, val)
 	}
+
 	for _, msg := range m.RepeatedImportedMessage {
 		writer.WriteMessage(46, func() {
 			msg.MarshalToWriter(writer)
 		})
 	}
+
 	for _, msg := range m.RepeatedNestedMessage {
 		writer.WriteMessage(48, func() {
 			msg.MarshalToWriter(writer)
 		})
 	}
+
 	for _, msg := range m.RepeatedForeignMessage {
 		writer.WriteMessage(49, func() {
 			msg.MarshalToWriter(writer)
 		})
 	}
+
 	if len(m.RepeatedNestedEnum) > 0 {
 		var ints []int
 		for _, enum := range m.RepeatedNestedEnum {
@@ -714,6 +754,7 @@ func (m *TestAllTypes) MarshalToWriter(writer jspb.Writer) {
 		}
 		writer.WriteEnumSlice(51, ints)
 	}
+
 	if len(m.RepeatedForeignEnum) > 0 {
 		var ints []int
 		for _, enum := range m.RepeatedForeignEnum {
@@ -721,6 +762,8 @@ func (m *TestAllTypes) MarshalToWriter(writer jspb.Writer) {
 		}
 		writer.WriteEnumSlice(52, ints)
 	}
+
+	return
 }
 
 // Marshal marshals TestAllTypes to a slice of bytes.
@@ -898,9 +941,12 @@ func (m *TestAllTypes_NestedMessage) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if m.B != 0 {
 		writer.WriteInt32(1, m.B)
 	}
+
+	return
 }
 
 // Marshal marshals TestAllTypes_NestedMessage to a slice of bytes.
@@ -977,17 +1023,22 @@ func (m *NestedTestAllTypes) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	writer.WriteMessage(1, func() {
 		m.Child.MarshalToWriter(writer)
 	})
+
 	writer.WriteMessage(2, func() {
 		m.Payload.MarshalToWriter(writer)
 	})
+
 	for _, msg := range m.RepeatedChild {
 		writer.WriteMessage(3, func() {
 			msg.MarshalToWriter(writer)
 		})
 	}
+
+	return
 }
 
 // Marshal marshals NestedTestAllTypes to a slice of bytes.
@@ -1057,9 +1108,12 @@ func (m *ForeignMessage) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if m.C != 0 {
 		writer.WriteInt32(1, m.C)
 	}
+
+	return
 }
 
 // Marshal marshals ForeignMessage to a slice of bytes.
@@ -1271,6 +1325,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if len(m.MapInt32Int32) > 0 {
 		writer.WriteMessage(1, func() {
 			for key, value := range m.MapInt32Int32 {
@@ -1279,6 +1334,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapInt64Int64) > 0 {
 		writer.WriteMessage(2, func() {
 			for key, value := range m.MapInt64Int64 {
@@ -1287,6 +1343,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapUint32Uint32) > 0 {
 		writer.WriteMessage(3, func() {
 			for key, value := range m.MapUint32Uint32 {
@@ -1295,6 +1352,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapUint64Uint64) > 0 {
 		writer.WriteMessage(4, func() {
 			for key, value := range m.MapUint64Uint64 {
@@ -1303,6 +1361,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapSint32Sint32) > 0 {
 		writer.WriteMessage(5, func() {
 			for key, value := range m.MapSint32Sint32 {
@@ -1311,6 +1370,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapSint64Sint64) > 0 {
 		writer.WriteMessage(6, func() {
 			for key, value := range m.MapSint64Sint64 {
@@ -1319,6 +1379,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapFixed32Fixed32) > 0 {
 		writer.WriteMessage(7, func() {
 			for key, value := range m.MapFixed32Fixed32 {
@@ -1327,6 +1388,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapFixed64Fixed64) > 0 {
 		writer.WriteMessage(8, func() {
 			for key, value := range m.MapFixed64Fixed64 {
@@ -1335,6 +1397,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapSfixed32Sfixed32) > 0 {
 		writer.WriteMessage(9, func() {
 			for key, value := range m.MapSfixed32Sfixed32 {
@@ -1343,6 +1406,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapSfixed64Sfixed64) > 0 {
 		writer.WriteMessage(10, func() {
 			for key, value := range m.MapSfixed64Sfixed64 {
@@ -1351,6 +1415,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapInt32Float) > 0 {
 		writer.WriteMessage(11, func() {
 			for key, value := range m.MapInt32Float {
@@ -1359,6 +1424,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapInt32Double) > 0 {
 		writer.WriteMessage(12, func() {
 			for key, value := range m.MapInt32Double {
@@ -1367,6 +1433,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapBoolBool) > 0 {
 		writer.WriteMessage(13, func() {
 			for key, value := range m.MapBoolBool {
@@ -1375,6 +1442,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapStringString) > 0 {
 		writer.WriteMessage(14, func() {
 			for key, value := range m.MapStringString {
@@ -1383,6 +1451,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapInt32Bytes) > 0 {
 		writer.WriteMessage(15, func() {
 			for key, value := range m.MapInt32Bytes {
@@ -1391,6 +1460,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapInt32Enum) > 0 {
 		writer.WriteMessage(16, func() {
 			for key, value := range m.MapInt32Enum {
@@ -1399,6 +1469,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapInt32ForeignMessage) > 0 {
 		writer.WriteMessage(17, func() {
 			for key, value := range m.MapInt32ForeignMessage {
@@ -1409,6 +1480,7 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.MapInt32ImportedMessage) > 0 {
 		writer.WriteMessage(18, func() {
 			for key, value := range m.MapInt32ImportedMessage {
@@ -1419,6 +1491,8 @@ func (m *TestMap) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
+	return
 }
 
 // Marshal marshals TestMap to a slice of bytes.

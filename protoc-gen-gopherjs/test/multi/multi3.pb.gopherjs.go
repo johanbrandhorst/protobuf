@@ -46,9 +46,12 @@ func (m *Multi3) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if int(m.HatType) != 0 {
 		writer.WriteEnum(1, int(m.HatType))
 	}
+
+	return
 }
 
 // Marshal marshals Multi3 to a slice of bytes.

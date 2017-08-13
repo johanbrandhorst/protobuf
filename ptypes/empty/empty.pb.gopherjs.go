@@ -35,6 +35,8 @@ func (m *Empty) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
+	return
 }
 
 // Marshal marshals Empty to a slice of bytes.

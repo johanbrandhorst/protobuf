@@ -57,15 +57,20 @@ func (m *Multi1) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	writer.WriteMessage(1, func() {
 		m.Multi2.MarshalToWriter(writer)
 	})
+
 	if int(m.Color) != 0 {
 		writer.WriteEnum(2, int(m.Color))
 	}
+
 	if int(m.HatType) != 0 {
 		writer.WriteEnum(3, int(m.HatType))
 	}
+
+	return
 }
 
 // Marshal marshals Multi1 to a slice of bytes.

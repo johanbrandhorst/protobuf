@@ -122,6 +122,7 @@ func (m *ExtraStuff) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	switch t := m.Title.(type) {
 	case *ExtraStuff_FirstName:
 		if len(t.FirstName) > 0 {
@@ -132,6 +133,7 @@ func (m *ExtraStuff) MarshalToWriter(writer jspb.Writer) {
 			writer.WriteInt32(3, t.IdNumber)
 		}
 	}
+
 	if len(m.Addresses) > 0 {
 		writer.WriteMessage(1, func() {
 			for key, value := range m.Addresses {
@@ -140,9 +142,12 @@ func (m *ExtraStuff) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	if len(m.CardNumbers) > 0 {
 		writer.WriteUint32Slice(4, m.CardNumbers)
 	}
+
+	return
 }
 
 // Marshal marshals ExtraStuff to a slice of bytes.
@@ -286,30 +291,40 @@ func (m *PingRequest) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if len(m.Value) > 0 {
 		writer.WriteString(1, m.Value)
 	}
+
 	if m.ResponseCount != 0 {
 		writer.WriteInt32(2, m.ResponseCount)
 	}
+
 	if m.ErrorCodeReturned != 0 {
 		writer.WriteUint32(3, m.ErrorCodeReturned)
 	}
+
 	if int(m.FailureType) != 0 {
 		writer.WriteEnum(4, int(m.FailureType))
 	}
+
 	if m.CheckMetadata {
 		writer.WriteBool(5, m.CheckMetadata)
 	}
+
 	if m.SendHeaders {
 		writer.WriteBool(6, m.SendHeaders)
 	}
+
 	if m.SendTrailers {
 		writer.WriteBool(7, m.SendTrailers)
 	}
+
 	if m.MessageLatencyMs != 0 {
 		writer.WriteInt32(8, m.MessageLatencyMs)
 	}
+
+	return
 }
 
 // Marshal marshals PingRequest to a slice of bytes.
@@ -390,12 +405,16 @@ func (m *PingResponse) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if len(m.Value) > 0 {
 		writer.WriteString(1, m.Value)
 	}
+
 	if m.Counter != 0 {
 		writer.WriteInt32(2, m.Counter)
 	}
+
+	return
 }
 
 // Marshal marshals PingResponse to a slice of bytes.

@@ -68,6 +68,7 @@ func (m *Struct) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if len(m.Fields) > 0 {
 		writer.WriteMessage(1, func() {
 			for key, value := range m.Fields {
@@ -78,6 +79,8 @@ func (m *Struct) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
+	return
 }
 
 // Marshal marshals Struct to a slice of bytes.
@@ -267,6 +270,7 @@ func (m *Value) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	switch t := m.Kind.(type) {
 	case *Value_NullValue:
 		if int(t.NullValue) != 0 {
@@ -293,6 +297,8 @@ func (m *Value) MarshalToWriter(writer jspb.Writer) {
 			t.ListValue.MarshalToWriter(writer)
 		})
 	}
+
+	return
 }
 
 // Marshal marshals Value to a slice of bytes.
@@ -380,11 +386,14 @@ func (m *ListValue) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	for _, msg := range m.Values {
 		writer.WriteMessage(1, func() {
 			msg.MarshalToWriter(writer)
 		})
 	}
+
+	return
 }
 
 // Marshal marshals ListValue to a slice of bytes.

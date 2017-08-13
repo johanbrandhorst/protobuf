@@ -113,12 +113,16 @@ func (m *Duration) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if m.Seconds != 0 {
 		writer.WriteInt64(1, m.Seconds)
 	}
+
 	if m.Nanos != 0 {
 		writer.WriteInt32(2, m.Nanos)
 	}
+
+	return
 }
 
 // Marshal marshals Duration to a slice of bytes.

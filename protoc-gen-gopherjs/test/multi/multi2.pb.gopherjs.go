@@ -58,12 +58,16 @@ func (m *Multi2) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if m.RequiredValue != 0 {
 		writer.WriteInt32(1, m.RequiredValue)
 	}
+
 	if int(m.Color) != 0 {
 		writer.WriteEnum(2, int(m.Color))
 	}
+
+	return
 }
 
 // Marshal marshals Multi2 to a slice of bytes.

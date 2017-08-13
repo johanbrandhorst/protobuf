@@ -95,18 +95,24 @@ func (m *Simple) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if m.Key != 0 {
 		writer.WriteInt64(1, m.Key)
 	}
+
 	if m.Deadline != 0 {
 		writer.WriteFloat32(2, m.Deadline)
 	}
+
 	if int(m.Day) != 0 {
 		writer.WriteEnum(3, int(m.Day))
 	}
+
 	if len(m.Name) > 0 {
 		writer.WriteString(4, m.Name)
 	}
+
+	return
 }
 
 // Marshal marshals Simple to a slice of bytes.
@@ -190,11 +196,13 @@ func (m *Complex) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	for _, msg := range m.Communique {
 		writer.WriteMessage(1, func() {
 			msg.MarshalToWriter(writer)
 		})
 	}
+
 	if len(m.CompactKeys) > 0 {
 		writer.WriteMessage(2, func() {
 			for key, value := range m.CompactKeys {
@@ -203,9 +211,12 @@ func (m *Complex) MarshalToWriter(writer jspb.Writer) {
 			}
 		})
 	}
+
 	writer.WriteMessage(3, func() {
 		m.Multi.MarshalToWriter(writer)
 	})
+
+	return
 }
 
 // Marshal marshals Complex to a slice of bytes.
@@ -422,6 +433,7 @@ func (m *Complex_Communique) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	switch t := m.UnionThing.(type) {
 	case *Complex_Communique_Number:
 		if t.Number != 0 {
@@ -456,9 +468,12 @@ func (m *Complex_Communique) MarshalToWriter(writer jspb.Writer) {
 			writer.WriteSint32(9, t.Delta)
 		}
 	}
+
 	if m.MakeMeCry {
 		writer.WriteBool(1, m.MakeMeCry)
 	}
+
+	return
 }
 
 // Marshal marshals Complex_Communique to a slice of bytes.
@@ -539,6 +554,8 @@ func (m *Complex_Communique_Delta) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
+	return
 }
 
 // Marshal marshals Complex_Communique_Delta to a slice of bytes.

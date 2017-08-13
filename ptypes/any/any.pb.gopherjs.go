@@ -137,12 +137,16 @@ func (m *Any) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if len(m.TypeUrl) > 0 {
 		writer.WriteString(1, m.TypeUrl)
 	}
+
 	if len(m.Value) > 0 {
 		writer.WriteBytes(2, m.Value)
 	}
+
+	return
 }
 
 // Marshal marshals Any to a slice of bytes.

@@ -47,9 +47,12 @@ func (m *DoubleValue) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if m.Value != 0 {
 		writer.WriteFloat64(1, m.Value)
 	}
+
+	return
 }
 
 // Marshal marshals DoubleValue to a slice of bytes.
@@ -111,9 +114,12 @@ func (m *FloatValue) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if m.Value != 0 {
 		writer.WriteFloat32(1, m.Value)
 	}
+
+	return
 }
 
 // Marshal marshals FloatValue to a slice of bytes.
@@ -175,9 +181,12 @@ func (m *Int64Value) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if m.Value != 0 {
 		writer.WriteInt64(1, m.Value)
 	}
+
+	return
 }
 
 // Marshal marshals Int64Value to a slice of bytes.
@@ -239,9 +248,12 @@ func (m *UInt64Value) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if m.Value != 0 {
 		writer.WriteUint64(1, m.Value)
 	}
+
+	return
 }
 
 // Marshal marshals UInt64Value to a slice of bytes.
@@ -303,9 +315,12 @@ func (m *Int32Value) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if m.Value != 0 {
 		writer.WriteInt32(1, m.Value)
 	}
+
+	return
 }
 
 // Marshal marshals Int32Value to a slice of bytes.
@@ -367,9 +382,12 @@ func (m *UInt32Value) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if m.Value != 0 {
 		writer.WriteUint32(1, m.Value)
 	}
+
+	return
 }
 
 // Marshal marshals UInt32Value to a slice of bytes.
@@ -431,9 +449,12 @@ func (m *BoolValue) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if m.Value {
 		writer.WriteBool(1, m.Value)
 	}
+
+	return
 }
 
 // Marshal marshals BoolValue to a slice of bytes.
@@ -495,9 +516,12 @@ func (m *StringValue) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if len(m.Value) > 0 {
 		writer.WriteString(1, m.Value)
 	}
+
+	return
 }
 
 // Marshal marshals StringValue to a slice of bytes.
@@ -559,9 +583,12 @@ func (m *BytesValue) MarshalToWriter(writer jspb.Writer) {
 	if m == nil {
 		return
 	}
+
 	if len(m.Value) > 0 {
 		writer.WriteBytes(1, m.Value)
 	}
+
+	return
 }
 
 // Marshal marshals BytesValue to a slice of bytes.
