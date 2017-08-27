@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/websocket/websocketjs"
@@ -59,10 +60,11 @@ type ClientStream interface {
 	Context() context.Context
 }
 
-// NewClientStream opens a new WebSocket connection. It will block until the connection is
+// NewClientStream opens a new WebSocket connection for performing client-side
+// and bi-directional streaming. It will block until the connection is
 // established or fails to connect.
 func (c *Client) NewClientStream(ctx context.Context, method string) (ClientStream, error) {
-	ws, err := websocketjs.New("wss://" + c.host + "/" + c.service + "/" + method)
+	ws, err := websocketjs.New(strings.Replace(c.host, "https", "wss", 1) + "/" + c.service + "/" + method)
 	if err != nil {
 		return nil, err
 	}
