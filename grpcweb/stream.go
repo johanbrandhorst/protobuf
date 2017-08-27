@@ -20,18 +20,56 @@
 
 package grpcweb
 
-import "context"
+import (
+	"context"
+	"io"
 
-// StreamClient implements an asynchronous
+	"google.golang.org/grpc/codes"
+
+	"github.com/johanbrandhorst/protobuf/grpcweb/status"
+)
+
+// streamClient implements an asynchronous
 // reader of messages received on the stream.
-type StreamClient struct {
+type streamClient struct {
 	ctx      context.Context
 	messages chan []byte
 	errors   chan error
 }
 
+// ServerStream is implemented by StreamClient
+type ServerStream interface {
+	Recv() ([]byte, error)
+}
+
+// NewServerStream performs a server-to-client streaming RPC call, returning
+// a struct which exposes a Go gRPC like streaming interface.
+// It is non-blocking.
+func (c Client) NewServerStream(ctx context.Context, method string, req []byte, opts ...CallOption) (ServerStream, error) {
+	srv := &streamClient{
+		ctx:      ctx,
+		messages: make(chan []byte, 10), // Buffer up to 10 messages
+		errors:   make(chan error, 1),
+	}
+
+	onMsg := func(in []byte) { srv.messages <- in }
+	onEnd := func(s *status.Status) {
+		if s.Code != codes.OK {
+			srv.errors <- s
+		} else {
+			srv.errors <- io.EOF
+		}
+	}
+	err := invoke(ctx, c.host, c.service, method, req, onMsg, onEnd, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	return srv, nil
+}
+
 // Recv blocks until either a message or an error is received.
-func (s StreamClient) Recv() ([]byte, error) {
+func (s streamClient) Recv() ([]byte, error) {
 	select {
 	case msg := <-s.messages:
 		return msg, nil
