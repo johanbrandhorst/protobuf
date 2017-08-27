@@ -1,4 +1,4 @@
-package bidi
+package wsproxy
 
 import (
 	"context"
@@ -29,7 +29,7 @@ type Proxy struct {
 	creds  credentials.TransportCredentials
 }
 
-// WrapServer warps the input handler with a Websocket-to-Bidi-streaming proxy.
+// WrapServer wraps the input handler with a Websocket-to-Bidi-Streaming proxy.
 func WrapServer(h http.Handler, logger Logger, creds credentials.TransportCredentials) http.Handler {
 	return &Proxy{
 		h:      h,
@@ -80,7 +80,7 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
-	p.logger.Debug("Creating new stream with host: ", r.RemoteAddr, "and method: ", r.RequestURI)
+	p.logger.Debug("Creating new stream with host: ", r.RemoteAddr, " and method: ", r.RequestURI)
 	s, err := t.NewStream(ctx, &transport.CallHdr{
 		Host:   r.RemoteAddr,
 		Method: r.RequestURI,
@@ -174,26 +174,26 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			p.logger.Warn("[WRITE] Failed to write message: ", err)
 			return
 		}
-		p.logger.Debug("[WRITE] Sent", msg)
+		p.logger.Debug("[WRITE] Sent payload:", msg)
 	}
 
 }
 
 func (p *Proxy) sendStatus(conn *websocket.Conn, st *status.Status) {
-	p.logger.Debug(`Sending status: Msg: "`, st.Message(), `", Code: `, st.Code().String())
+	p.logger.Debug(`[WRITE] Sending status: Msg: "`, st.Message(), `", Code: `, st.Code().String())
 
 	closeMsg := websocket.FormatCloseMessage(internal.FormatErrorCode(st.Code()), st.Message())
 	err := conn.WriteMessage(websocket.CloseMessage, closeMsg)
 	if err != nil {
-		p.logger.Warn("error writing websocket trailer: ", err)
+		p.logger.Warn("[WRITE] Failed to write Websocket trailer: ", err)
 	}
 
-	p.logger.Debug("Sent close message")
+	p.logger.Debug("[WRITE] Sent close message")
 	err = conn.Close()
 	if err != nil {
-		p.logger.Warn("Failed to close connection: ", err)
+		p.logger.Warn("[WRITE] Failed to close connection: ", err)
 		return
 	}
-	p.logger.Debug("Closed connection")
+	p.logger.Debug("[WRITE] Closed connection")
 	return
 }
