@@ -39,7 +39,8 @@ type streamClient struct {
 
 // ServerStream is implemented by StreamClient
 type ServerStream interface {
-	Recv() ([]byte, error)
+	RecvMsg() ([]byte, error)
+	Context() context.Context
 }
 
 // NewServerStream performs a server-to-client streaming RPC call, returning
@@ -68,8 +69,8 @@ func (c Client) NewServerStream(ctx context.Context, method string, req []byte, 
 	return srv, nil
 }
 
-// Recv blocks until either a message or an error is received.
-func (s streamClient) Recv() ([]byte, error) {
+// RecvMsg blocks until either a message or an error is received.
+func (s streamClient) RecvMsg() ([]byte, error) {
 	select {
 	case msg := <-s.messages:
 		return msg, nil
@@ -78,4 +79,9 @@ func (s streamClient) Recv() ([]byte, error) {
 	case <-s.ctx.Done():
 		return nil, s.ctx.Err()
 	}
+}
+
+// Context returns the stream context.
+func (s streamClient) Context() context.Context {
+	return s.ctx
 }

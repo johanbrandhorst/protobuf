@@ -172,15 +172,8 @@ func (c *conn) receiveFrame(ctx context.Context) (*messageEvent, error) {
 	}
 }
 
-func getFrameData(obj *js.Object) []byte {
-	// Check if it's an array buffer. If so, convert it to a Go byte slice.
-	if constructor := obj.Get("constructor"); constructor == js.Global.Get("ArrayBuffer") {
-		uint8Array := js.Global.Get("Uint8Array").New(obj)
-		return uint8Array.Interface().([]byte)
-	}
-	return []byte(obj.String())
-}
-
+// RecvMsg reads a message from the stream.
+// It blocks until a message or error has been received.
 func (c *conn) RecvMsg() ([]byte, error) {
 	ev, err := c.receiveFrame(c.ctx)
 	if err != nil {
@@ -193,9 +186,16 @@ func (c *conn) RecvMsg() ([]byte, error) {
 		return nil, err
 	}
 
-	return getFrameData(ev.Data), nil
+	// Check if it's an array buffer. If so, convert it to a Go byte slice.
+	if constructor := ev.Data.Get("constructor"); constructor == js.Global.Get("ArrayBuffer") {
+		uint8Array := js.Global.Get("Uint8Array").New(ev.Data)
+		return uint8Array.Interface().([]byte), nil
+	}
+	return []byte(ev.Data.String()), nil
 }
 
+// SendMsg sends a message on the stream. It errors
+// if the stream is not ready to receive messages.
 func (c *conn) SendMsg(msg []byte) error {
 	if c.ReadyState != websocketjs.Open {
 		// Read close message and return
@@ -205,14 +205,16 @@ func (c *conn) SendMsg(msg []byte) error {
 	return c.Send(msg)
 }
 
+// CloseSend closes the stream.
 func (c *conn) CloseSend() error {
 	// CloseSend does not itself read the close event,
 	// it will be done by the next Recv
 	return c.SendMsg(internal.FormatCloseMessage())
 }
 
+// CloseAndRecv closes the stream and returns the last message.
 func (c *conn) CloseAndRecv() ([]byte, error) {
-	err := c.SendMsg(internal.FormatCloseMessage())
+	err := c.CloseSend()
 	if err != nil {
 		return nil, err
 	}
@@ -232,6 +234,7 @@ func (c *conn) CloseAndRecv() ([]byte, error) {
 	return msg, nil
 }
 
+// Context returns the streams context.
 func (c *conn) Context() context.Context {
 	return c.ctx
 }
