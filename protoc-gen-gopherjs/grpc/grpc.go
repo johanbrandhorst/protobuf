@@ -291,7 +291,7 @@ func (g *grpc) generateClientMethod(servName, fullServName, serviceDescVar strin
 	}
 	if method.GetClientStreaming() && !method.GetServerStreaming() {
 		g.P("CloseAndRecv() (*", outType, ", error)")
-	} else if method.GetServerStreaming() && !method.GetClientStreaming() {
+	} else if method.GetServerStreaming() && method.GetClientStreaming() {
 		g.P("CloseSend() error")
 	}
 	g.P("Context() context.Context")
@@ -323,7 +323,7 @@ func (g *grpc) generateClientMethod(servName, fullServName, serviceDescVar strin
 	if method.GetServerStreaming() {
 		g.P("func (x *", streamType, ") Recv() (*", outType, ", error) {")
 		g.In()
-		g.P("resp, err := x.stream.Recv()")
+		g.P("resp, err := x.stream.RecvMsg()")
 		g.P("if err != nil {")
 		g.In()
 		g.P("return nil, err")
@@ -349,7 +349,7 @@ func (g *grpc) generateClientMethod(servName, fullServName, serviceDescVar strin
 		g.Out()
 		g.P("}")
 		g.P()
-	} else if method.GetServerStreaming() && !method.GetClientStreaming() {
+	} else if method.GetServerStreaming() && method.GetClientStreaming() {
 		g.P("func (x *", streamType, ") CloseSend() error {")
 		g.In()
 		g.P("return x.stream.CloseSend()")
@@ -357,4 +357,10 @@ func (g *grpc) generateClientMethod(servName, fullServName, serviceDescVar strin
 		g.P("}")
 		g.P()
 	}
+	g.P("func (x *", streamType, ") Context() context.Context {")
+	g.In()
+	g.P("return x.Context()")
+	g.Out()
+	g.P("}")
+	g.P()
 }
