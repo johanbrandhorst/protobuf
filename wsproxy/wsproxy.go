@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/websocket"
 	"google.golang.org/grpc/codes"
@@ -46,6 +47,14 @@ var upgrader = websocket.Upgrader{
 		// TODO: Enforce only local origins
 		return true
 	},
+}
+
+func isClosedConnError(err error) bool {
+	str := err.Error()
+	if strings.Contains(str, "use of closed network connection") {
+		return true
+	}
+	return websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway)
 }
 
 func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -102,6 +111,10 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			p.logger.Debug("[READ] Reading from Websocket")
 			_, payload, err := conn.ReadMessage()
 			if err != nil {
+				if isClosedConnError(err) {
+					p.logger.Warn("[READ] Websocket closed")
+					return
+				}
 				p.logger.Warn("[READ] Failed to read Websocket message: ", err)
 				return
 			}
