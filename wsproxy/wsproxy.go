@@ -18,8 +18,8 @@ import (
 
 // Logger is the interface used by the Proxy to log events
 type Logger interface {
-	Debug(...interface{})
-	Warn(...interface{})
+	Debugln(...interface{})
+	Warnln(...interface{})
 }
 
 // Proxy wraps a handler with a websocket to perform
@@ -65,37 +65,50 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		p.logger.Warn("Failed to upgrade Websocket: ", err)
+		p.logger.Warnln("Failed to upgrade Websocket:", err)
 		return
 	}
+
+	defer func() {
+		err = conn.Close()
+		if err != nil {
+			p.logger.Warnln("Failed to close connection:", err)
+			return
+		}
+		p.logger.Debugln("Closed connection")
+	}()
 
 	ctx, cancelFn := context.WithCancel(r.Context())
 	defer cancelFn()
 
-	p.logger.Debug("Creating new transport with addr: ", r.Host)
+	p.logger.Debugln("Creating new transport with addr:", r.Host)
 	t, err := transport.NewClientTransport(ctx,
 		transport.TargetInfo{Addr: r.Host},
 		transport.ConnectOptions{
 			TransportCredentials: p.creds,
 		})
 	if err != nil {
-		p.logger.Warn("Failed to create transport: ", err)
+		closeMsg := formatCloseMessage(websocket.CloseInternalServerErr, err.Error())
+		_ = conn.WriteMessage(websocket.CloseMessage, closeMsg)
+		p.logger.Warnln("Failed to create transport:", err)
 		return
 	}
 	defer func() {
 		err = t.GracefulClose()
 		if err != nil {
-			p.logger.Warn("Failed to close transport: ", err)
+			p.logger.Warnln("Failed to close transport:", err)
 		}
 	}()
 
-	p.logger.Debug("Creating new stream with host: ", r.RemoteAddr, " and method: ", r.RequestURI)
+	p.logger.Debugln("Creating new stream with host:", r.RemoteAddr, " and method:", r.RequestURI)
 	s, err := t.NewStream(ctx, &transport.CallHdr{
 		Host:   r.RemoteAddr,
 		Method: r.RequestURI,
 	})
 	if err != nil {
-		p.logger.Warn("Failed to create stream: ", err)
+		closeMsg := formatCloseMessage(websocket.CloseInternalServerErr, err.Error())
+		_ = conn.WriteMessage(websocket.CloseMessage, closeMsg)
+		p.logger.Warnln("Failed to create stream:", err)
 		return
 	}
 
@@ -104,21 +117,20 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		for {
 			select {
 			case <-s.Context().Done():
-				p.logger.Debug("[READ] Context canceled, returning")
+				p.logger.Debugln("[READ] Context canceled, returning")
 				return
 			default:
 			}
-			p.logger.Debug("[READ] Reading from Websocket")
 			_, payload, err := conn.ReadMessage()
 			if err != nil {
 				if isClosedConnError(err) {
-					p.logger.Warn("[READ] Websocket closed")
+					p.logger.Warnln("[READ] Websocket closed")
 					return
 				}
-				p.logger.Warn("[READ] Failed to read Websocket message: ", err)
+				p.logger.Warnln("[READ] Failed to read Websocket message:", err)
 				return
 			}
-			p.logger.Debug("[READ] Read payload: ", payload)
+			p.logger.Debugln("[READ] Read payload:", payload)
 			if internal.IsCloseMessage(payload) {
 				err = t.Write(s, nil, &transport.Options{Last: true})
 				if err == io.EOF || err == nil {
@@ -135,7 +147,7 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if err != nil {
-				p.logger.Warn("[READ] Failed to write message to transport", err)
+				p.logger.Warnln("[READ] Failed to write message to transport:", err)
 				if _, ok := err.(transport.ConnectionError); !ok {
 					t.CloseStream(s, err)
 				}
@@ -152,14 +164,19 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		_, err := s.Read(header[:])
 		if err != nil {
 			if err == io.EOF {
-				p.logger.Debug("[WRITE] Stream closed")
+				p.logger.Debugln("[WRITE] Stream closed")
+				// Wait for status to be received
+				<-s.Done()
+				p.sendStatus(conn, s.Status())
 			} else {
-				p.logger.Warn("[WRITE] Failed to read header: ", err)
+				p.logger.Warnln("[WRITE] Failed to read header:", err)
+				if se, ok := err.(transport.StreamError); ok {
+					p.sendStatus(conn, status.New(se.Code, se.Desc))
+				} else {
+					p.sendStatus(conn, status.New(codes.Internal, err.Error()))
+				}
 			}
 
-			// Wait for status to be received
-			<-s.Done()
-			p.sendStatus(conn, s.Status())
 			return
 		}
 
@@ -167,7 +184,7 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		isCompressed := uint8(header[0]) != 0
 		if isCompressed {
 			// If payload is compressed, bail out
-			p.logger.Warn("[WRITE] Reply was compressed, bailing")
+			p.logger.Warnln("[WRITE] Reply was compressed, bailing")
 			p.sendStatus(conn, status.New(codes.FailedPrecondition, "Server sent compressed data"))
 			return
 		}
@@ -176,7 +193,7 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// TODO: Reuse buffer and resize as necessary instead
 		msg = make([]byte, int(len))
 		if n, err := s.Read(msg); err != nil || n != len {
-			p.logger.Warn("[WRITE] Failed to read message: ", err)
+			p.logger.Warnln("[WRITE] Failed to read message:", err)
 			// Wait for status to be received
 			<-s.Done()
 			p.sendStatus(conn, s.Status())
@@ -184,29 +201,32 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if err = conn.WriteMessage(websocket.BinaryMessage, msg); err != nil {
-			p.logger.Warn("[WRITE] Failed to write message: ", err)
+			p.logger.Warnln("[WRITE] Failed to write message:", err)
 			return
 		}
-		p.logger.Debug("[WRITE] Sent payload:", msg)
+		p.logger.Debugln("[WRITE] Sent payload:", msg)
 	}
 
 }
 
-func (p *Proxy) sendStatus(conn *websocket.Conn, st *status.Status) {
-	p.logger.Debug(`[WRITE] Sending status: Msg: "`, st.Message(), `", Code: `, st.Code().String())
+func formatCloseMessage(code int, message string) []byte {
+	closeMsg := websocket.FormatCloseMessage(code, message)
+	if len(closeMsg) > 125 {
+		t := []byte("[truncated]")
+		closeMsg = append(closeMsg[:125-len(t)], t...)
+	}
+	return closeMsg
+}
 
-	closeMsg := websocket.FormatCloseMessage(internal.FormatErrorCode(st.Code()), st.Message())
+func (p *Proxy) sendStatus(conn *websocket.Conn, st *status.Status) {
+	p.logger.Debugln("[WRITE] Sending status: Msg:", st.Message(), ", Code:", st.Code().String())
+
+	closeMsg := formatCloseMessage(internal.FormatErrorCode(st.Code()), st.Message())
 	err := conn.WriteMessage(websocket.CloseMessage, closeMsg)
 	if err != nil {
-		p.logger.Warn("[WRITE] Failed to write Websocket trailer: ", err)
+		p.logger.Warnln("[WRITE] Failed to write Websocket trailer:", err)
 	}
 
-	p.logger.Debug("[WRITE] Sent close message")
-	err = conn.Close()
-	if err != nil {
-		p.logger.Warn("[WRITE] Failed to close connection: ", err)
-		return
-	}
-	p.logger.Debug("[WRITE] Closed connection")
+	p.logger.Debugln("[WRITE] Sent close message")
 	return
 }
