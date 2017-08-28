@@ -194,14 +194,8 @@ func (c *conn) RecvMsg() ([]byte, error) {
 	return []byte(ev.Data.String()), nil
 }
 
-// SendMsg sends a message on the stream. It errors
-// if the stream is not ready to receive messages.
+// SendMsg sends a message on the stream.
 func (c *conn) SendMsg(msg []byte) error {
-	if c.ReadyState != websocketjs.Open {
-		// Read close message and return
-		_, err := c.RecvMsg()
-		return err
-	}
 	return c.Send(msg)
 }
 
