@@ -1098,7 +1098,7 @@ func bidiServerTests(serverAddr string) {
 
 			st := status.FromError(err)
 			if st.Code != codes.DataLoss {
-				qunit.Ok(false, fmt.Sprintf("Unexpected code in error, was %q, expected %q", st.Code, codes.DataLoss))
+				qunit.Ok(false, fmt.Sprintf("Unexpected code in error, was %q, expected %q, error: %v", st.Code, codes.DataLoss, st.Error()))
 				return
 			}
 
