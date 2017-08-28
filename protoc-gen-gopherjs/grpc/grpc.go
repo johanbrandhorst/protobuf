@@ -359,7 +359,7 @@ func (g *grpc) generateClientMethod(servName, fullServName, serviceDescVar strin
 	}
 	g.P("func (x *", streamType, ") Context() context.Context {")
 	g.In()
-	g.P("return x.Context()")
+	g.P("return x.stream.Context()")
 	g.Out()
 	g.P("}")
 	g.P()
