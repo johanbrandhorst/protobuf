@@ -168,6 +168,7 @@ func (c *conn) receiveFrame(ctx context.Context) (*messageEvent, error) {
 			return nil, errors.New("unexpected message type")
 		}
 	case <-ctx.Done():
+		_ = c.Close()
 		return nil, ctx.Err()
 	}
 }
