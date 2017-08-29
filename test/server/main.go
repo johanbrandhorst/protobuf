@@ -43,7 +43,10 @@ func main() {
 		log.Fatalln("Failed to get local server client credentials:", err)
 	}
 	wrappedServer := grpcweb.WrapServer(grpcServer)
-	handler := wsproxy.WrapServer(http.HandlerFunc(wrappedServer.ServeHTTP), log, clientCreds)
+	handler := wsproxy.WrapServer(
+		http.HandlerFunc(wrappedServer.ServeHTTP),
+		log,
+		wsproxy.WithTransportCredentials(clientCreds))
 
 	emptyGrpcServer := grpc.NewServer()
 	emptyWrappedServer := grpcweb.WrapServer(emptyGrpcServer, grpcweb.WithCorsForRegisteredEndpointsOnly(false))
