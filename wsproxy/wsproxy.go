@@ -123,6 +123,7 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 			_, payload, err := conn.ReadMessage()
 			if err != nil {
+				cancelFn()
 				if isClosedConnError(err) {
 					p.logger.Warnln("[READ] Websocket closed")
 					return
@@ -134,6 +135,8 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			if internal.IsCloseMessage(payload) {
 				err = t.Write(s, nil, &transport.Options{Last: true})
 				if err == io.EOF || err == nil {
+					// Do not want to cancel context here, want
+					// Writer to read io.EOF then exit.
 					return
 				}
 			} else {
@@ -141,12 +144,13 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				payload = append(make([]byte, 5), payload...)
 				// Skip first byte to indicate no compression
 				// TODO: Add compression?
-				// Encode size of payload to byte 1-5
+				// Encode size of payload to byte 1-4
 				binary.BigEndian.PutUint32(payload[1:5], uint32(len(payload)-5))
 				err = t.Write(s, payload, &transport.Options{Last: false})
 			}
 
 			if err != nil {
+				cancelFn()
 				p.logger.Warnln("[READ] Failed to write message to transport:", err)
 				if _, ok := err.(transport.ConnectionError); !ok {
 					t.CloseStream(s, err)
