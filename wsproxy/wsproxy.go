@@ -31,11 +31,26 @@ type Proxy struct {
 }
 
 // WrapServer wraps the input handler with a Websocket-to-Bidi-Streaming proxy.
-func WrapServer(h http.Handler, logger Logger, creds credentials.TransportCredentials) http.Handler {
-	return &Proxy{
+func WrapServer(h http.Handler, logger Logger, opts ...Option) http.Handler {
+	p := &Proxy{
 		h:      h,
 		logger: logger,
-		creds:  creds,
+	}
+
+	for _, opt := range opts {
+		opt(p)
+	}
+
+	return p
+}
+
+// Option specifies the type of function that can be used to configure the server.
+type Option func(p *Proxy)
+
+// WithTransportCredentials specifies credentials to use for the transport.
+func WithTransportCredentials(creds credentials.TransportCredentials) Option {
+	return func(p *Proxy) {
+		p.creds = creds
 	}
 }
 
