@@ -16,25 +16,30 @@ import (
 	"github.com/johanbrandhorst/protobuf/internal"
 )
 
-// Logger is the interface used by the Proxy to log events
+// Logger is the interface used by the proxy to log events
 type Logger interface {
 	Debugln(...interface{})
 	Warnln(...interface{})
 }
 
-// Proxy wraps a handler with a websocket to perform
+type noopLogger struct{}
+
+func (n noopLogger) Debugln(_ ...interface{}) {}
+func (n noopLogger) Warnln(_ ...interface{})  {}
+
+// proxy wraps a handler with a websocket to perform
 // bidirectional messaging between a gRPC backend and a web frontend.
-type Proxy struct {
+type proxy struct {
 	h      http.Handler
 	logger Logger
 	creds  credentials.TransportCredentials
 }
 
 // WrapServer wraps the input handler with a Websocket-to-Bidi-Streaming proxy.
-func WrapServer(h http.Handler, logger Logger, opts ...Option) http.Handler {
-	p := &Proxy{
+func WrapServer(h http.Handler, opts ...Option) http.Handler {
+	p := &proxy{
 		h:      h,
-		logger: logger,
+		logger: noopLogger{},
 	}
 
 	for _, opt := range opts {
@@ -45,12 +50,19 @@ func WrapServer(h http.Handler, logger Logger, opts ...Option) http.Handler {
 }
 
 // Option specifies the type of function that can be used to configure the server.
-type Option func(p *Proxy)
+type Option func(p *proxy)
 
 // WithTransportCredentials specifies credentials to use for the transport.
 func WithTransportCredentials(creds credentials.TransportCredentials) Option {
-	return func(p *Proxy) {
+	return func(p *proxy) {
 		p.creds = creds
+	}
+}
+
+// WithLogger configures the proxy to use the logger for logging.
+func WithLogger(logger Logger) Option {
+	return func(p *proxy) {
+		p.logger = logger
 	}
 }
 
@@ -72,7 +84,7 @@ func isClosedConnError(err error) bool {
 	return websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway)
 }
 
-func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (p *proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !websocket.IsWebSocketUpgrade(r) {
 		p.h.ServeHTTP(w, r)
 		return
@@ -237,7 +249,7 @@ func formatCloseMessage(code int, message string) []byte {
 	return closeMsg
 }
 
-func (p *Proxy) sendStatus(conn *websocket.Conn, st *status.Status) {
+func (p *proxy) sendStatus(conn *websocket.Conn, st *status.Status) {
 	p.logger.Debugln("[WRITE] Sending status: Msg:", st.Message(), ", Code:", st.Code().String())
 
 	closeMsg := formatCloseMessage(internal.FormatErrorCode(st.Code()), st.Message())

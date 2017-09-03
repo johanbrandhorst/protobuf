@@ -45,7 +45,7 @@ func main() {
 	wrappedServer := grpcweb.WrapServer(grpcServer)
 	handler := wsproxy.WrapServer(
 		http.HandlerFunc(wrappedServer.ServeHTTP),
-		log,
+		wsproxy.WithLogger(log),
 		wsproxy.WithTransportCredentials(clientCreds))
 
 	emptyGrpcServer := grpc.NewServer()
