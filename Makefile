@@ -16,7 +16,6 @@ build:
 
 integration:
 	bash -c "\
-		set -x \
 		trap '\
 			docker-compose logs selenium && \
 			docker-compose logs chromedriver && \
