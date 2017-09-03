@@ -196,59 +196,88 @@ func (c *conn) onClose(ev *js.Object) {
 	}()
 }
 
-// receiveFrame receives one full frame from the WebSocket. It blocks until the
-// frame is received.
-func (c *conn) receiveFrame(ctx context.Context) (*messageEvent, error) {
-	select {
-	case event, ok := <-c.ch:
-		if !ok { // The channel has been closed
-			return nil, io.EOF
-		}
-
-		switch m := event.(type) {
-		case *messageEvent:
-			return m, nil
-		case *closeEvent:
-			close(c.ch)
-			if m.Code == 4000 { // codes.OK
-				return nil, io.EOF
-			}
-			// Otherwise, propagate close error
-			return nil, m
-		default:
-			return nil, errors.New("unexpected message type")
-		}
-	case <-ctx.Done():
-		_ = c.Close()
-		return nil, ctx.Err()
+func mapWebsocketError(err error) *status.Status {
+	e, ok := err.(*closeEvent)
+	// If this is not a closeEvent, just return
+	if !ok {
+		return status.FromError(err)
 	}
+
+	// If this is a close event, and it is a gRPC Error code,
+	// parse the error
+	if internal.IsgRPCErrorCode(e.Code) {
+		return &status.Status{
+			Code:    internal.ParseErrorCode(e.Code),
+			Message: e.Reason,
+		}
+	}
+
+	// If it is a normal websocket error, decide based on the code
+	st := new(status.Status)
+	switch e.Code {
+	case normal:
+		st.Code = codes.OK
+	case noStatus, abnormal:
+		st.Code = codes.Unknown
+		st.Message = e.Reason
+	case serviceRestart, tryAgainLater:
+		st.Code = codes.Unavailable
+		st.Message = e.Reason
+	case internalError, badGateway:
+		st.Code = codes.Internal
+		st.Message = e.Reason
+	case goingAway, unsupportedData, missingExtension, policyViolation,
+		invalidFrame, protocolError, tooLarge, tlsHandshake:
+		st.Code = codes.FailedPrecondition
+		st.Message = e.Reason
+	}
+
+	return st
 }
 
 // RecvMsg reads a message from the stream.
 // It blocks until a message or error has been received.
 func (c *conn) RecvMsg() ([]byte, error) {
-	ev, err := c.receiveFrame(c.ctx)
-	if err != nil {
-		if cerr, ok := err.(*closeEvent); ok && internal.IsgRPCErrorCode(cerr.Code) {
-			return nil, &status.Status{
-				Code:    internal.ParseErrorCode(cerr.Code),
-				Message: cerr.Reason,
-			}
+	select {
+	case event, ok := <-c.ch:
+		if !ok {
+			// The channel has been closed
+			return nil, io.EOF
 		}
-		return nil, err
-	}
 
-	// Check if it's an array buffer. If so, convert it to a Go byte slice.
-	if constructor := ev.Data.Get("constructor"); constructor == js.Global.Get("ArrayBuffer") {
-		uint8Array := js.Global.Get("Uint8Array").New(ev.Data)
-		return uint8Array.Interface().([]byte), nil
+		switch m := event.(type) {
+		case *messageEvent:
+			// Check if it's an array buffer. If so, convert it to a Go byte slice.
+			if constructor := m.Data.Get("constructor"); constructor == js.Global.Get("ArrayBuffer") {
+				uint8Array := js.Global.Get("Uint8Array").New(m.Data)
+				return uint8Array.Interface().([]byte), nil
+			}
+			return []byte(m.Data.String()), nil
+		case *closeEvent:
+			close(c.ch)
+			st := mapWebsocketError(m)
+			if st.Code == codes.OK {
+				// Special case at the end of streams, return io.EOF instead of OK
+				// This is so stream readers don't have to read both OK and io.EOF
+				return nil, io.EOF
+			}
+			return nil, st
+		default:
+			return nil, errors.New("unexpected message type")
+		}
+	case <-c.ctx.Done():
+		_ = c.Close()
+		return nil, c.ctx.Err()
 	}
-	return []byte(ev.Data.String()), nil
 }
 
 // SendMsg sends a message on the stream.
 func (c *conn) SendMsg(msg []byte) error {
-	return c.Send(msg)
+	err := c.Send(msg)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // CloseSend closes the stream.
