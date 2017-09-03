@@ -9,9 +9,60 @@ import (
 
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/websocket/websocketjs"
+	"google.golang.org/grpc/codes"
 
 	"github.com/johanbrandhorst/protobuf/grpcweb/status"
 	"github.com/johanbrandhorst/protobuf/internal"
+)
+
+// Code describes a websocket close event code
+type code int
+
+// Close codes defined by IANA
+// https://www.iana.org/assignments/websocket/websocket.xml#close-code-number
+const (
+	// Normal closure; the connection successfully completed whatever purpose for which it was created.
+	normal = iota + 1000
+	// The endpoint is going away, either because of a server failure or
+	// because the browser is navigating away from the page that opened the connection.
+	goingAway
+	// The endpoint is terminating the connection due to a protocol error.
+	protocolError
+	// The connection is being terminated because the endpoint received data of a type it
+	// cannot accept (for example, a text-only endpoint received binary data).
+	unsupportedData
+	// reserved for future use
+	_
+	// Indicates that no status code was provided even though one was expected.
+	noStatus
+	// Used to indicate that a connection was closed abnormally
+	// (that is, with no close frame being sent) when a status code is expected.
+	abnormal
+	// The endpoint is terminating the connection because a message was
+	// received that contained inconsistent data (e.g., non-UTF-8 data within a text message).
+	invalidFrame
+	// The endpoint is terminating the connection because it received a message that violates its policy.
+	// This is a generic status code, used when codes 1003 and 1009 are not suitable.
+	policyViolation
+	// The endpoint is terminating the connection because a data frame was received that is too large.
+	tooLarge
+	// The client is terminating the connection because it expected the server
+	// to negotiate one or more extension, but the server didn't.
+	missingExtension
+	// The server is terminating the connection because it encountered
+	// an unexpected condition that prevented it from fulfilling the request.
+	internalError
+	// The server is terminating the connection because it is restarting.
+	serviceRestart
+	// The server is terminating the connection due to a temporary condition,
+	// e.g. it is overloaded and is casting off some of its clients.
+	tryAgainLater
+	// The server was acting as a gateway or proxy and received an
+	// invalid response from the upstream server. This is similar to 502 HTTP Status Code.
+	badGateway
+	// Indicates that the connection was closed due to a failure
+	// to perform a TLS handshake (e.g., the server certificate can't be verified).
+	tlsHandshake
 )
 
 // closeEvent allows a CloseEvent to be used as an error.
