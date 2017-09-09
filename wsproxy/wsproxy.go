@@ -3,6 +3,7 @@ package wsproxy
 import (
 	"context"
 	"encoding/binary"
+	"errors"
 	"io"
 	"net"
 	"net/http"
@@ -81,6 +82,9 @@ func isClosedConnError(err error) bool {
 	str := err.Error()
 	if strings.Contains(str, "use of closed network connection") {
 		return true
+	} else if ce, ok := err.(*websocket.CloseError); ok && internal.IsgRPCErrorCode(ce.Code) {
+		// Ignore returned gRPC error codes
+		return true
 	}
 	return websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway)
 }
@@ -140,6 +144,22 @@ func (p *proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		p.logger.Warnln("Failed to create stream:", err)
 		return
 	}
+
+	// Listen on s.Context().Done() to detect cancellation and
+	// s.Done() to detect normal termination
+	// when there is no pending I/O operations on this stream.
+	go func() {
+		select {
+		case <-t.Error():
+			// Incur transport error, simply exit.
+		case <-s.Done():
+			t.CloseStream(s, nil)
+		case <-s.GoAway():
+			t.CloseStream(s, errors.New("grpc: the connection is drained"))
+		case <-s.Context().Done():
+			t.CloseStream(s, transport.ContextErr(s.Context().Err()))
+		}
+	}()
 
 	// Read loop - reads from websocket and puts it on the stream
 	go func() {
@@ -201,6 +221,8 @@ func (p *proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				// Wait for status to be received
 				<-s.Done()
 				p.sendStatus(conn, s.Status())
+			} else if se, ok := err.(transport.StreamError); ok && se.Code == codes.Canceled {
+				p.logger.Debugln("[WRITE] Context canceled")
 			} else {
 				p.logger.Warnln("[WRITE] Failed to read header:", err)
 				if se, ok := err.(transport.StreamError); ok {
