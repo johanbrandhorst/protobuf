@@ -174,7 +174,7 @@ func (p *proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				cancelFn()
 				if isClosedConnError(err) {
-					p.logger.Warnln("[READ] Websocket closed")
+					p.logger.Debugln("[READ] Websocket closed")
 					return
 				}
 				p.logger.Warnln("[READ] Failed to read Websocket message:", err)
