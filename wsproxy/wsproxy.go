@@ -189,12 +189,6 @@ func (p *proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 			} else {
-				// Append header
-				payload = append(make([]byte, 5), payload...)
-				// Skip first byte to indicate no compression
-				// TODO: Add compression?
-				// Encode size of payload to byte 1-4
-				binary.BigEndian.PutUint32(payload[1:5], uint32(len(payload)-5))
 				err = t.Write(s, payload, &transport.Options{Last: false})
 			}
 
@@ -255,7 +249,7 @@ func (p *proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if err = conn.WriteMessage(websocket.BinaryMessage, msg); err != nil {
+		if err = conn.WriteMessage(websocket.BinaryMessage, append(header[:], msg...)); err != nil {
 			p.logger.Warnln("[WRITE] Failed to write message:", err)
 			return
 		}
