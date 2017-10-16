@@ -125,7 +125,7 @@ func (s *testSrv) PingEmpty(ctx context.Context, _ *empty.Empty) (*testproto.Pin
 
 func (s *testSrv) Ping(ctx context.Context, ping *testproto.PingRequest) (*testproto.PingResponse, error) {
 	if ping.GetCheckMetadata() {
-		md, ok := metadata.FromContext(ctx)
+		md, ok := metadata.FromIncomingContext(ctx)
 		if !ok || len(md[strings.ToLower(shared.ClientMDTestKey)]) == 0 ||
 			md[strings.ToLower(shared.ClientMDTestKey)][0] != shared.ClientMDTestValue {
 			return nil, status.Errorf(codes.InvalidArgument, "Metadata was invalid")
@@ -174,7 +174,7 @@ func (s *testSrv) PingError(ctx context.Context, ping *testproto.PingRequest) (*
 
 func (s *testSrv) PingList(ping *testproto.PingRequest, stream testproto.TestService_PingListServer) error {
 	if ping.GetCheckMetadata() {
-		md, ok := metadata.FromContext(stream.Context())
+		md, ok := metadata.FromIncomingContext(stream.Context())
 		if !ok || len(md[strings.ToLower(shared.ClientMDTestKey)]) == 0 ||
 			md[strings.ToLower(shared.ClientMDTestKey)][0] != shared.ClientMDTestValue {
 			return status.Errorf(codes.InvalidArgument, "Metadata was invalid")
@@ -208,7 +208,7 @@ func (s *testSrv) PingList(ping *testproto.PingRequest, stream testproto.TestSer
 			if !ok {
 				return status.Errorf(codes.Internal, "lowLevelServerStream does not exist in context")
 			}
-			lowLevelServerStream.ServerTransport().Write(lowLevelServerStream, make([]byte, 0), &transport.Options{
+			lowLevelServerStream.ServerTransport().Write(lowLevelServerStream, nil, nil, &transport.Options{
 				Delay: false,
 			})
 		}
