@@ -8,13 +8,17 @@ gRPC-Web spec compatible interface. It uses `jspb` and `grpcweb`.
 It is the main entrypoint for using the protobuf/gRPC GopherJS bindings.
 
 ### [GopherJS ProtobufJS Bindings](./jspb/README.md)
-This is a simple GopherJS binding around the node `google-protobuf` package.
+This is a simple GopherJS binding around the npm `google-protobuf` package.
 Importing it into any GopherJS source allows usage of ProtobufJS functionality.
 
 ### [GopherJS gRPC-Web Client Bindings](./grpcweb/README.md)
-This is a GopherJS binding around the Improbable gRPC-Web client and
-the websocket proxy.
+This is a GopherJS binding around the Improbable gRPC-Web client. It also
+exposes functions for making websocket calls. It is not intended for
+public use.
 
+### [Websocket proxy library](./wsproxy/README.md)
+This is a library for intercepting websocket connections
+and translating them to gRPC streams.
 
 ## Contributions
 Contributions are very welcome, please submit issues and PRs for review.
