@@ -1,6 +1,12 @@
 # GopherJS Bindings for ProtobufJS and gRPC-Web
 [![CircleCI](https://circleci.com/gh/johanbrandhorst/protobuf/tree/master.svg?style=svg)](https://circleci.com/gh/johanbrandhorst/protobuf/tree/master) [![Go Report Card](https://goreportcard.com/badge/github.com/johanbrandhorst/protobuf)](https://goreportcard.com/report/github.com/johanbrandhorst/protobuf) [![Gitter chat](https://badges.gitter.im/johanbrandhorst/protobuf.png)](https://gitter.im/gopherjs-protobuf)
 
+## Getting started
+The easiest way to get started with gRPC-Web for Go is to clone
+[the boilerplate repo](https://github.com/johanbrandhorst/grpcweb-boilerplate)
+and start playing around with it.
+
+## Components
 ### [GopherJS Protobuf Generator](./protoc-gen-gopherjs/README.md)
 This is a GopherJS client code generator for the Google Protobuf format.
 It generates code for interfacing with any gRPC services exposing a
