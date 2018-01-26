@@ -113,18 +113,21 @@ func (p *proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		p.logger.Debugln("Closed connection")
 	}()
 
-	ctx, cancelFn := context.WithCancel(r.Context())
-	defer cancelFn()
+	ctx, cancel := context.WithCancel(r.Context())
+	defer cancel()
 
 	host := withPort(r.Host)
 	p.logger.Debugln("Creating new transport with addr:", host)
+	connCtx, connCancel := context.WithTimeout(ctx, time.Second*20)
+	defer connCancel()
 	t, err := transport.NewClientTransport(
+		connCtx,
 		ctx,
 		transport.TargetInfo{Addr: host},
 		transport.ConnectOptions{
 			TransportCredentials: p.creds,
 		},
-		time.Second*20,
+		func() {},
 	)
 	if err != nil {
 		closeMsg := formatCloseMessage(websocket.CloseInternalServerErr, err.Error())
