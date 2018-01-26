@@ -118,8 +118,8 @@ func (p *proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	host := withPort(r.Host)
 	p.logger.Debugln("Creating new transport with addr:", host)
-	connCtx, connCancel := context.WithTimeout(ctx, time.Second*20)
-	defer connCancel()
+	// Cancel func unnecessary as we defer cancel parent
+	connCtx, _ := context.WithTimeout(ctx, time.Second*20)
 	t, err := transport.NewClientTransport(
 		connCtx,
 		ctx,
@@ -181,7 +181,7 @@ func (p *proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 			_, payload, err := conn.ReadMessage()
 			if err != nil {
-				cancelFn()
+				cancel()
 				if isClosedConnError(err) {
 					p.logger.Debugln("[READ] Websocket closed")
 					return
@@ -202,7 +202,7 @@ func (p *proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if err != nil {
-				cancelFn()
+				cancel()
 				p.logger.Warnln("[READ] Failed to write message to transport:", err)
 				if _, ok := err.(transport.ConnectionError); !ok {
 					t.CloseStream(s, err)
