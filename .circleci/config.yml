@@ -8,6 +8,15 @@ jobs:
       - checkout
       - run: go get -u github.com/gopherjs/gopherjs
       - run: make build
+  dep:
+    docker:
+      - image: 'golang:latest'
+    working_directory: /go/src/github.com/johanbrandhorst/protobuf
+    steps:
+      - checkout
+      - run: go get -u github.com/golang/dep/cmd/dep
+      - run: dep ensure -v
+      - run: git diff --exit-code
   generate:
     docker:
       - image: 'golang:latest'
@@ -63,6 +72,7 @@ workflows:
   build-and-test:
     jobs:
       - build
+      - dep
       - generate
       - tests:
           requires:
