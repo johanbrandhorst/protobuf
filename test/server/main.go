@@ -74,7 +74,7 @@ func main() {
 		Handler: http.HandlerFunc(emptyHandler),
 	}
 
-	grpclog.Printf("Starting servers.")
+	grpclog.Printf("Starting servers")
 
 	// Start the empty Http1.1 server
 	go func() {
@@ -109,6 +109,7 @@ func main() {
 		Addr:    shared.GopherJSServer,
 		Handler: http.FileServer(http.Dir("./client/html")),
 	}
+	grpclog.Printf("Serving tests on https://localhost:8080")
 	if err := httpsSrv.ListenAndServeTLS("./insecure/localhost.crt", "./insecure/localhost.key"); err != nil {
 		grpclog.Fatalf("failed to start JS server: %v", err)
 	}
