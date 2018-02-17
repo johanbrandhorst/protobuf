@@ -60,9 +60,7 @@ type ExtraStuff struct {
 }
 
 // isExtraStuff_Title is used to distinguish types assignable to Title
-type isExtraStuff_Title interface {
-	isExtraStuff_Title()
-}
+type isExtraStuff_Title interface{ isExtraStuff_Title() }
 
 // ExtraStuff_FirstName is assignable to Title
 type ExtraStuff_FirstName struct {

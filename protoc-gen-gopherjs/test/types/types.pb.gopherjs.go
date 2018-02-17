@@ -163,9 +163,7 @@ type TestAllTypes struct {
 }
 
 // isTestAllTypes_OneofField is used to distinguish types assignable to OneofField
-type isTestAllTypes_OneofField interface {
-	isTestAllTypes_OneofField()
-}
+type isTestAllTypes_OneofField interface{ isTestAllTypes_OneofField() }
 
 // TestAllTypes_OneofUint32 is assignable to OneofField
 type TestAllTypes_OneofUint32 struct {

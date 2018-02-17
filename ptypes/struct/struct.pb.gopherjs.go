@@ -158,9 +158,7 @@ type Value struct {
 }
 
 // isValue_Kind is used to distinguish types assignable to Kind
-type isValue_Kind interface {
-	isValue_Kind()
-}
+type isValue_Kind interface{ isValue_Kind() }
 
 // Value_NullValue is assignable to Kind
 type Value_NullValue struct {
