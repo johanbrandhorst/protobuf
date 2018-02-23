@@ -3,6 +3,13 @@
 
 ![gRPC-Web Gopher by Egon Elbre (@egonelbre)](./logo.svg)
 
+## Users
+A list of some of the users of the library. Send
+me a message on @jbrandhorst on Gophers Slack if you wish
+to be added to this list
+
+* https://github.com/anxiousmodernman/co-chair
+
 ## Getting started
 The easiest way to get started with gRPC-Web for Go is to clone
 [the boilerplate repo](https://github.com/johanbrandhorst/grpcweb-boilerplate)
@@ -29,7 +36,7 @@ This is a library for intercepting websocket connections
 and translating them to gRPC streams.
 
 ## Contributions
-Contributions are very welcome, please submit issues and PRs for review.
+Contributions are very welcome, please submit issues or PRs for review.
 
 ## Demo
 See [the example repo](https://github.com/johanbrandhorst/grpcweb-example)
