@@ -1,5 +1,8 @@
 # GopherJS Bindings for ProtobufJS and gRPC-Web
-[![CircleCI](https://circleci.com/gh/johanbrandhorst/protobuf/tree/master.svg?style=svg)](https://circleci.com/gh/johanbrandhorst/protobuf/tree/master) [![Go Report Card](https://goreportcard.com/badge/github.com/johanbrandhorst/protobuf)](https://goreportcard.com/report/github.com/johanbrandhorst/protobuf) [![Gitter chat](https://badges.gitter.im/johanbrandhorst/protobuf.png)](https://gitter.im/gopherjs-protobuf)
+[![Circle CI](https://circleci.com/gh/johanbrandhorst/protobuf.svg?style=shield)](https://circleci.com/gh/johanbrandhorst/protobuf)
+[![Go Report Card](https://goreportcard.com/badge/github.com/johanbrandhorst/protobuf)](https://goreportcard.com/report/github.com/johanbrandhorst/protobuf)
+[![GoDoc](https://godoc.org/github.com/johanbrandhorst/protobuf?status.svg)](https://godoc.org/github.com/johanbrandhorst/protobuf)
+[![Gitter chat](https://badges.gitter.im/johanbrandhorst/protobuf.png)](https://gitter.im/gopherjs-protobuf)
 
 ![gRPC-Web Gopher by Egon Elbre (@egonelbre)](./logo.svg)
 
