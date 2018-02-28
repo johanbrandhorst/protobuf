@@ -299,9 +299,7 @@ type Complex_Communique struct {
 }
 
 // isComplex_Communique_UnionThing is used to distinguish types assignable to UnionThing
-type isComplex_Communique_UnionThing interface {
-	isComplex_Communique_UnionThing()
-}
+type isComplex_Communique_UnionThing interface{ isComplex_Communique_UnionThing() }
 
 // Complex_Communique_Number is assignable to UnionThing
 type Complex_Communique_Number struct {
