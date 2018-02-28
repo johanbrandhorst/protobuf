@@ -25,6 +25,8 @@ jobs:
       - checkout
       - run:
           name: Install protoc
+          environment:
+            PROTOBUF_VERSION: "3.5.1"
           command: >
             apt-get update
 
@@ -33,11 +35,11 @@ jobs:
             rm -rf /var/lib/apt/lists/*
 
             wget
-            https://github.com/google/protobuf/releases/download/v3.5.0/protoc-3.5.0-linux-x86_64.zip
+            https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/protoc-${PROTOBUF_VERSION}-linux-x86_64.zip
 
-            unzip protoc-3.5.0-linux-x86_64.zip -d /usr/local
+            unzip protoc-${PROTOBUF_VERSION}-linux-x86_64.zip -d /usr/local
 
-            rm protoc-3.5.0-linux-x86_64.zip
+            rm protoc-${PROTOBUF_VERSION}-linux-x86_64.zip
 
             apt-get remove -y wget unzip
 
