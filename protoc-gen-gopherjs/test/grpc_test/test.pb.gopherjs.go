@@ -602,7 +602,7 @@ var _ grpcweb.Client
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpcweb package it is being compiled against.
-const _ = grpcweb.GrpcWebPackageIsVersion2
+const _ = grpcweb.GrpcWebPackageIsVersion3
 
 // Client API for TestService service
 
@@ -633,34 +633,33 @@ func (c *testServiceClient) Unary(ctx context.Context, in *Simple, opts ...grpcw
 }
 
 func (c *testServiceClient) ServerStreaming(ctx context.Context, in *Simple, opts ...grpcweb.CallOption) (TestService_ServerStreamingClient, error) {
-	srv, err := c.client.NewServerStream(ctx, "ServerStreaming", in.Marshal(), opts...)
+	srv, err := c.client.NewClientStream(ctx, false, true, "ServerStreaming", opts...)
 	if err != nil {
 		return nil, err
 	}
 
-	return &testServiceServerStreamingClient{
-		stream: srv,
-	}, nil
+	err = srv.SendMsg(in.Marshal())
+	if err != nil {
+		return nil, err
+	}
+
+	return &testServiceServerStreamingClient{srv}, nil
 }
 
 type TestService_ServerStreamingClient interface {
 	Recv() (*Complex, error)
-	Context() context.Context
+	grpcweb.ClientStream
 }
 
 type testServiceServerStreamingClient struct {
-	stream grpcweb.ServerStream
+	grpcweb.ClientStream
 }
 
 func (x *testServiceServerStreamingClient) Recv() (*Complex, error) {
-	resp, err := x.stream.RecvMsg()
+	resp, err := x.RecvMsg()
 	if err != nil {
 		return nil, err
 	}
 
 	return new(Complex).Unmarshal(resp)
-}
-
-func (x *testServiceServerStreamingClient) Context() context.Context {
-	return x.stream.Context()
 }

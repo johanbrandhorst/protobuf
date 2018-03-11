@@ -463,7 +463,7 @@ var _ grpcweb.Client
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpcweb package it is being compiled against.
-const _ = grpcweb.GrpcWebPackageIsVersion2
+const _ = grpcweb.GrpcWebPackageIsVersion3
 
 // Client API for TestService service
 
@@ -517,27 +517,30 @@ func (c *testServiceClient) PingError(ctx context.Context, in *PingRequest, opts
 }
 
 func (c *testServiceClient) PingList(ctx context.Context, in *PingRequest, opts ...grpcweb.CallOption) (TestService_PingListClient, error) {
-	srv, err := c.client.NewServerStream(ctx, "PingList", in.Marshal(), opts...)
+	srv, err := c.client.NewClientStream(ctx, false, true, "PingList", opts...)
 	if err != nil {
 		return nil, err
 	}
 
-	return &testServicePingListClient{
-		stream: srv,
-	}, nil
+	err = srv.SendMsg(in.Marshal())
+	if err != nil {
+		return nil, err
+	}
+
+	return &testServicePingListClient{srv}, nil
 }
 
 type TestService_PingListClient interface {
 	Recv() (*PingResponse, error)
-	Context() context.Context
+	grpcweb.ClientStream
 }
 
 type testServicePingListClient struct {
-	stream grpcweb.ServerStream
+	grpcweb.ClientStream
 }
 
 func (x *testServicePingListClient) Recv() (*PingResponse, error) {
-	resp, err := x.stream.RecvMsg()
+	resp, err := x.RecvMsg()
 	if err != nil {
 		return nil, err
 	}
@@ -545,35 +548,36 @@ func (x *testServicePingListClient) Recv() (*PingResponse, error) {
 	return new(PingResponse).Unmarshal(resp)
 }
 
-func (x *testServicePingListClient) Context() context.Context {
-	return x.stream.Context()
-}
-
 func (c *testServiceClient) PingClientStream(ctx context.Context, opts ...grpcweb.CallOption) (TestService_PingClientStreamClient, error) {
-	srv, err := c.client.NewClientStream(ctx, "PingClientStream")
+	srv, err := c.client.NewClientStream(ctx, true, false, "PingClientStream", opts...)
 	if err != nil {
 		return nil, err
 	}
 
-	return &testServicePingClientStreamClient{stream: srv}, nil
+	return &testServicePingClientStreamClient{srv}, nil
 }
 
 type TestService_PingClientStreamClient interface {
 	Send(*PingRequest) error
 	CloseAndRecv() (*PingResponse, error)
-	Context() context.Context
+	grpcweb.ClientStream
 }
 
 type testServicePingClientStreamClient struct {
-	stream grpcweb.ClientStream
+	grpcweb.ClientStream
 }
 
 func (x *testServicePingClientStreamClient) Send(req *PingRequest) error {
-	return x.stream.SendMsg(req.Marshal())
+	return x.SendMsg(req.Marshal())
 }
 
 func (x *testServicePingClientStreamClient) CloseAndRecv() (*PingResponse, error) {
-	resp, err := x.stream.CloseAndRecv()
+	err := x.CloseSend()
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := x.RecvMsg()
 	if err != nil {
 		return nil, err
 	}
@@ -581,35 +585,36 @@ func (x *testServicePingClientStreamClient) CloseAndRecv() (*PingResponse, error
 	return new(PingResponse).Unmarshal(resp)
 }
 
-func (x *testServicePingClientStreamClient) Context() context.Context {
-	return x.stream.Context()
-}
-
 func (c *testServiceClient) PingClientStreamError(ctx context.Context, opts ...grpcweb.CallOption) (TestService_PingClientStreamErrorClient, error) {
-	srv, err := c.client.NewClientStream(ctx, "PingClientStreamError")
+	srv, err := c.client.NewClientStream(ctx, true, false, "PingClientStreamError", opts...)
 	if err != nil {
 		return nil, err
 	}
 
-	return &testServicePingClientStreamErrorClient{stream: srv}, nil
+	return &testServicePingClientStreamErrorClient{srv}, nil
 }
 
 type TestService_PingClientStreamErrorClient interface {
 	Send(*PingRequest) error
 	CloseAndRecv() (*PingResponse, error)
-	Context() context.Context
+	grpcweb.ClientStream
 }
 
 type testServicePingClientStreamErrorClient struct {
-	stream grpcweb.ClientStream
+	grpcweb.ClientStream
 }
 
 func (x *testServicePingClientStreamErrorClient) Send(req *PingRequest) error {
-	return x.stream.SendMsg(req.Marshal())
+	return x.SendMsg(req.Marshal())
 }
 
 func (x *testServicePingClientStreamErrorClient) CloseAndRecv() (*PingResponse, error) {
-	resp, err := x.stream.CloseAndRecv()
+	err := x.CloseSend()
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := x.RecvMsg()
 	if err != nil {
 		return nil, err
 	}
@@ -617,36 +622,31 @@ func (x *testServicePingClientStreamErrorClient) CloseAndRecv() (*PingResponse, 
 	return new(PingResponse).Unmarshal(resp)
 }
 
-func (x *testServicePingClientStreamErrorClient) Context() context.Context {
-	return x.stream.Context()
-}
-
 func (c *testServiceClient) PingBidiStream(ctx context.Context, opts ...grpcweb.CallOption) (TestService_PingBidiStreamClient, error) {
-	srv, err := c.client.NewClientStream(ctx, "PingBidiStream")
+	srv, err := c.client.NewClientStream(ctx, true, true, "PingBidiStream", opts...)
 	if err != nil {
 		return nil, err
 	}
 
-	return &testServicePingBidiStreamClient{stream: srv}, nil
+	return &testServicePingBidiStreamClient{srv}, nil
 }
 
 type TestService_PingBidiStreamClient interface {
 	Send(*PingRequest) error
 	Recv() (*PingResponse, error)
-	CloseSend() error
-	Context() context.Context
+	grpcweb.ClientStream
 }
 
 type testServicePingBidiStreamClient struct {
-	stream grpcweb.ClientStream
+	grpcweb.ClientStream
 }
 
 func (x *testServicePingBidiStreamClient) Send(req *PingRequest) error {
-	return x.stream.SendMsg(req.Marshal())
+	return x.SendMsg(req.Marshal())
 }
 
 func (x *testServicePingBidiStreamClient) Recv() (*PingResponse, error) {
-	resp, err := x.stream.RecvMsg()
+	resp, err := x.RecvMsg()
 	if err != nil {
 		return nil, err
 	}
@@ -654,51 +654,34 @@ func (x *testServicePingBidiStreamClient) Recv() (*PingResponse, error) {
 	return new(PingResponse).Unmarshal(resp)
 }
 
-func (x *testServicePingBidiStreamClient) CloseSend() error {
-	return x.stream.CloseSend()
-}
-
-func (x *testServicePingBidiStreamClient) Context() context.Context {
-	return x.stream.Context()
-}
-
 func (c *testServiceClient) PingBidiStreamError(ctx context.Context, opts ...grpcweb.CallOption) (TestService_PingBidiStreamErrorClient, error) {
-	srv, err := c.client.NewClientStream(ctx, "PingBidiStreamError")
+	srv, err := c.client.NewClientStream(ctx, true, true, "PingBidiStreamError", opts...)
 	if err != nil {
 		return nil, err
 	}
 
-	return &testServicePingBidiStreamErrorClient{stream: srv}, nil
+	return &testServicePingBidiStreamErrorClient{srv}, nil
 }
 
 type TestService_PingBidiStreamErrorClient interface {
 	Send(*PingRequest) error
 	Recv() (*PingResponse, error)
-	CloseSend() error
-	Context() context.Context
+	grpcweb.ClientStream
 }
 
 type testServicePingBidiStreamErrorClient struct {
-	stream grpcweb.ClientStream
+	grpcweb.ClientStream
 }
 
 func (x *testServicePingBidiStreamErrorClient) Send(req *PingRequest) error {
-	return x.stream.SendMsg(req.Marshal())
+	return x.SendMsg(req.Marshal())
 }
 
 func (x *testServicePingBidiStreamErrorClient) Recv() (*PingResponse, error) {
-	resp, err := x.stream.RecvMsg()
+	resp, err := x.RecvMsg()
 	if err != nil {
 		return nil, err
 	}
 
 	return new(PingResponse).Unmarshal(resp)
-}
-
-func (x *testServicePingBidiStreamErrorClient) CloseSend() error {
-	return x.stream.CloseSend()
-}
-
-func (x *testServicePingBidiStreamErrorClient) Context() context.Context {
-	return x.stream.Context()
 }
