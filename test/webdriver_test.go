@@ -11,7 +11,10 @@ import (
 	"github.com/sclevine/agouti"
 	"github.com/sclevine/agouti/api"
 	. "github.com/sclevine/agouti/matchers"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
+	"github.com/johanbrandhorst/protobuf/test/server/wrappers"
 	"github.com/johanbrandhorst/protobuf/test/shared"
 )
 
@@ -165,3 +168,18 @@ func browserTest(browserName, address string, newPage pageFunc) {
 		})
 	})
 }
+
+var _ = Describe("Go gRPC-Client Oracle tests", func() {
+	It("does not error", func() {
+		wrapper := wrappers.ClientWrapper{C: client}
+		getStatus := func(err error) (codes.Code, string) {
+			st, _ := status.FromError(err)
+			return st.Code(), st.Message()
+		}
+
+		Expect(shared.TestPing(wrapper, getStatus)).To(Succeed())
+		Expect(shared.TestPingList(wrapper, getStatus)).To(Succeed())
+		Expect(shared.TestPingClientStream(wrapper, getStatus)).To(Succeed())
+		Expect(shared.TestPingBidiStream(wrapper, getStatus)).To(Succeed())
+	})
+})

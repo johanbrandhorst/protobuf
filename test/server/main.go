@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -14,7 +15,6 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/grpclog"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
@@ -23,7 +23,6 @@ import (
 	testproto "github.com/johanbrandhorst/protobuf/test/server/proto/test"
 	"github.com/johanbrandhorst/protobuf/test/server/proto/types"
 	"github.com/johanbrandhorst/protobuf/test/shared"
-	"github.com/johanbrandhorst/protobuf/wsproxy"
 )
 
 func main() {
@@ -38,15 +37,19 @@ func main() {
 		TimestampFormat: time.RFC3339Nano,
 	}
 	grpclog.SetLogger(log)
-	clientCreds, err := credentials.NewClientTLSFromFile("./insecure/localhost.crt", "")
-	if err != nil {
-		log.Fatalln("Failed to get local server client credentials:", err)
-	}
-	wrappedServer := grpcweb.WrapServer(grpcServer)
-	handler := wsproxy.WrapServer(
-		http.HandlerFunc(wrappedServer.ServeHTTP),
-		wsproxy.WithLogger(log),
-		wsproxy.WithTransportCredentials(clientCreds))
+	wrappedServer := grpcweb.WrapServer(grpcServer,
+		grpcweb.WithWebsockets(true),
+		grpcweb.WithWebsocketOriginFunc(func(req *http.Request) bool {
+			origin := req.Header.Get("Origin")
+			parsedURL, err := url.ParseRequestURI(origin)
+			if err != nil {
+				grpclog.Warningf("Unable to parse url for grpc-websocket origin check: %s. error: %v", origin, err)
+				return false
+			}
+			// Allow connections from any port
+			return stripPort(parsedURL.Host) == stripPort(req.Host)
+		}),
+	)
 
 	emptyGrpcServer := grpc.NewServer()
 	emptyWrappedServer := grpcweb.WrapServer(emptyGrpcServer, grpcweb.WithCorsForRegisteredEndpointsOnly(false))
@@ -56,7 +59,7 @@ func main() {
 
 	http1Server := http.Server{
 		Addr:    shared.HTTP1Server,
-		Handler: handler,
+		Handler: wrappedServer,
 	}
 	http1Server.TLSNextProto = map[string]func(*http.Server, *tls.Conn, http.Handler){} // Disable HTTP2
 	http1EmptyServer := http.Server{
@@ -67,7 +70,7 @@ func main() {
 
 	http2Server := http.Server{
 		Addr:    shared.HTTP2Server,
-		Handler: handler,
+		Handler: wrappedServer,
 	}
 	http2EmptyServer := http.Server{
 		Addr:    shared.EmptyHTTP2Server,
@@ -115,6 +118,17 @@ func main() {
 	}
 }
 
+func stripPort(hostport string) string {
+	colon := strings.IndexByte(hostport, ':')
+	if colon == -1 {
+		return hostport
+	}
+	if i := strings.IndexByte(hostport, ']'); i != -1 {
+		return strings.TrimPrefix(hostport[:i], "[")
+	}
+	return hostport[:colon]
+}
+
 type testSrv struct {
 }
 
@@ -152,7 +166,7 @@ func (s *testSrv) Ping(ctx context.Context, ping *testproto.PingRequest) (*testp
 func (s *testSrv) PingError(ctx context.Context, ping *testproto.PingRequest) (*empty.Empty, error) {
 	if ping.FailureType == testproto.PingRequest_DROP {
 		t, _ := transport.StreamFromContext(ctx)
-		t.ServerTransport().Close()
+		_ = t.ServerTransport().Close()
 		return nil, status.Errorf(codes.Unavailable, "You got closed. You probably won't see this error")
 
 	}
@@ -170,7 +184,7 @@ func (s *testSrv) PingError(ctx context.Context, ping *testproto.PingRequest) (*
 				shared.ServerTrailerTestKey1, shared.ServerMDTestValue1,
 				shared.ServerTrailerTestKey2, shared.ServerMDTestValue2))
 	}
-	return nil, status.Errorf(codes.Code(ping.ErrorCodeReturned), "Intentionally returning error for PingError")
+	return nil, status.Errorf(codes.Code(ping.ErrorCodeReturned), ping.Value)
 }
 
 func (s *testSrv) PingList(ping *testproto.PingRequest, stream testproto.TestService_PingListServer) error {
@@ -195,9 +209,11 @@ func (s *testSrv) PingList(ping *testproto.PingRequest, stream testproto.TestSer
 	}
 	if ping.FailureType == testproto.PingRequest_DROP {
 		t, _ := transport.StreamFromContext(stream.Context())
-		t.ServerTransport().Close()
-		return nil
-
+		_ = t.ServerTransport().Close()
+		return status.Errorf(codes.Unavailable, "You got closed. You probably won't see this error")
+	}
+	if ping.GetFailureType() == testproto.PingRequest_CODE {
+		return status.Errorf(codes.Code(ping.ErrorCodeReturned), ping.GetValue())
 	}
 	for i := int32(0); i < ping.ResponseCount; i++ {
 		sleepDuration := ping.GetMessageLatencyMs()
@@ -232,6 +248,25 @@ func (s *testSrv) PingClientStream(stream testproto.TestService_PingClientStream
 			time.Sleep(time.Duration(ping.GetMessageLatencyMs()) * time.Millisecond)
 			return stream.SendAndClose(&testproto.PingResponse{Value: "Closed"})
 		}
+		if ping.GetCheckMetadata() {
+			md, ok := metadata.FromIncomingContext(stream.Context())
+			if !ok || len(md[strings.ToLower(shared.ClientMDTestKey)]) == 0 ||
+				md[strings.ToLower(shared.ClientMDTestKey)][0] != shared.ClientMDTestValue {
+				return status.Errorf(codes.InvalidArgument, "Metadata was invalid")
+			}
+		}
+		if ping.GetSendHeaders() {
+			stream.SendHeader(
+				metadata.Pairs(
+					shared.ServerMDTestKey1, shared.ServerMDTestValue1,
+					shared.ServerMDTestKey2, shared.ServerMDTestValue2))
+		}
+		if ping.GetSendTrailers() {
+			stream.SetTrailer(
+				metadata.Pairs(
+					shared.ServerTrailerTestKey1, shared.ServerMDTestValue1,
+					shared.ServerTrailerTestKey2, shared.ServerMDTestValue2))
+		}
 		if err != nil {
 			return err
 		}
@@ -249,6 +284,11 @@ func (s *testSrv) PingClientStreamError(stream testproto.TestService_PingClientS
 		if err != nil {
 			return err
 		}
+		if ping.FailureType == testproto.PingRequest_DROP {
+			t, _ := transport.StreamFromContext(stream.Context())
+			_ = t.ServerTransport().Close()
+			return status.Errorf(codes.Unavailable, "You got closed. You probably won't see this error")
+		}
 		if ping.GetFailureType() == testproto.PingRequest_CODE {
 			return status.Errorf(codes.Code(ping.ErrorCodeReturned), ping.GetValue())
 		}
@@ -263,8 +303,30 @@ func (s *testSrv) PingBidiStream(stream testproto.TestService_PingBidiStreamServ
 		if err != nil {
 			return err
 		}
+		if ping.GetCheckMetadata() {
+			md, ok := metadata.FromIncomingContext(stream.Context())
+			if !ok || len(md[strings.ToLower(shared.ClientMDTestKey)]) == 0 ||
+				md[strings.ToLower(shared.ClientMDTestKey)][0] != shared.ClientMDTestValue {
+				return status.Errorf(codes.InvalidArgument, "Metadata was invalid")
+			}
+		}
+		if ping.GetSendHeaders() {
+			stream.SendHeader(
+				metadata.Pairs(
+					shared.ServerMDTestKey1, shared.ServerMDTestValue1,
+					shared.ServerMDTestKey2, shared.ServerMDTestValue2))
+		}
+		if ping.GetSendTrailers() {
+			stream.SetTrailer(
+				metadata.Pairs(
+					shared.ServerTrailerTestKey1, shared.ServerMDTestValue1,
+					shared.ServerTrailerTestKey2, shared.ServerMDTestValue2))
+		}
 		time.Sleep(time.Duration(ping.GetMessageLatencyMs()) * time.Millisecond)
-		err = stream.Send(&testproto.PingResponse{Value: ping.GetValue()})
+		err = stream.Send(&testproto.PingResponse{
+			Value:   ping.GetValue(),
+			Counter: ping.GetResponseCount(),
+		})
 		if err != nil {
 			return err
 		}
@@ -283,8 +345,16 @@ func (s *testSrv) PingBidiStreamError(stream testproto.TestService_PingBidiStrea
 		if ping.GetFailureType() == testproto.PingRequest_CODE {
 			return status.Errorf(codes.Code(ping.ErrorCodeReturned), ping.GetValue())
 		}
+		if ping.FailureType == testproto.PingRequest_DROP {
+			t, _ := transport.StreamFromContext(stream.Context())
+			_ = t.ServerTransport().Close()
+			return status.Errorf(codes.Unavailable, "You got closed. You probably won't see this error")
+		}
 		time.Sleep(time.Duration(ping.GetMessageLatencyMs()) * time.Millisecond)
-		err = stream.Send(&testproto.PingResponse{Value: ping.GetValue()})
+		err = stream.Send(&testproto.PingResponse{
+			Value:   ping.GetValue(),
+			Counter: ping.GetResponseCount(),
+		})
 		if err != nil {
 			return err
 		}

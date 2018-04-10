@@ -1,6 +1,9 @@
 package webdriver_test
 
 import (
+	"context"
+	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"testing"
@@ -9,6 +12,12 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
 	"github.com/sclevine/agouti"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/grpclog"
+
+	testproto "github.com/johanbrandhorst/protobuf/test/server/proto/test"
+	"github.com/johanbrandhorst/protobuf/test/shared"
 )
 
 func TestWebdriver(t *testing.T) {
@@ -48,6 +57,7 @@ var (
 		}),
 		*/
 	)
+	client testproto.TestServiceClient
 )
 
 var _ = BeforeSuite(func() {
@@ -69,6 +79,28 @@ var _ = BeforeSuite(func() {
 			Expect(chromeDriver.Start()).NotTo(HaveOccurred())
 			//Expect(seleniumDriver.Start()).NotTo(HaveOccurred())
 		}
+	})
+
+	By("Dialing the gRPC Server", func() {
+		grpclog.SetLoggerV2(grpclog.NewLoggerV2(os.Stdout, ioutil.Discard, ioutil.Discard))
+		tc, err := credentials.NewClientTLSFromFile("./insecure/localhost.crt", "")
+		Expect(err).NotTo(HaveOccurred())
+		cc, err := grpc.Dial("localhost"+shared.HTTP2Server,
+			grpc.WithBlock(),
+			grpc.WithTransportCredentials(tc),
+			grpc.WithStreamInterceptor(func(ctx context.Context, desc *grpc.StreamDesc, cc *grpc.ClientConn, method string, streamer grpc.Streamer, opts ...grpc.CallOption) (grpc.ClientStream, error) {
+				fmt.Fprintln(GinkgoWriter, "Calling", method)
+				defer func() { fmt.Fprintln(GinkgoWriter, "Finished", method) }()
+				return streamer(ctx, desc, cc, method, opts...)
+			}),
+			grpc.WithUnaryInterceptor(func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+				fmt.Fprintln(GinkgoWriter, "Calling", method)
+				defer func() { fmt.Fprintln(GinkgoWriter, "Finished", method) }()
+				return invoker(ctx, method, req, reply, cc, opts...)
+			}),
+		)
+		Expect(err).NotTo(HaveOccurred())
+		client = testproto.NewTestServiceClient(cc)
 	})
 })
 
