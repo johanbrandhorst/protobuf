@@ -82,6 +82,12 @@
   revision = "283ed655c6b8238afecd5bea6434bc9b03129f2f"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  revision = "816c9085562cd7ee03e7f8188a1cfd942858cded"
+
+[[projects]]
   name = "github.com/rs/cors"
   packages = ["."]
   revision = "7af7a1e09ba336d2ea14b1ce73bf693c6837dbf6"
