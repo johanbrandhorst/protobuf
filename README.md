@@ -4,7 +4,8 @@
 [![GoDoc](https://godoc.org/github.com/johanbrandhorst/protobuf?status.svg)](https://godoc.org/github.com/johanbrandhorst/protobuf)
 [![Gitter chat](https://badges.gitter.im/johanbrandhorst/protobuf.png)](https://gitter.im/gopherjs-protobuf)
 
-![gRPC-Web Gopher by Egon Elbre (@egonelbre)](./logo.svg)
+![gRPC-Web radio operator Gopher by Egon Elbre (@egonelbre)](./logo.svg)
+_gRPC-Web radio operator Gopher by Egon Elbre (@egonelbre)_
 
 ## Users
 A list of some of the users of the library. Send
@@ -30,13 +31,8 @@ This is a simple GopherJS binding around the npm `google-protobuf` package.
 Importing it into any GopherJS source allows usage of ProtobufJS functionality.
 
 ### [GopherJS gRPC-Web Client Bindings](./grpcweb/README.md)
-This is a GopherJS binding around the Improbable gRPC-Web client. It also
-exposes functions for making websocket calls. It is not intended for
-public use.
-
-### [Websocket proxy library](./wsproxy/README.md)
-This is a library for intercepting websocket connections
-and translating them to gRPC streams.
+This is a GopherJS binding around the Improbable gRPC-Web client.
+It is not intended for public use.
 
 ## Contributions
 Contributions are very welcome, please submit issues or PRs for review.
