@@ -23,10 +23,10 @@
   version = "v1.2.0"
 
 [[projects]]
-  branch = "master"
   name = "github.com/improbable-eng/grpc-web"
   packages = ["go/grpcweb"]
-  revision = "6fb683f067bd56862c3a510bc5590b955ce46d2a"
+  revision = "58d1f6c3d97b6d81d7eebd7d26d5942a1d40cb46"
+  version = "0.6.0"
 
 [[projects]]
   branch = "master"
@@ -233,6 +233,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "b24995dd3a513fff482068b6f436db74f6d0b9291161deeb8b831ac929a87d15"
+  inputs-digest = "5d47778ade6f0b565f3310787b329bc428faff647a471adf5edbfaa96c7d11d0"
   solver-name = "gps-cdcl"
   solver-version = 1
