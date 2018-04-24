@@ -13,6 +13,7 @@ me a message on @jbrandhorst on Gophers Slack if you wish
 to be added to this list
 
 * https://github.com/anxiousmodernman/co-chair
+* https://github.com/google/shenzhen-go
 
 ## Getting started
 The easiest way to get started with gRPC-Web for Go is to clone
