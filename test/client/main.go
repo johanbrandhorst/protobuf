@@ -3,9 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"math"
 	"net/url"
-	"reflect"
 
+	"github.com/go-test/deep"
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/rusco/qunit"
 	"google.golang.org/grpc/codes"
@@ -118,18 +119,18 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 	qunit.AsyncTest("Unary call to echo server with many types", func() interface{} {
 		c := types.NewEchoServiceClient(uri + serverAddr)
 		req := &types.TestAllTypes{
-			SingleInt32:       1,
-			SingleInt64:       2,
-			SingleUint32:      3,
-			SingleUint64:      4,
-			SingleSint32:      5,
-			SingleSint64:      6,
-			SingleFixed32:     7,
-			SingleFixed64:     8,
-			SingleSfixed32:    9,
-			SingleSfixed64:    10,
-			SingleFloat:       10.5,
-			SingleDouble:      11.5,
+			SingleInt32:       -math.MaxInt32,
+			SingleInt64:       -math.MaxInt64,
+			SingleUint32:      math.MaxUint32,
+			SingleUint64:      math.MaxUint64,
+			SingleSint32:      -math.MaxInt32,
+			SingleSint64:      -math.MaxInt64,
+			SingleFixed32:     math.MaxUint32,
+			SingleFixed64:     math.MaxUint64,
+			SingleSfixed32:    -math.MaxInt32,
+			SingleSfixed64:    -math.MaxInt64,
+			SingleFloat:       math.MaxFloat32,
+			SingleDouble:      math.MaxFloat64,
 			SingleBool:        true,
 			SingleString:      "Alfred",
 			SingleBytes:       []byte("Megan"),
@@ -140,23 +141,23 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 				HatType: multi.Multi3_FEDORA,
 			},
 			SingleNestedMessage: &types.TestAllTypes_NestedMessage{
-				B: 12,
+				B: math.MaxInt32,
 			},
 			SingleForeignMessage: &types.ForeignMessage{
-				C: 13,
+				C: math.MaxInt32,
 			},
-			RepeatedInt32:       []int32{14, 15},
-			RepeatedInt64:       []int64{16, 17},
-			RepeatedUint32:      []uint32{18, 19},
-			RepeatedUint64:      []uint64{20, 21},
-			RepeatedSint32:      []int32{22, 23},
-			RepeatedSint64:      []int64{24, 25},
-			RepeatedFixed32:     []uint32{26, 27},
-			RepeatedFixed64:     []uint64{28, 29},
-			RepeatedSfixed32:    []int32{30, 31},
-			RepeatedSfixed64:    []int64{32, 33},
-			RepeatedFloat:       []float32{34.33, 35.34},
-			RepeatedDouble:      []float64{36.35, 37.36},
+			RepeatedInt32:       []int32{-math.MaxInt32, math.MaxInt32},
+			RepeatedInt64:       []int64{-math.MaxInt64, math.MaxInt64},
+			RepeatedUint32:      []uint32{0, math.MaxUint32},
+			RepeatedUint64:      []uint64{0, math.MaxUint64},
+			RepeatedSint32:      []int32{-math.MaxInt32, math.MaxInt32},
+			RepeatedSint64:      []int64{-math.MaxInt64, math.MaxInt64},
+			RepeatedFixed32:     []uint32{0, math.MaxUint32},
+			RepeatedFixed64:     []uint64{0, math.MaxUint64},
+			RepeatedSfixed32:    []int32{-math.MaxInt32, math.MaxInt32},
+			RepeatedSfixed64:    []int64{-math.MaxInt64, math.MaxInt64},
+			RepeatedFloat:       []float32{-math.MaxFloat32, math.MaxFloat32},
+			RepeatedDouble:      []float64{-math.MaxFloat64, math.MaxFloat64},
 			RepeatedBool:        []bool{true, false, true},
 			RepeatedString:      []string{"Alfred", "Robin", "Simon"},
 			RepeatedBytes:       [][]byte{[]byte("David"), []byte("Henrik")},
@@ -174,24 +175,24 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 			},
 			RepeatedNestedMessage: []*types.TestAllTypes_NestedMessage{
 				{
-					B: 38,
+					B: -math.MaxInt32,
 				},
 				{
-					B: 39,
+					B: math.MaxInt32,
 				},
 			},
 			RepeatedForeignMessage: []*types.ForeignMessage{
 				{
-					C: 40,
+					C: -math.MaxInt32,
 				},
 				{
-					C: 41,
+					C: math.MaxInt32,
 				},
 			},
 			OneofField: &types.TestAllTypes_OneofImportedMessage{
 				OneofImportedMessage: &multi.Multi1{
 					Multi2: &multi.Multi2{
-						RequiredValue: 42,
+						RequiredValue: math.MaxInt32,
 						Color:         multi.Multi2_BLUE,
 					},
 					Color:   multi.Multi2_RED,
@@ -210,8 +211,12 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 				qunit.Ok(false, "Unexpected error:"+st.Error())
 				return
 			}
-			if !reflect.DeepEqual(req, resp) {
-				qunit.Ok(false, fmt.Sprintf("response and request differed: Req:\n%v\nResp:\n%v", req, resp))
+			if diff := deep.Equal(req, resp); diff != nil {
+				var s string
+				for _, v := range diff {
+					s += "\n" + v
+				}
+				qunit.Ok(false, s)
 				return
 			}
 
@@ -318,8 +323,12 @@ func serverTests(label, serverAddr, emptyServerAddr string) {
 				qunit.Ok(false, "Unexpected error:"+st.Error())
 				return
 			}
-			if !reflect.DeepEqual(req, resp) {
-				qunit.Ok(false, fmt.Sprintf("response and request differed: Req:\n%v\nResp:\n%v", req, resp))
+			if diff := deep.Equal(req, resp); diff != nil {
+				var s string
+				for _, v := range diff {
+					s += "\n" + v
+				}
+				qunit.Ok(false, s)
 				return
 			}
 
