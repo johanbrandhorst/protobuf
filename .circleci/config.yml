@@ -6,7 +6,7 @@ jobs:
     working_directory: /go/src/github.com/johanbrandhorst/protobuf
     steps:
       - checkout
-      - run: go get -u github.com/gopherjs/gopherjs
+      - run: go install ./vendor/github.com/gopherjs/gopherjs
       - run: make build
   dep:
     docker:
@@ -49,8 +49,9 @@ jobs:
           command: >
             make install
 
-            go get -u -v github.com/golang/protobuf/protoc-gen-go
-            github.com/gopherjs/gopherjs
+            go install ./vendor/github.com/golang/protobuf/protoc-gen-go
+
+            go install ./vendor/github.com/gopherjs/gopherjs
       - run:
           name: Regenerate
           command: |

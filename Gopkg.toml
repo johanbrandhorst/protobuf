@@ -1,9 +1,7 @@
-ignored = [
-  "github.com/gopherjs/gopherjs/js",
-]
-
 required = [
   "github.com/onsi/ginkgo/ginkgo",
+  "github.com/golang/protobuf/protoc-gen-go",
+  "github.com/gopherjs/gopherjs",
 ]
 
 [prune]
@@ -12,8 +10,12 @@ required = [
   go-tests = true
 
 [[constraint]]
-  branch = "master"
   name = "github.com/golang/protobuf"
+  version = "=1.0.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/gopherjs/gopherjs"
 
 [[constraint]]
   name = "github.com/improbable-eng/grpc-web"
