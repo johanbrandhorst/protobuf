@@ -74,9 +74,7 @@ func (m *ExtraStuff) String() string            { return proto.CompactTextString
 func (*ExtraStuff) ProtoMessage()               {}
 func (*ExtraStuff) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
-type isExtraStuff_Title interface {
-	isExtraStuff_Title()
-}
+type isExtraStuff_Title interface{ isExtraStuff_Title() }
 
 type ExtraStuff_FirstName struct {
 	FirstName string `protobuf:"bytes,2,opt,name=first_name,json=firstName,oneof"`

@@ -179,9 +179,7 @@ func (m *TestAllTypes) String() string            { return proto.CompactTextStri
 func (*TestAllTypes) ProtoMessage()               {}
 func (*TestAllTypes) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
-type isTestAllTypes_OneofField interface {
-	isTestAllTypes_OneofField()
-}
+type isTestAllTypes_OneofField interface{ isTestAllTypes_OneofField() }
 
 type TestAllTypes_OneofUint32 struct {
 	OneofUint32 uint32 `protobuf:"varint,111,opt,name=oneof_uint32,json=oneofUint32,oneof"`
