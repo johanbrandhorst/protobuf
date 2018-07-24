@@ -52,7 +52,20 @@ func main() {
 	)
 
 	emptyGrpcServer := grpc.NewServer()
-	emptyWrappedServer := grpcweb.WrapServer(emptyGrpcServer, grpcweb.WithCorsForRegisteredEndpointsOnly(false))
+	emptyWrappedServer := grpcweb.WrapServer(emptyGrpcServer,
+		grpcweb.WithWebsockets(true),
+		grpcweb.WithWebsocketOriginFunc(func(req *http.Request) bool {
+			origin := req.Header.Get("Origin")
+			parsedURL, err := url.ParseRequestURI(origin)
+			if err != nil {
+				grpclog.Warningf("Unable to parse url for grpc-websocket origin check: %s. error: %v", origin, err)
+				return false
+			}
+			// Allow connections from any port
+			return stripPort(parsedURL.Host) == stripPort(req.Host)
+		}),
+		grpcweb.WithCorsForRegisteredEndpointsOnly(false),
+	)
 	emptyHandler := func(resp http.ResponseWriter, req *http.Request) {
 		emptyWrappedServer.ServeHTTP(resp, req)
 	}

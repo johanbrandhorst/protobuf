@@ -125,7 +125,7 @@ func TestPing(client TestClient, getStatus func(error) (codes.Code, string)) err
 		ResponseCount: 1,
 	})
 	if err != nil {
-		return errors.WithMessage(err, "send nethier header or trailer")
+		return errors.WithMessage(err, "send neither header or trailer")
 	}
 
 	req := &Request{
