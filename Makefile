@@ -6,6 +6,7 @@ regenerate:
 
 install:
 	cd protoc-gen-gopherjs && go install ./
+	go install ./vendor/github.com/golang/protobuf/protoc-gen-go
 
 .PHONY: test
 test:
