@@ -20,7 +20,10 @@ func (cw ClientWrapper) Ping(ctx context.Context, req *shared.Request, headers, 
 		return nil, err
 	}
 
-	return (*shared.Response)(resp), nil
+	return &shared.Response{
+		Value:   resp.GetValue(),
+		Counter: resp.GetCounter(),
+	}, nil
 }
 
 func (cw ClientWrapper) PingError(ctx context.Context, req *shared.Request) error {

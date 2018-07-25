@@ -7,7 +7,7 @@ regenerate:
 		../protoc-gen-gopherjs/test/multi/multi1.proto \
 		../protoc-gen-gopherjs/test/multi/multi2.proto \
 		../protoc-gen-gopherjs/test/multi/multi3.proto \
-		--go_out=plugins=grpc,Mmulti/multi1.proto=github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/test/multi:./server/proto
+		--go_out=plugins=grpc:${GOPATH}/src
 	protoc -I. -I${GOPATH}/src -I../protoc-gen-gopherjs/test \
 		../protoc-gen-gopherjs/test/types/types.proto \
 		--go_out=plugins=grpc,Mmulti/multi1.proto=github.com/johanbrandhorst/protobuf/test/server/proto/multi:./server/proto
