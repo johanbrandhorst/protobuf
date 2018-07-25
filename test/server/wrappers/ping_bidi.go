@@ -21,7 +21,10 @@ func (pcsw pingBidiStreamWrapper) Recv() (*shared.Response, error) {
 		return nil, err
 	}
 
-	return (*shared.Response)(resp), nil
+	return &shared.Response{
+		Value:   resp.GetValue(),
+		Counter: resp.GetCounter(),
+	}, nil
 }
 
 func (pcsw pingBidiStreamWrapper) Header() (metadata.MD, error) {
@@ -50,7 +53,10 @@ func (pbsew pingBidiStreamErrorWrapper) Recv() (*shared.Response, error) {
 		return nil, err
 	}
 
-	return (*shared.Response)(resp), nil
+	return &shared.Response{
+		Value:   resp.GetValue(),
+		Counter: resp.GetCounter(),
+	}, nil
 }
 
 func (pbsew pingBidiStreamErrorWrapper) CloseSend() error {

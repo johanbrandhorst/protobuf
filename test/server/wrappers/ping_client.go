@@ -21,7 +21,10 @@ func (pcsw pingClientStreamWrapper) CloseAndRecv() (*shared.Response, error) {
 		return nil, err
 	}
 
-	return (*shared.Response)(resp), nil
+	return &shared.Response{
+		Value:   resp.GetValue(),
+		Counter: resp.GetCounter(),
+	}, nil
 }
 
 func (pcsw pingClientStreamWrapper) Header() (metadata.MD, error) {

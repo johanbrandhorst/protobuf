@@ -17,7 +17,10 @@ func (pcsw pingListWrapper) Recv() (*shared.Response, error) {
 		return nil, err
 	}
 
-	return (*shared.Response)(resp), nil
+	return &shared.Response{
+		Value:   resp.GetValue(),
+		Counter: resp.GetCounter(),
+	}, nil
 }
 
 func (pcsw pingListWrapper) Header() (metadata.MD, error) {

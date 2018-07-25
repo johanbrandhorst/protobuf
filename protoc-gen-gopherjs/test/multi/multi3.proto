@@ -36,6 +36,7 @@ package multitest;
 import "github.com/johanbrandhorst/protobuf/proto/gopherjs.proto";
 
 option (gopherjs.gopherjs_package) = "github.com/johanbrandhorst/protobuf/protoc-gen-gopherjs/test/multi";
+option go_package = "github.com/johanbrandhorst/protobuf/test/server/proto/multi";
 
 message Multi3 {
   enum HatType {
