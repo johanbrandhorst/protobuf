@@ -22,7 +22,6 @@ message PingRequest {
   enum FailureType {
     NONE = 0;
     CODE = 1;
-    DROP = 2;
   }
 
   string value = 1;

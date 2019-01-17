@@ -211,12 +211,5 @@ func TestPingClientStream(client TestClient, getStatus func(error) (codes.Code, 
 	req.ErrorCodeReturned = uint32(codes.DataLoss)
 	req.Value = "test"
 	err = testPingClientStreamError(client, req, getStatus)
-	if err != nil {
-		return errors.WithMessage(err, "trigger return code")
-	}
-
-	req.FailureType = DROP
-	req.ErrorCodeReturned = uint32(codes.Internal)
-	req.Value = "error"
-	return errors.WithMessage(testPingClientStreamError(client, req, getStatus), "trigger network error")
+	return errors.WithMessage(err, "trigger return code")
 }

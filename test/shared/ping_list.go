@@ -181,12 +181,5 @@ func TestPingList(client TestClient, getStatus func(error) (codes.Code, string))
 		ErrorCodeReturned: uint32(codes.DataLoss),
 	}
 	err = testPingListError(client, req, getStatus)
-	if err != nil {
-		return errors.WithMessage(err, "trigger return code")
-	}
-
-	req.FailureType = DROP
-	req.ErrorCodeReturned = uint32(codes.Unknown)
-	req.Value = ""
-	return errors.WithMessage(testPingListError(client, req, getStatus), "trigger network error")
+	return errors.WithMessage(err, "trigger return code")
 }
