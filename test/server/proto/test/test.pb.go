@@ -48,7 +48,7 @@ func (x PingRequest_FailureType) String() string {
 	return proto.EnumName(PingRequest_FailureType_name, int32(x))
 }
 func (PingRequest_FailureType) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_test_16492901af3f74e9, []int{1, 0}
+	return fileDescriptor_test_c175bf3ee4cc4a47, []int{1, 0}
 }
 
 type ExtraStuff struct {
@@ -67,7 +67,7 @@ func (m *ExtraStuff) Reset()         { *m = ExtraStuff{} }
 func (m *ExtraStuff) String() string { return proto.CompactTextString(m) }
 func (*ExtraStuff) ProtoMessage()    {}
 func (*ExtraStuff) Descriptor() ([]byte, []int) {
-	return fileDescriptor_test_16492901af3f74e9, []int{0}
+	return fileDescriptor_test_c175bf3ee4cc4a47, []int{0}
 }
 func (m *ExtraStuff) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ExtraStuff.Unmarshal(m, b)
@@ -219,7 +219,7 @@ func (m *PingRequest) Reset()         { *m = PingRequest{} }
 func (m *PingRequest) String() string { return proto.CompactTextString(m) }
 func (*PingRequest) ProtoMessage()    {}
 func (*PingRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_test_16492901af3f74e9, []int{1}
+	return fileDescriptor_test_c175bf3ee4cc4a47, []int{1}
 }
 func (m *PingRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_PingRequest.Unmarshal(m, b)
@@ -307,7 +307,7 @@ func (m *PingResponse) Reset()         { *m = PingResponse{} }
 func (m *PingResponse) String() string { return proto.CompactTextString(m) }
 func (*PingResponse) ProtoMessage()    {}
 func (*PingResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_test_16492901af3f74e9, []int{2}
+	return fileDescriptor_test_c175bf3ee4cc4a47, []int{2}
 }
 func (m *PingResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_PingResponse.Unmarshal(m, b)
@@ -812,9 +812,9 @@ var _TestService_serviceDesc = grpc.ServiceDesc{
 	Metadata: "proto/test/test.proto",
 }
 
-func init() { proto.RegisterFile("proto/test/test.proto", fileDescriptor_test_16492901af3f74e9) }
+func init() { proto.RegisterFile("proto/test/test.proto", fileDescriptor_test_c175bf3ee4cc4a47) }
 
-var fileDescriptor_test_16492901af3f74e9 = []byte{
+var fileDescriptor_test_c175bf3ee4cc4a47 = []byte{
 	// 680 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x54, 0x4f, 0x6f, 0xda, 0x4e,
 	0x10, 0xc5, 0x01, 0x12, 0x18, 0x07, 0x44, 0x36, 0xbf, 0xfc, 0x64, 0x51, 0x45, 0xa1, 0x54, 0x95,

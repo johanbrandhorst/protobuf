@@ -96,10 +96,10 @@ var TestAllTypes_NestedEnum_name = map[int]string{
 }
 var TestAllTypes_NestedEnum_value = map[string]int{
 	"NESTED_ENUM_UNSPECIFIED": 0,
-	"FOO": 1,
-	"BAR": 2,
-	"BAZ": 3,
-	"NEG": -1,
+	"FOO":                     1,
+	"BAR":                     2,
+	"BAZ":                     3,
+	"NEG":                     -1,
 }
 
 func (x TestAllTypes_NestedEnum) String() string {

@@ -51,7 +51,7 @@ func (x ForeignEnum) String() string {
 	return proto.EnumName(ForeignEnum_name, int32(x))
 }
 func (ForeignEnum) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{0}
+	return fileDescriptor_types_2931d3c727cb3502, []int{0}
 }
 
 type MapEnum int32
@@ -77,7 +77,7 @@ func (x MapEnum) String() string {
 	return proto.EnumName(MapEnum_name, int32(x))
 }
 func (MapEnum) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{1}
+	return fileDescriptor_types_2931d3c727cb3502, []int{1}
 }
 
 type TestAllTypes_NestedEnum int32
@@ -99,17 +99,17 @@ var TestAllTypes_NestedEnum_name = map[int32]string{
 }
 var TestAllTypes_NestedEnum_value = map[string]int32{
 	"NESTED_ENUM_UNSPECIFIED": 0,
-	"FOO": 1,
-	"BAR": 2,
-	"BAZ": 3,
-	"NEG": -1,
+	"FOO":                     1,
+	"BAR":                     2,
+	"BAZ":                     3,
+	"NEG":                     -1,
 }
 
 func (x TestAllTypes_NestedEnum) String() string {
 	return proto.EnumName(TestAllTypes_NestedEnum_name, int32(x))
 }
 func (TestAllTypes_NestedEnum) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{0, 0}
+	return fileDescriptor_types_2931d3c727cb3502, []int{0, 0}
 }
 
 // This proto includes every type of field in both singular and repeated
@@ -175,7 +175,7 @@ func (m *TestAllTypes) Reset()         { *m = TestAllTypes{} }
 func (m *TestAllTypes) String() string { return proto.CompactTextString(m) }
 func (*TestAllTypes) ProtoMessage()    {}
 func (*TestAllTypes) Descriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{0}
+	return fileDescriptor_types_2931d3c727cb3502, []int{0}
 }
 func (m *TestAllTypes) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TestAllTypes.Unmarshal(m, b)
@@ -672,7 +672,7 @@ func (m *TestAllTypes_NestedMessage) Reset()         { *m = TestAllTypes_NestedM
 func (m *TestAllTypes_NestedMessage) String() string { return proto.CompactTextString(m) }
 func (*TestAllTypes_NestedMessage) ProtoMessage()    {}
 func (*TestAllTypes_NestedMessage) Descriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{0, 0}
+	return fileDescriptor_types_2931d3c727cb3502, []int{0, 0}
 }
 func (m *TestAllTypes_NestedMessage) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TestAllTypes_NestedMessage.Unmarshal(m, b)
@@ -713,7 +713,7 @@ func (m *NestedTestAllTypes) Reset()         { *m = NestedTestAllTypes{} }
 func (m *NestedTestAllTypes) String() string { return proto.CompactTextString(m) }
 func (*NestedTestAllTypes) ProtoMessage()    {}
 func (*NestedTestAllTypes) Descriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{1}
+	return fileDescriptor_types_2931d3c727cb3502, []int{1}
 }
 func (m *NestedTestAllTypes) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_NestedTestAllTypes.Unmarshal(m, b)
@@ -767,7 +767,7 @@ func (m *ForeignMessage) Reset()         { *m = ForeignMessage{} }
 func (m *ForeignMessage) String() string { return proto.CompactTextString(m) }
 func (*ForeignMessage) ProtoMessage()    {}
 func (*ForeignMessage) Descriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{2}
+	return fileDescriptor_types_2931d3c727cb3502, []int{2}
 }
 func (m *ForeignMessage) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ForeignMessage.Unmarshal(m, b)
@@ -823,7 +823,7 @@ func (m *TestMap) Reset()         { *m = TestMap{} }
 func (m *TestMap) String() string { return proto.CompactTextString(m) }
 func (*TestMap) ProtoMessage()    {}
 func (*TestMap) Descriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{3}
+	return fileDescriptor_types_2931d3c727cb3502, []int{3}
 }
 func (m *TestMap) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TestMap.Unmarshal(m, b)
@@ -1103,9 +1103,9 @@ var _EchoService_serviceDesc = grpc.ServiceDesc{
 	Metadata: "types/types.proto",
 }
 
-func init() { proto.RegisterFile("types/types.proto", fileDescriptor_types_70e44cff411bc46a) }
+func init() { proto.RegisterFile("types/types.proto", fileDescriptor_types_2931d3c727cb3502) }
 
-var fileDescriptor_types_70e44cff411bc46a = []byte{
+var fileDescriptor_types_2931d3c727cb3502 = []byte{
 	// 1766 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x98, 0xeb, 0x52, 0xe3, 0xc8,
 	0x15, 0xc7, 0x2d, 0x84, 0x31, 0x1c, 0xdf, 0xe4, 0x36, 0x17, 0x0d, 0x9b, 0xec, 0xf4, 0x98, 0x25,

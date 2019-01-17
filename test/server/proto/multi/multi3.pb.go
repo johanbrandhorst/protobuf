@@ -39,7 +39,7 @@ func (x Multi3_HatType) String() string {
 	return proto.EnumName(Multi3_HatType_name, int32(x))
 }
 func (Multi3_HatType) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_multi3_66ed3a29e38ba739, []int{0, 0}
+	return fileDescriptor_multi3_4aafaed8c4ac770e, []int{0, 0}
 }
 
 type Multi3 struct {
@@ -53,7 +53,7 @@ func (m *Multi3) Reset()         { *m = Multi3{} }
 func (m *Multi3) String() string { return proto.CompactTextString(m) }
 func (*Multi3) ProtoMessage()    {}
 func (*Multi3) Descriptor() ([]byte, []int) {
-	return fileDescriptor_multi3_66ed3a29e38ba739, []int{0}
+	return fileDescriptor_multi3_4aafaed8c4ac770e, []int{0}
 }
 func (m *Multi3) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Multi3.Unmarshal(m, b)
@@ -85,9 +85,9 @@ func init() {
 	proto.RegisterEnum("multitest.Multi3_HatType", Multi3_HatType_name, Multi3_HatType_value)
 }
 
-func init() { proto.RegisterFile("multi/multi3.proto", fileDescriptor_multi3_66ed3a29e38ba739) }
+func init() { proto.RegisterFile("multi/multi3.proto", fileDescriptor_multi3_4aafaed8c4ac770e) }
 
-var fileDescriptor_multi3_66ed3a29e38ba739 = []byte{
+var fileDescriptor_multi3_4aafaed8c4ac770e = []byte{
 	// 212 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0xca, 0x2d, 0xcd, 0x29,
 	0xc9, 0xd4, 0x07, 0x93, 0xc6, 0x7a, 0x05, 0x45, 0xf9, 0x25, 0xf9, 0x42, 0x9c, 0x60, 0x5e, 0x49,
