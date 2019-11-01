@@ -1,7 +1,7 @@
 all: checkout build
 
 checkout:
-	npm install grpc-web-client@0.6.3 webpack@4.28.4 webpack-cli@3.2.1
+	npm install @improbable-eng/grpc-web@0.11.0 webpack@4.28.4 webpack-cli@3.2.1
 
 build:
 	./node_modules/.bin/webpack
