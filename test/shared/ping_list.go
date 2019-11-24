@@ -52,16 +52,6 @@ func testPingList(client TestClient, req *Request) error {
 		return reportError("number of replies", i, req.ResponseCount)
 	}
 
-	// Headers used as callOptions should not be populated
-	if len(headers) > 0 {
-		return reportError("header", headers, nil)
-	}
-
-	// Trailers used as callOptions should not be populated
-	if len(trailers) > 0 {
-		return reportError("trailer", trailers, nil)
-	}
-
 	h, err := srv.Header()
 	if err != nil {
 		return unexpectedError("header", err)
