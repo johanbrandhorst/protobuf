@@ -1,7 +1,7 @@
 all: checkout build
 
 checkout:
-	npm install @improbable-eng/grpc-web@0.11.0 webpack@4.28.4 webpack-cli@3.2.1
+	npm install @improbable-eng/grpc-web@0.11.0 @improbable-eng/grpc-web-node-http-transport@0.11.0 webpack@4.28.4 webpack-cli@3.2.1
 
 build:
 	./node_modules/.bin/webpack

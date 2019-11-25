@@ -1,12 +1,13 @@
 const resolve = require("path").resolve;
 
 module.exports = {
-  entry: "./node_modules/@improbable-eng/grpc-web/dist/grpc-web-client.js",
+  entry: "./index.js",
   output: {
     path: resolve("."),
     filename: "grpc.inc.js",
     libraryTarget: "this"
   },
+  target: 'node',
   optimization: {
     minimize: true
   },
