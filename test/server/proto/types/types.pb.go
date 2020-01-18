@@ -3,15 +3,14 @@
 
 package types
 
-import proto "github.com/golang/protobuf/proto"
-import fmt "fmt"
-import math "math"
-import _ "github.com/johanbrandhorst/protobuf/proto"
-import multi "github.com/johanbrandhorst/protobuf/test/server/proto/multi"
-
 import (
-	context "golang.org/x/net/context"
+	context "context"
+	fmt "fmt"
+	proto "github.com/golang/protobuf/proto"
+	_ "github.com/johanbrandhorst/protobuf/proto"
+	multi "github.com/johanbrandhorst/protobuf/test/server/proto/multi"
 	grpc "google.golang.org/grpc"
+	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -23,7 +22,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type ForeignEnum int32
 
@@ -40,6 +39,7 @@ var ForeignEnum_name = map[int32]string{
 	5: "FOREIGN_BAR",
 	6: "FOREIGN_BAZ",
 }
+
 var ForeignEnum_value = map[string]int32{
 	"FOREIGN_UNSPECIFIED": 0,
 	"FOREIGN_FOO":         4,
@@ -50,8 +50,9 @@ var ForeignEnum_value = map[string]int32{
 func (x ForeignEnum) String() string {
 	return proto.EnumName(ForeignEnum_name, int32(x))
 }
+
 func (ForeignEnum) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{0}
+	return fileDescriptor_2c0f90c600ad7e2e, []int{0}
 }
 
 type MapEnum int32
@@ -67,6 +68,7 @@ var MapEnum_name = map[int32]string{
 	1: "MAP_ENUM_BAR",
 	2: "MAP_ENUM_BAZ",
 }
+
 var MapEnum_value = map[string]int32{
 	"MAP_ENUM_FOO": 0,
 	"MAP_ENUM_BAR": 1,
@@ -76,8 +78,9 @@ var MapEnum_value = map[string]int32{
 func (x MapEnum) String() string {
 	return proto.EnumName(MapEnum_name, int32(x))
 }
+
 func (MapEnum) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{1}
+	return fileDescriptor_2c0f90c600ad7e2e, []int{1}
 }
 
 type TestAllTypes_NestedEnum int32
@@ -97,66 +100,68 @@ var TestAllTypes_NestedEnum_name = map[int32]string{
 	3:  "BAZ",
 	-1: "NEG",
 }
+
 var TestAllTypes_NestedEnum_value = map[string]int32{
 	"NESTED_ENUM_UNSPECIFIED": 0,
-	"FOO": 1,
-	"BAR": 2,
-	"BAZ": 3,
-	"NEG": -1,
+	"FOO":                     1,
+	"BAR":                     2,
+	"BAZ":                     3,
+	"NEG":                     -1,
 }
 
 func (x TestAllTypes_NestedEnum) String() string {
 	return proto.EnumName(TestAllTypes_NestedEnum_name, int32(x))
 }
+
 func (TestAllTypes_NestedEnum) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{0, 0}
+	return fileDescriptor_2c0f90c600ad7e2e, []int{0, 0}
 }
 
 // This proto includes every type of field in both singular and repeated
 // forms.
 type TestAllTypes struct {
 	// Singular
-	SingleInt32           int32                       `protobuf:"varint,1,opt,name=single_int32,json=singleInt32" json:"single_int32,omitempty"`
-	SingleInt64           int64                       `protobuf:"varint,2,opt,name=single_int64,json=singleInt64" json:"single_int64,omitempty"`
-	SingleUint32          uint32                      `protobuf:"varint,3,opt,name=single_uint32,json=singleUint32" json:"single_uint32,omitempty"`
-	SingleUint64          uint64                      `protobuf:"varint,4,opt,name=single_uint64,json=singleUint64" json:"single_uint64,omitempty"`
-	SingleSint32          int32                       `protobuf:"zigzag32,5,opt,name=single_sint32,json=singleSint32" json:"single_sint32,omitempty"`
-	SingleSint64          int64                       `protobuf:"zigzag64,6,opt,name=single_sint64,json=singleSint64" json:"single_sint64,omitempty"`
-	SingleFixed32         uint32                      `protobuf:"fixed32,7,opt,name=single_fixed32,json=singleFixed32" json:"single_fixed32,omitempty"`
-	SingleFixed64         uint64                      `protobuf:"fixed64,8,opt,name=single_fixed64,json=singleFixed64" json:"single_fixed64,omitempty"`
-	SingleSfixed32        int32                       `protobuf:"fixed32,9,opt,name=single_sfixed32,json=singleSfixed32" json:"single_sfixed32,omitempty"`
-	SingleSfixed64        int64                       `protobuf:"fixed64,10,opt,name=single_sfixed64,json=singleSfixed64" json:"single_sfixed64,omitempty"`
-	SingleFloat           float32                     `protobuf:"fixed32,11,opt,name=single_float,json=singleFloat" json:"single_float,omitempty"`
-	SingleDouble          float64                     `protobuf:"fixed64,12,opt,name=single_double,json=singleDouble" json:"single_double,omitempty"`
-	SingleBool            bool                        `protobuf:"varint,13,opt,name=single_bool,json=singleBool" json:"single_bool,omitempty"`
-	SingleString          string                      `protobuf:"bytes,14,opt,name=single_string,json=singleString" json:"single_string,omitempty"`
+	SingleInt32           int32                       `protobuf:"varint,1,opt,name=single_int32,json=singleInt32,proto3" json:"single_int32,omitempty"`
+	SingleInt64           int64                       `protobuf:"varint,2,opt,name=single_int64,json=singleInt64,proto3" json:"single_int64,omitempty"`
+	SingleUint32          uint32                      `protobuf:"varint,3,opt,name=single_uint32,json=singleUint32,proto3" json:"single_uint32,omitempty"`
+	SingleUint64          uint64                      `protobuf:"varint,4,opt,name=single_uint64,json=singleUint64,proto3" json:"single_uint64,omitempty"`
+	SingleSint32          int32                       `protobuf:"zigzag32,5,opt,name=single_sint32,json=singleSint32,proto3" json:"single_sint32,omitempty"`
+	SingleSint64          int64                       `protobuf:"zigzag64,6,opt,name=single_sint64,json=singleSint64,proto3" json:"single_sint64,omitempty"`
+	SingleFixed32         uint32                      `protobuf:"fixed32,7,opt,name=single_fixed32,json=singleFixed32,proto3" json:"single_fixed32,omitempty"`
+	SingleFixed64         uint64                      `protobuf:"fixed64,8,opt,name=single_fixed64,json=singleFixed64,proto3" json:"single_fixed64,omitempty"`
+	SingleSfixed32        int32                       `protobuf:"fixed32,9,opt,name=single_sfixed32,json=singleSfixed32,proto3" json:"single_sfixed32,omitempty"`
+	SingleSfixed64        int64                       `protobuf:"fixed64,10,opt,name=single_sfixed64,json=singleSfixed64,proto3" json:"single_sfixed64,omitempty"`
+	SingleFloat           float32                     `protobuf:"fixed32,11,opt,name=single_float,json=singleFloat,proto3" json:"single_float,omitempty"`
+	SingleDouble          float64                     `protobuf:"fixed64,12,opt,name=single_double,json=singleDouble,proto3" json:"single_double,omitempty"`
+	SingleBool            bool                        `protobuf:"varint,13,opt,name=single_bool,json=singleBool,proto3" json:"single_bool,omitempty"`
+	SingleString          string                      `protobuf:"bytes,14,opt,name=single_string,json=singleString,proto3" json:"single_string,omitempty"`
 	SingleBytes           []byte                      `protobuf:"bytes,15,opt,name=single_bytes,json=singleBytes,proto3" json:"single_bytes,omitempty"`
-	SingleImportedMessage *multi.Multi1               `protobuf:"bytes,16,opt,name=single_imported_message,json=singleImportedMessage" json:"single_imported_message,omitempty"`
-	SingleNestedMessage   *TestAllTypes_NestedMessage `protobuf:"bytes,18,opt,name=single_nested_message,json=singleNestedMessage" json:"single_nested_message,omitempty"`
-	SingleForeignMessage  *ForeignMessage             `protobuf:"bytes,19,opt,name=single_foreign_message,json=singleForeignMessage" json:"single_foreign_message,omitempty"`
-	SingleNestedEnum      TestAllTypes_NestedEnum     `protobuf:"varint,21,opt,name=single_nested_enum,json=singleNestedEnum,enum=types.TestAllTypes_NestedEnum" json:"single_nested_enum,omitempty"`
-	SingleForeignEnum     ForeignEnum                 `protobuf:"varint,22,opt,name=single_foreign_enum,json=singleForeignEnum,enum=types.ForeignEnum" json:"single_foreign_enum,omitempty"`
+	SingleImportedMessage *multi.Multi1               `protobuf:"bytes,16,opt,name=single_imported_message,json=singleImportedMessage,proto3" json:"single_imported_message,omitempty"`
+	SingleNestedMessage   *TestAllTypes_NestedMessage `protobuf:"bytes,18,opt,name=single_nested_message,json=singleNestedMessage,proto3" json:"single_nested_message,omitempty"`
+	SingleForeignMessage  *ForeignMessage             `protobuf:"bytes,19,opt,name=single_foreign_message,json=singleForeignMessage,proto3" json:"single_foreign_message,omitempty"`
+	SingleNestedEnum      TestAllTypes_NestedEnum     `protobuf:"varint,21,opt,name=single_nested_enum,json=singleNestedEnum,proto3,enum=types.TestAllTypes_NestedEnum" json:"single_nested_enum,omitempty"`
+	SingleForeignEnum     ForeignEnum                 `protobuf:"varint,22,opt,name=single_foreign_enum,json=singleForeignEnum,proto3,enum=types.ForeignEnum" json:"single_foreign_enum,omitempty"`
 	// Repeated
-	RepeatedInt32           []int32                       `protobuf:"varint,31,rep,packed,name=repeated_int32,json=repeatedInt32" json:"repeated_int32,omitempty"`
-	RepeatedInt64           []int64                       `protobuf:"varint,32,rep,packed,name=repeated_int64,json=repeatedInt64" json:"repeated_int64,omitempty"`
-	RepeatedUint32          []uint32                      `protobuf:"varint,33,rep,packed,name=repeated_uint32,json=repeatedUint32" json:"repeated_uint32,omitempty"`
-	RepeatedUint64          []uint64                      `protobuf:"varint,34,rep,packed,name=repeated_uint64,json=repeatedUint64" json:"repeated_uint64,omitempty"`
-	RepeatedSint32          []int32                       `protobuf:"zigzag32,35,rep,packed,name=repeated_sint32,json=repeatedSint32" json:"repeated_sint32,omitempty"`
-	RepeatedSint64          []int64                       `protobuf:"zigzag64,36,rep,packed,name=repeated_sint64,json=repeatedSint64" json:"repeated_sint64,omitempty"`
-	RepeatedFixed32         []uint32                      `protobuf:"fixed32,37,rep,packed,name=repeated_fixed32,json=repeatedFixed32" json:"repeated_fixed32,omitempty"`
-	RepeatedFixed64         []uint64                      `protobuf:"fixed64,38,rep,packed,name=repeated_fixed64,json=repeatedFixed64" json:"repeated_fixed64,omitempty"`
-	RepeatedSfixed32        []int32                       `protobuf:"fixed32,39,rep,packed,name=repeated_sfixed32,json=repeatedSfixed32" json:"repeated_sfixed32,omitempty"`
-	RepeatedSfixed64        []int64                       `protobuf:"fixed64,40,rep,packed,name=repeated_sfixed64,json=repeatedSfixed64" json:"repeated_sfixed64,omitempty"`
-	RepeatedFloat           []float32                     `protobuf:"fixed32,41,rep,packed,name=repeated_float,json=repeatedFloat" json:"repeated_float,omitempty"`
-	RepeatedDouble          []float64                     `protobuf:"fixed64,42,rep,packed,name=repeated_double,json=repeatedDouble" json:"repeated_double,omitempty"`
-	RepeatedBool            []bool                        `protobuf:"varint,43,rep,packed,name=repeated_bool,json=repeatedBool" json:"repeated_bool,omitempty"`
-	RepeatedString          []string                      `protobuf:"bytes,44,rep,name=repeated_string,json=repeatedString" json:"repeated_string,omitempty"`
+	RepeatedInt32           []int32                       `protobuf:"varint,31,rep,packed,name=repeated_int32,json=repeatedInt32,proto3" json:"repeated_int32,omitempty"`
+	RepeatedInt64           []int64                       `protobuf:"varint,32,rep,packed,name=repeated_int64,json=repeatedInt64,proto3" json:"repeated_int64,omitempty"`
+	RepeatedUint32          []uint32                      `protobuf:"varint,33,rep,packed,name=repeated_uint32,json=repeatedUint32,proto3" json:"repeated_uint32,omitempty"`
+	RepeatedUint64          []uint64                      `protobuf:"varint,34,rep,packed,name=repeated_uint64,json=repeatedUint64,proto3" json:"repeated_uint64,omitempty"`
+	RepeatedSint32          []int32                       `protobuf:"zigzag32,35,rep,packed,name=repeated_sint32,json=repeatedSint32,proto3" json:"repeated_sint32,omitempty"`
+	RepeatedSint64          []int64                       `protobuf:"zigzag64,36,rep,packed,name=repeated_sint64,json=repeatedSint64,proto3" json:"repeated_sint64,omitempty"`
+	RepeatedFixed32         []uint32                      `protobuf:"fixed32,37,rep,packed,name=repeated_fixed32,json=repeatedFixed32,proto3" json:"repeated_fixed32,omitempty"`
+	RepeatedFixed64         []uint64                      `protobuf:"fixed64,38,rep,packed,name=repeated_fixed64,json=repeatedFixed64,proto3" json:"repeated_fixed64,omitempty"`
+	RepeatedSfixed32        []int32                       `protobuf:"fixed32,39,rep,packed,name=repeated_sfixed32,json=repeatedSfixed32,proto3" json:"repeated_sfixed32,omitempty"`
+	RepeatedSfixed64        []int64                       `protobuf:"fixed64,40,rep,packed,name=repeated_sfixed64,json=repeatedSfixed64,proto3" json:"repeated_sfixed64,omitempty"`
+	RepeatedFloat           []float32                     `protobuf:"fixed32,41,rep,packed,name=repeated_float,json=repeatedFloat,proto3" json:"repeated_float,omitempty"`
+	RepeatedDouble          []float64                     `protobuf:"fixed64,42,rep,packed,name=repeated_double,json=repeatedDouble,proto3" json:"repeated_double,omitempty"`
+	RepeatedBool            []bool                        `protobuf:"varint,43,rep,packed,name=repeated_bool,json=repeatedBool,proto3" json:"repeated_bool,omitempty"`
+	RepeatedString          []string                      `protobuf:"bytes,44,rep,name=repeated_string,json=repeatedString,proto3" json:"repeated_string,omitempty"`
 	RepeatedBytes           [][]byte                      `protobuf:"bytes,45,rep,name=repeated_bytes,json=repeatedBytes,proto3" json:"repeated_bytes,omitempty"`
-	RepeatedImportedMessage []*multi.Multi1               `protobuf:"bytes,46,rep,name=repeated_imported_message,json=repeatedImportedMessage" json:"repeated_imported_message,omitempty"`
-	RepeatedNestedMessage   []*TestAllTypes_NestedMessage `protobuf:"bytes,48,rep,name=repeated_nested_message,json=repeatedNestedMessage" json:"repeated_nested_message,omitempty"`
-	RepeatedForeignMessage  []*ForeignMessage             `protobuf:"bytes,49,rep,name=repeated_foreign_message,json=repeatedForeignMessage" json:"repeated_foreign_message,omitempty"`
-	RepeatedNestedEnum      []TestAllTypes_NestedEnum     `protobuf:"varint,51,rep,packed,name=repeated_nested_enum,json=repeatedNestedEnum,enum=types.TestAllTypes_NestedEnum" json:"repeated_nested_enum,omitempty"`
-	RepeatedForeignEnum     []ForeignEnum                 `protobuf:"varint,52,rep,packed,name=repeated_foreign_enum,json=repeatedForeignEnum,enum=types.ForeignEnum" json:"repeated_foreign_enum,omitempty"`
+	RepeatedImportedMessage []*multi.Multi1               `protobuf:"bytes,46,rep,name=repeated_imported_message,json=repeatedImportedMessage,proto3" json:"repeated_imported_message,omitempty"`
+	RepeatedNestedMessage   []*TestAllTypes_NestedMessage `protobuf:"bytes,48,rep,name=repeated_nested_message,json=repeatedNestedMessage,proto3" json:"repeated_nested_message,omitempty"`
+	RepeatedForeignMessage  []*ForeignMessage             `protobuf:"bytes,49,rep,name=repeated_foreign_message,json=repeatedForeignMessage,proto3" json:"repeated_foreign_message,omitempty"`
+	RepeatedNestedEnum      []TestAllTypes_NestedEnum     `protobuf:"varint,51,rep,packed,name=repeated_nested_enum,json=repeatedNestedEnum,proto3,enum=types.TestAllTypes_NestedEnum" json:"repeated_nested_enum,omitempty"`
+	RepeatedForeignEnum     []ForeignEnum                 `protobuf:"varint,52,rep,packed,name=repeated_foreign_enum,json=repeatedForeignEnum,proto3,enum=types.ForeignEnum" json:"repeated_foreign_enum,omitempty"`
 	// For oneof test
 	//
 	// Types that are valid to be assigned to OneofField:
@@ -175,16 +180,17 @@ func (m *TestAllTypes) Reset()         { *m = TestAllTypes{} }
 func (m *TestAllTypes) String() string { return proto.CompactTextString(m) }
 func (*TestAllTypes) ProtoMessage()    {}
 func (*TestAllTypes) Descriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{0}
+	return fileDescriptor_2c0f90c600ad7e2e, []int{0}
 }
+
 func (m *TestAllTypes) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TestAllTypes.Unmarshal(m, b)
 }
 func (m *TestAllTypes) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_TestAllTypes.Marshal(b, m, deterministic)
 }
-func (dst *TestAllTypes) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TestAllTypes.Merge(dst, src)
+func (m *TestAllTypes) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TestAllTypes.Merge(m, src)
 }
 func (m *TestAllTypes) XXX_Size() int {
 	return xxx_messageInfo_TestAllTypes.Size(m)
@@ -194,39 +200,6 @@ func (m *TestAllTypes) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_TestAllTypes proto.InternalMessageInfo
-
-type isTestAllTypes_OneofField interface {
-	isTestAllTypes_OneofField()
-}
-
-type TestAllTypes_OneofUint32 struct {
-	OneofUint32 uint32 `protobuf:"varint,111,opt,name=oneof_uint32,json=oneofUint32,oneof"`
-}
-type TestAllTypes_OneofNestedMessage struct {
-	OneofNestedMessage *TestAllTypes_NestedMessage `protobuf:"bytes,112,opt,name=oneof_nested_message,json=oneofNestedMessage,oneof"`
-}
-type TestAllTypes_OneofString struct {
-	OneofString string `protobuf:"bytes,113,opt,name=oneof_string,json=oneofString,oneof"`
-}
-type TestAllTypes_OneofBytes struct {
-	OneofBytes []byte `protobuf:"bytes,114,opt,name=oneof_bytes,json=oneofBytes,proto3,oneof"`
-}
-type TestAllTypes_OneofImportedMessage struct {
-	OneofImportedMessage *multi.Multi1 `protobuf:"bytes,115,opt,name=oneof_imported_message,json=oneofImportedMessage,oneof"`
-}
-
-func (*TestAllTypes_OneofUint32) isTestAllTypes_OneofField()          {}
-func (*TestAllTypes_OneofNestedMessage) isTestAllTypes_OneofField()   {}
-func (*TestAllTypes_OneofString) isTestAllTypes_OneofField()          {}
-func (*TestAllTypes_OneofBytes) isTestAllTypes_OneofField()           {}
-func (*TestAllTypes_OneofImportedMessage) isTestAllTypes_OneofField() {}
-
-func (m *TestAllTypes) GetOneofField() isTestAllTypes_OneofField {
-	if m != nil {
-		return m.OneofField
-	}
-	return nil
-}
 
 func (m *TestAllTypes) GetSingleInt32() int32 {
 	if m != nil {
@@ -508,6 +481,47 @@ func (m *TestAllTypes) GetRepeatedForeignEnum() []ForeignEnum {
 	return nil
 }
 
+type isTestAllTypes_OneofField interface {
+	isTestAllTypes_OneofField()
+}
+
+type TestAllTypes_OneofUint32 struct {
+	OneofUint32 uint32 `protobuf:"varint,111,opt,name=oneof_uint32,json=oneofUint32,proto3,oneof"`
+}
+
+type TestAllTypes_OneofNestedMessage struct {
+	OneofNestedMessage *TestAllTypes_NestedMessage `protobuf:"bytes,112,opt,name=oneof_nested_message,json=oneofNestedMessage,proto3,oneof"`
+}
+
+type TestAllTypes_OneofString struct {
+	OneofString string `protobuf:"bytes,113,opt,name=oneof_string,json=oneofString,proto3,oneof"`
+}
+
+type TestAllTypes_OneofBytes struct {
+	OneofBytes []byte `protobuf:"bytes,114,opt,name=oneof_bytes,json=oneofBytes,proto3,oneof"`
+}
+
+type TestAllTypes_OneofImportedMessage struct {
+	OneofImportedMessage *multi.Multi1 `protobuf:"bytes,115,opt,name=oneof_imported_message,json=oneofImportedMessage,proto3,oneof"`
+}
+
+func (*TestAllTypes_OneofUint32) isTestAllTypes_OneofField() {}
+
+func (*TestAllTypes_OneofNestedMessage) isTestAllTypes_OneofField() {}
+
+func (*TestAllTypes_OneofString) isTestAllTypes_OneofField() {}
+
+func (*TestAllTypes_OneofBytes) isTestAllTypes_OneofField() {}
+
+func (*TestAllTypes_OneofImportedMessage) isTestAllTypes_OneofField() {}
+
+func (m *TestAllTypes) GetOneofField() isTestAllTypes_OneofField {
+	if m != nil {
+		return m.OneofField
+	}
+	return nil
+}
+
 func (m *TestAllTypes) GetOneofUint32() uint32 {
 	if x, ok := m.GetOneofField().(*TestAllTypes_OneofUint32); ok {
 		return x.OneofUint32
@@ -543,9 +557,9 @@ func (m *TestAllTypes) GetOneofImportedMessage() *multi.Multi1 {
 	return nil
 }
 
-// XXX_OneofFuncs is for the internal use of the proto package.
-func (*TestAllTypes) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
-	return _TestAllTypes_OneofMarshaler, _TestAllTypes_OneofUnmarshaler, _TestAllTypes_OneofSizer, []interface{}{
+// XXX_OneofWrappers is for the internal use of the proto package.
+func (*TestAllTypes) XXX_OneofWrappers() []interface{} {
+	return []interface{}{
 		(*TestAllTypes_OneofUint32)(nil),
 		(*TestAllTypes_OneofNestedMessage)(nil),
 		(*TestAllTypes_OneofString)(nil),
@@ -554,115 +568,8 @@ func (*TestAllTypes) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) 
 	}
 }
 
-func _TestAllTypes_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
-	m := msg.(*TestAllTypes)
-	// oneof_field
-	switch x := m.OneofField.(type) {
-	case *TestAllTypes_OneofUint32:
-		b.EncodeVarint(111<<3 | proto.WireVarint)
-		b.EncodeVarint(uint64(x.OneofUint32))
-	case *TestAllTypes_OneofNestedMessage:
-		b.EncodeVarint(112<<3 | proto.WireBytes)
-		if err := b.EncodeMessage(x.OneofNestedMessage); err != nil {
-			return err
-		}
-	case *TestAllTypes_OneofString:
-		b.EncodeVarint(113<<3 | proto.WireBytes)
-		b.EncodeStringBytes(x.OneofString)
-	case *TestAllTypes_OneofBytes:
-		b.EncodeVarint(114<<3 | proto.WireBytes)
-		b.EncodeRawBytes(x.OneofBytes)
-	case *TestAllTypes_OneofImportedMessage:
-		b.EncodeVarint(115<<3 | proto.WireBytes)
-		if err := b.EncodeMessage(x.OneofImportedMessage); err != nil {
-			return err
-		}
-	case nil:
-	default:
-		return fmt.Errorf("TestAllTypes.OneofField has unexpected type %T", x)
-	}
-	return nil
-}
-
-func _TestAllTypes_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
-	m := msg.(*TestAllTypes)
-	switch tag {
-	case 111: // oneof_field.oneof_uint32
-		if wire != proto.WireVarint {
-			return true, proto.ErrInternalBadWireType
-		}
-		x, err := b.DecodeVarint()
-		m.OneofField = &TestAllTypes_OneofUint32{uint32(x)}
-		return true, err
-	case 112: // oneof_field.oneof_nested_message
-		if wire != proto.WireBytes {
-			return true, proto.ErrInternalBadWireType
-		}
-		msg := new(TestAllTypes_NestedMessage)
-		err := b.DecodeMessage(msg)
-		m.OneofField = &TestAllTypes_OneofNestedMessage{msg}
-		return true, err
-	case 113: // oneof_field.oneof_string
-		if wire != proto.WireBytes {
-			return true, proto.ErrInternalBadWireType
-		}
-		x, err := b.DecodeStringBytes()
-		m.OneofField = &TestAllTypes_OneofString{x}
-		return true, err
-	case 114: // oneof_field.oneof_bytes
-		if wire != proto.WireBytes {
-			return true, proto.ErrInternalBadWireType
-		}
-		x, err := b.DecodeRawBytes(true)
-		m.OneofField = &TestAllTypes_OneofBytes{x}
-		return true, err
-	case 115: // oneof_field.oneof_imported_message
-		if wire != proto.WireBytes {
-			return true, proto.ErrInternalBadWireType
-		}
-		msg := new(multi.Multi1)
-		err := b.DecodeMessage(msg)
-		m.OneofField = &TestAllTypes_OneofImportedMessage{msg}
-		return true, err
-	default:
-		return false, nil
-	}
-}
-
-func _TestAllTypes_OneofSizer(msg proto.Message) (n int) {
-	m := msg.(*TestAllTypes)
-	// oneof_field
-	switch x := m.OneofField.(type) {
-	case *TestAllTypes_OneofUint32:
-		n += 2 // tag and wire
-		n += proto.SizeVarint(uint64(x.OneofUint32))
-	case *TestAllTypes_OneofNestedMessage:
-		s := proto.Size(x.OneofNestedMessage)
-		n += 2 // tag and wire
-		n += proto.SizeVarint(uint64(s))
-		n += s
-	case *TestAllTypes_OneofString:
-		n += 2 // tag and wire
-		n += proto.SizeVarint(uint64(len(x.OneofString)))
-		n += len(x.OneofString)
-	case *TestAllTypes_OneofBytes:
-		n += 2 // tag and wire
-		n += proto.SizeVarint(uint64(len(x.OneofBytes)))
-		n += len(x.OneofBytes)
-	case *TestAllTypes_OneofImportedMessage:
-		s := proto.Size(x.OneofImportedMessage)
-		n += 2 // tag and wire
-		n += proto.SizeVarint(uint64(s))
-		n += s
-	case nil:
-	default:
-		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
-	}
-	return n
-}
-
 type TestAllTypes_NestedMessage struct {
-	B                    int32    `protobuf:"varint,1,opt,name=b" json:"b,omitempty"`
+	B                    int32    `protobuf:"varint,1,opt,name=b,proto3" json:"b,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -672,16 +579,17 @@ func (m *TestAllTypes_NestedMessage) Reset()         { *m = TestAllTypes_NestedM
 func (m *TestAllTypes_NestedMessage) String() string { return proto.CompactTextString(m) }
 func (*TestAllTypes_NestedMessage) ProtoMessage()    {}
 func (*TestAllTypes_NestedMessage) Descriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{0, 0}
+	return fileDescriptor_2c0f90c600ad7e2e, []int{0, 0}
 }
+
 func (m *TestAllTypes_NestedMessage) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TestAllTypes_NestedMessage.Unmarshal(m, b)
 }
 func (m *TestAllTypes_NestedMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_TestAllTypes_NestedMessage.Marshal(b, m, deterministic)
 }
-func (dst *TestAllTypes_NestedMessage) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TestAllTypes_NestedMessage.Merge(dst, src)
+func (m *TestAllTypes_NestedMessage) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TestAllTypes_NestedMessage.Merge(m, src)
 }
 func (m *TestAllTypes_NestedMessage) XXX_Size() int {
 	return xxx_messageInfo_TestAllTypes_NestedMessage.Size(m)
@@ -701,9 +609,9 @@ func (m *TestAllTypes_NestedMessage) GetB() int32 {
 
 // This proto includes a recusively nested message.
 type NestedTestAllTypes struct {
-	Child                *NestedTestAllTypes   `protobuf:"bytes,1,opt,name=child" json:"child,omitempty"`
-	Payload              *TestAllTypes         `protobuf:"bytes,2,opt,name=payload" json:"payload,omitempty"`
-	RepeatedChild        []*NestedTestAllTypes `protobuf:"bytes,3,rep,name=repeated_child,json=repeatedChild" json:"repeated_child,omitempty"`
+	Child                *NestedTestAllTypes   `protobuf:"bytes,1,opt,name=child,proto3" json:"child,omitempty"`
+	Payload              *TestAllTypes         `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
+	RepeatedChild        []*NestedTestAllTypes `protobuf:"bytes,3,rep,name=repeated_child,json=repeatedChild,proto3" json:"repeated_child,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
 	XXX_unrecognized     []byte                `json:"-"`
 	XXX_sizecache        int32                 `json:"-"`
@@ -713,16 +621,17 @@ func (m *NestedTestAllTypes) Reset()         { *m = NestedTestAllTypes{} }
 func (m *NestedTestAllTypes) String() string { return proto.CompactTextString(m) }
 func (*NestedTestAllTypes) ProtoMessage()    {}
 func (*NestedTestAllTypes) Descriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{1}
+	return fileDescriptor_2c0f90c600ad7e2e, []int{1}
 }
+
 func (m *NestedTestAllTypes) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_NestedTestAllTypes.Unmarshal(m, b)
 }
 func (m *NestedTestAllTypes) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_NestedTestAllTypes.Marshal(b, m, deterministic)
 }
-func (dst *NestedTestAllTypes) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_NestedTestAllTypes.Merge(dst, src)
+func (m *NestedTestAllTypes) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_NestedTestAllTypes.Merge(m, src)
 }
 func (m *NestedTestAllTypes) XXX_Size() int {
 	return xxx_messageInfo_NestedTestAllTypes.Size(m)
@@ -757,7 +666,7 @@ func (m *NestedTestAllTypes) GetRepeatedChild() []*NestedTestAllTypes {
 // Define these after TestAllTypes to make sure the compiler can handle
 // that.
 type ForeignMessage struct {
-	C                    int32    `protobuf:"varint,1,opt,name=c" json:"c,omitempty"`
+	C                    int32    `protobuf:"varint,1,opt,name=c,proto3" json:"c,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -767,16 +676,17 @@ func (m *ForeignMessage) Reset()         { *m = ForeignMessage{} }
 func (m *ForeignMessage) String() string { return proto.CompactTextString(m) }
 func (*ForeignMessage) ProtoMessage()    {}
 func (*ForeignMessage) Descriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{2}
+	return fileDescriptor_2c0f90c600ad7e2e, []int{2}
 }
+
 func (m *ForeignMessage) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ForeignMessage.Unmarshal(m, b)
 }
 func (m *ForeignMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_ForeignMessage.Marshal(b, m, deterministic)
 }
-func (dst *ForeignMessage) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ForeignMessage.Merge(dst, src)
+func (m *ForeignMessage) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ForeignMessage.Merge(m, src)
 }
 func (m *ForeignMessage) XXX_Size() int {
 	return xxx_messageInfo_ForeignMessage.Size(m)
@@ -796,24 +706,24 @@ func (m *ForeignMessage) GetC() int32 {
 
 // Tests maps.
 type TestMap struct {
-	MapInt32Int32           map[int32]int32           `protobuf:"bytes,1,rep,name=map_int32_int32,json=mapInt32Int32" json:"map_int32_int32,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	MapInt64Int64           map[int64]int64           `protobuf:"bytes,2,rep,name=map_int64_int64,json=mapInt64Int64" json:"map_int64_int64,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	MapUint32Uint32         map[uint32]uint32         `protobuf:"bytes,3,rep,name=map_uint32_uint32,json=mapUint32Uint32" json:"map_uint32_uint32,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	MapUint64Uint64         map[uint64]uint64         `protobuf:"bytes,4,rep,name=map_uint64_uint64,json=mapUint64Uint64" json:"map_uint64_uint64,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	MapSint32Sint32         map[int32]int32           `protobuf:"bytes,5,rep,name=map_sint32_sint32,json=mapSint32Sint32" json:"map_sint32_sint32,omitempty" protobuf_key:"zigzag32,1,opt,name=key" protobuf_val:"zigzag32,2,opt,name=value"`
-	MapSint64Sint64         map[int64]int64           `protobuf:"bytes,6,rep,name=map_sint64_sint64,json=mapSint64Sint64" json:"map_sint64_sint64,omitempty" protobuf_key:"zigzag64,1,opt,name=key" protobuf_val:"zigzag64,2,opt,name=value"`
-	MapFixed32Fixed32       map[uint32]uint32         `protobuf:"bytes,7,rep,name=map_fixed32_fixed32,json=mapFixed32Fixed32" json:"map_fixed32_fixed32,omitempty" protobuf_key:"fixed32,1,opt,name=key" protobuf_val:"fixed32,2,opt,name=value"`
-	MapFixed64Fixed64       map[uint64]uint64         `protobuf:"bytes,8,rep,name=map_fixed64_fixed64,json=mapFixed64Fixed64" json:"map_fixed64_fixed64,omitempty" protobuf_key:"fixed64,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"`
-	MapSfixed32Sfixed32     map[int32]int32           `protobuf:"bytes,9,rep,name=map_sfixed32_sfixed32,json=mapSfixed32Sfixed32" json:"map_sfixed32_sfixed32,omitempty" protobuf_key:"fixed32,1,opt,name=key" protobuf_val:"fixed32,2,opt,name=value"`
-	MapSfixed64Sfixed64     map[int64]int64           `protobuf:"bytes,10,rep,name=map_sfixed64_sfixed64,json=mapSfixed64Sfixed64" json:"map_sfixed64_sfixed64,omitempty" protobuf_key:"fixed64,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"`
-	MapInt32Float           map[int32]float32         `protobuf:"bytes,11,rep,name=map_int32_float,json=mapInt32Float" json:"map_int32_float,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"fixed32,2,opt,name=value"`
-	MapInt32Double          map[int32]float64         `protobuf:"bytes,12,rep,name=map_int32_double,json=mapInt32Double" json:"map_int32_double,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"`
-	MapBoolBool             map[bool]bool             `protobuf:"bytes,13,rep,name=map_bool_bool,json=mapBoolBool" json:"map_bool_bool,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	MapStringString         map[string]string         `protobuf:"bytes,14,rep,name=map_string_string,json=mapStringString" json:"map_string_string,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	MapInt32Bytes           map[int32][]byte          `protobuf:"bytes,15,rep,name=map_int32_bytes,json=mapInt32Bytes" json:"map_int32_bytes,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	MapInt32Enum            map[int32]MapEnum         `protobuf:"bytes,16,rep,name=map_int32_enum,json=mapInt32Enum" json:"map_int32_enum,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=types.MapEnum"`
-	MapInt32ForeignMessage  map[int32]*ForeignMessage `protobuf:"bytes,17,rep,name=map_int32_foreign_message,json=mapInt32ForeignMessage" json:"map_int32_foreign_message,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	MapInt32ImportedMessage map[int32]*multi.Multi1   `protobuf:"bytes,18,rep,name=map_int32_imported_message,json=mapInt32ImportedMessage" json:"map_int32_imported_message,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	MapInt32Int32           map[int32]int32           `protobuf:"bytes,1,rep,name=map_int32_int32,json=mapInt32Int32,proto3" json:"map_int32_int32,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
+	MapInt64Int64           map[int64]int64           `protobuf:"bytes,2,rep,name=map_int64_int64,json=mapInt64Int64,proto3" json:"map_int64_int64,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
+	MapUint32Uint32         map[uint32]uint32         `protobuf:"bytes,3,rep,name=map_uint32_uint32,json=mapUint32Uint32,proto3" json:"map_uint32_uint32,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
+	MapUint64Uint64         map[uint64]uint64         `protobuf:"bytes,4,rep,name=map_uint64_uint64,json=mapUint64Uint64,proto3" json:"map_uint64_uint64,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
+	MapSint32Sint32         map[int32]int32           `protobuf:"bytes,5,rep,name=map_sint32_sint32,json=mapSint32Sint32,proto3" json:"map_sint32_sint32,omitempty" protobuf_key:"zigzag32,1,opt,name=key,proto3" protobuf_val:"zigzag32,2,opt,name=value,proto3"`
+	MapSint64Sint64         map[int64]int64           `protobuf:"bytes,6,rep,name=map_sint64_sint64,json=mapSint64Sint64,proto3" json:"map_sint64_sint64,omitempty" protobuf_key:"zigzag64,1,opt,name=key,proto3" protobuf_val:"zigzag64,2,opt,name=value,proto3"`
+	MapFixed32Fixed32       map[uint32]uint32         `protobuf:"bytes,7,rep,name=map_fixed32_fixed32,json=mapFixed32Fixed32,proto3" json:"map_fixed32_fixed32,omitempty" protobuf_key:"fixed32,1,opt,name=key,proto3" protobuf_val:"fixed32,2,opt,name=value,proto3"`
+	MapFixed64Fixed64       map[uint64]uint64         `protobuf:"bytes,8,rep,name=map_fixed64_fixed64,json=mapFixed64Fixed64,proto3" json:"map_fixed64_fixed64,omitempty" protobuf_key:"fixed64,1,opt,name=key,proto3" protobuf_val:"fixed64,2,opt,name=value,proto3"`
+	MapSfixed32Sfixed32     map[int32]int32           `protobuf:"bytes,9,rep,name=map_sfixed32_sfixed32,json=mapSfixed32Sfixed32,proto3" json:"map_sfixed32_sfixed32,omitempty" protobuf_key:"fixed32,1,opt,name=key,proto3" protobuf_val:"fixed32,2,opt,name=value,proto3"`
+	MapSfixed64Sfixed64     map[int64]int64           `protobuf:"bytes,10,rep,name=map_sfixed64_sfixed64,json=mapSfixed64Sfixed64,proto3" json:"map_sfixed64_sfixed64,omitempty" protobuf_key:"fixed64,1,opt,name=key,proto3" protobuf_val:"fixed64,2,opt,name=value,proto3"`
+	MapInt32Float           map[int32]float32         `protobuf:"bytes,11,rep,name=map_int32_float,json=mapInt32Float,proto3" json:"map_int32_float,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"fixed32,2,opt,name=value,proto3"`
+	MapInt32Double          map[int32]float64         `protobuf:"bytes,12,rep,name=map_int32_double,json=mapInt32Double,proto3" json:"map_int32_double,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"fixed64,2,opt,name=value,proto3"`
+	MapBoolBool             map[bool]bool             `protobuf:"bytes,13,rep,name=map_bool_bool,json=mapBoolBool,proto3" json:"map_bool_bool,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
+	MapStringString         map[string]string         `protobuf:"bytes,14,rep,name=map_string_string,json=mapStringString,proto3" json:"map_string_string,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	MapInt32Bytes           map[int32][]byte          `protobuf:"bytes,15,rep,name=map_int32_bytes,json=mapInt32Bytes,proto3" json:"map_int32_bytes,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	MapInt32Enum            map[int32]MapEnum         `protobuf:"bytes,16,rep,name=map_int32_enum,json=mapInt32Enum,proto3" json:"map_int32_enum,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3,enum=types.MapEnum"`
+	MapInt32ForeignMessage  map[int32]*ForeignMessage `protobuf:"bytes,17,rep,name=map_int32_foreign_message,json=mapInt32ForeignMessage,proto3" json:"map_int32_foreign_message,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	MapInt32ImportedMessage map[int32]*multi.Multi1   `protobuf:"bytes,18,rep,name=map_int32_imported_message,json=mapInt32ImportedMessage,proto3" json:"map_int32_imported_message,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	XXX_NoUnkeyedLiteral    struct{}                  `json:"-"`
 	XXX_unrecognized        []byte                    `json:"-"`
 	XXX_sizecache           int32                     `json:"-"`
@@ -823,16 +733,17 @@ func (m *TestMap) Reset()         { *m = TestMap{} }
 func (m *TestMap) String() string { return proto.CompactTextString(m) }
 func (*TestMap) ProtoMessage()    {}
 func (*TestMap) Descriptor() ([]byte, []int) {
-	return fileDescriptor_types_70e44cff411bc46a, []int{3}
+	return fileDescriptor_2c0f90c600ad7e2e, []int{3}
 }
+
 func (m *TestMap) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TestMap.Unmarshal(m, b)
 }
 func (m *TestMap) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_TestMap.Marshal(b, m, deterministic)
 }
-func (dst *TestMap) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TestMap.Merge(dst, src)
+func (m *TestMap) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TestMap.Merge(m, src)
 }
 func (m *TestMap) XXX_Size() int {
 	return xxx_messageInfo_TestMap.Size(m)
@@ -970,6 +881,9 @@ func (m *TestMap) GetMapInt32ImportedMessage() map[int32]*multi.Multi1 {
 }
 
 func init() {
+	proto.RegisterEnum("types.ForeignEnum", ForeignEnum_name, ForeignEnum_value)
+	proto.RegisterEnum("types.MapEnum", MapEnum_name, MapEnum_value)
+	proto.RegisterEnum("types.TestAllTypes_NestedEnum", TestAllTypes_NestedEnum_name, TestAllTypes_NestedEnum_value)
 	proto.RegisterType((*TestAllTypes)(nil), "types.TestAllTypes")
 	proto.RegisterType((*TestAllTypes_NestedMessage)(nil), "types.TestAllTypes.NestedMessage")
 	proto.RegisterType((*NestedTestAllTypes)(nil), "types.NestedTestAllTypes")
@@ -993,119 +907,11 @@ func init() {
 	proto.RegisterMapType((map[string]string)(nil), "types.TestMap.MapStringStringEntry")
 	proto.RegisterMapType((map[uint32]uint32)(nil), "types.TestMap.MapUint32Uint32Entry")
 	proto.RegisterMapType((map[uint64]uint64)(nil), "types.TestMap.MapUint64Uint64Entry")
-	proto.RegisterEnum("types.ForeignEnum", ForeignEnum_name, ForeignEnum_value)
-	proto.RegisterEnum("types.MapEnum", MapEnum_name, MapEnum_value)
-	proto.RegisterEnum("types.TestAllTypes_NestedEnum", TestAllTypes_NestedEnum_name, TestAllTypes_NestedEnum_value)
 }
 
-// Reference imports to suppress errors if they are not otherwise used.
-var _ context.Context
-var _ grpc.ClientConn
+func init() { proto.RegisterFile("types/types.proto", fileDescriptor_2c0f90c600ad7e2e) }
 
-// This is a compile-time assertion to ensure that this generated file
-// is compatible with the grpc package it is being compiled against.
-const _ = grpc.SupportPackageIsVersion4
-
-// Client API for EchoService service
-
-type EchoServiceClient interface {
-	EchoAllTypes(ctx context.Context, in *TestAllTypes, opts ...grpc.CallOption) (*TestAllTypes, error)
-	EchoMaps(ctx context.Context, in *TestMap, opts ...grpc.CallOption) (*TestMap, error)
-}
-
-type echoServiceClient struct {
-	cc *grpc.ClientConn
-}
-
-func NewEchoServiceClient(cc *grpc.ClientConn) EchoServiceClient {
-	return &echoServiceClient{cc}
-}
-
-func (c *echoServiceClient) EchoAllTypes(ctx context.Context, in *TestAllTypes, opts ...grpc.CallOption) (*TestAllTypes, error) {
-	out := new(TestAllTypes)
-	err := grpc.Invoke(ctx, "/types.EchoService/EchoAllTypes", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *echoServiceClient) EchoMaps(ctx context.Context, in *TestMap, opts ...grpc.CallOption) (*TestMap, error) {
-	out := new(TestMap)
-	err := grpc.Invoke(ctx, "/types.EchoService/EchoMaps", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// Server API for EchoService service
-
-type EchoServiceServer interface {
-	EchoAllTypes(context.Context, *TestAllTypes) (*TestAllTypes, error)
-	EchoMaps(context.Context, *TestMap) (*TestMap, error)
-}
-
-func RegisterEchoServiceServer(s *grpc.Server, srv EchoServiceServer) {
-	s.RegisterService(&_EchoService_serviceDesc, srv)
-}
-
-func _EchoService_EchoAllTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TestAllTypes)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EchoServiceServer).EchoAllTypes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/types.EchoService/EchoAllTypes",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EchoServiceServer).EchoAllTypes(ctx, req.(*TestAllTypes))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EchoService_EchoMaps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TestMap)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EchoServiceServer).EchoMaps(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/types.EchoService/EchoMaps",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EchoServiceServer).EchoMaps(ctx, req.(*TestMap))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-var _EchoService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "types.EchoService",
-	HandlerType: (*EchoServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "EchoAllTypes",
-			Handler:    _EchoService_EchoAllTypes_Handler,
-		},
-		{
-			MethodName: "EchoMaps",
-			Handler:    _EchoService_EchoMaps_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "types/types.proto",
-}
-
-func init() { proto.RegisterFile("types/types.proto", fileDescriptor_types_70e44cff411bc46a) }
-
-var fileDescriptor_types_70e44cff411bc46a = []byte{
+var fileDescriptor_2c0f90c600ad7e2e = []byte{
 	// 1766 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x98, 0xeb, 0x52, 0xe3, 0xc8,
 	0x15, 0xc7, 0x2d, 0x84, 0x31, 0x1c, 0xdf, 0xe4, 0x36, 0x17, 0x0d, 0x9b, 0xec, 0xf4, 0x98, 0x25,
@@ -1218,4 +1024,109 @@ var fileDescriptor_types_70e44cff411bc46a = []byte{
 	0xeb, 0x2f, 0xfe, 0x33, 0xf3, 0xdd, 0xf1, 0xa3, 0x3f, 0x3c, 0x0e, 0xff, 0xd6, 0x7c, 0x42, 0xf3,
 	0xcc, 0xff, 0x96, 0xdd, 0x5d, 0x63, 0xf7, 0x4f, 0x7f, 0x0d, 0x00, 0x00, 0xff, 0xff, 0x28, 0x98,
 	0x00, 0x5d, 0xe1, 0x16, 0x00, 0x00,
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion4
+
+// EchoServiceClient is the client API for EchoService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type EchoServiceClient interface {
+	EchoAllTypes(ctx context.Context, in *TestAllTypes, opts ...grpc.CallOption) (*TestAllTypes, error)
+	EchoMaps(ctx context.Context, in *TestMap, opts ...grpc.CallOption) (*TestMap, error)
+}
+
+type echoServiceClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewEchoServiceClient(cc *grpc.ClientConn) EchoServiceClient {
+	return &echoServiceClient{cc}
+}
+
+func (c *echoServiceClient) EchoAllTypes(ctx context.Context, in *TestAllTypes, opts ...grpc.CallOption) (*TestAllTypes, error) {
+	out := new(TestAllTypes)
+	err := c.cc.Invoke(ctx, "/types.EchoService/EchoAllTypes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *echoServiceClient) EchoMaps(ctx context.Context, in *TestMap, opts ...grpc.CallOption) (*TestMap, error) {
+	out := new(TestMap)
+	err := c.cc.Invoke(ctx, "/types.EchoService/EchoMaps", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// EchoServiceServer is the server API for EchoService service.
+type EchoServiceServer interface {
+	EchoAllTypes(context.Context, *TestAllTypes) (*TestAllTypes, error)
+	EchoMaps(context.Context, *TestMap) (*TestMap, error)
+}
+
+func RegisterEchoServiceServer(s *grpc.Server, srv EchoServiceServer) {
+	s.RegisterService(&_EchoService_serviceDesc, srv)
+}
+
+func _EchoService_EchoAllTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TestAllTypes)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EchoServiceServer).EchoAllTypes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/types.EchoService/EchoAllTypes",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EchoServiceServer).EchoAllTypes(ctx, req.(*TestAllTypes))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _EchoService_EchoMaps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TestMap)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EchoServiceServer).EchoMaps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/types.EchoService/EchoMaps",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EchoServiceServer).EchoMaps(ctx, req.(*TestMap))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _EchoService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "types.EchoService",
+	HandlerType: (*EchoServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "EchoAllTypes",
+			Handler:    _EchoService_EchoAllTypes_Handler,
+		},
+		{
+			MethodName: "EchoMaps",
+			Handler:    _EchoService_EchoMaps_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "types/types.proto",
 }

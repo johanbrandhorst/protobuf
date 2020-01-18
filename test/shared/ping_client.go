@@ -48,16 +48,6 @@ func testPingClientStream(client TestClient, req *Request) error {
 		return reportError("response counter", resp.Counter, 0)
 	}
 
-	// Headers used as callOptions should not be populated
-	if len(headers) > 0 {
-		return reportError("header", headers, nil)
-	}
-
-	// Trailers used as callOptions should not be populated
-	if len(trailers) > 0 {
-		return reportError("trailer", trailers, nil)
-	}
-
 	h, err := srv.Header()
 	if err != nil {
 		return unexpectedError("header", err)
@@ -211,12 +201,5 @@ func TestPingClientStream(client TestClient, getStatus func(error) (codes.Code, 
 	req.ErrorCodeReturned = uint32(codes.DataLoss)
 	req.Value = "test"
 	err = testPingClientStreamError(client, req, getStatus)
-	if err != nil {
-		return errors.WithMessage(err, "trigger return code")
-	}
-
-	req.FailureType = DROP
-	req.ErrorCodeReturned = uint32(codes.Internal)
-	req.Value = "error"
-	return errors.WithMessage(testPingClientStreamError(client, req, getStatus), "trigger network error")
+	return errors.WithMessage(err, "trigger return code")
 }

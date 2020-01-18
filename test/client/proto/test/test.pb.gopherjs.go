@@ -32,18 +32,15 @@ type PingRequest_FailureType int
 const (
 	PingRequest_NONE PingRequest_FailureType = 0
 	PingRequest_CODE PingRequest_FailureType = 1
-	PingRequest_DROP PingRequest_FailureType = 2
 )
 
 var PingRequest_FailureType_name = map[int]string{
 	0: "NONE",
 	1: "CODE",
-	2: "DROP",
 }
 var PingRequest_FailureType_value = map[string]int{
 	"NONE": 0,
 	"CODE": 1,
-	"DROP": 2,
 }
 
 func (x PingRequest_FailureType) String() string {

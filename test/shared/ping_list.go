@@ -52,16 +52,6 @@ func testPingList(client TestClient, req *Request) error {
 		return reportError("number of replies", i, req.ResponseCount)
 	}
 
-	// Headers used as callOptions should not be populated
-	if len(headers) > 0 {
-		return reportError("header", headers, nil)
-	}
-
-	// Trailers used as callOptions should not be populated
-	if len(trailers) > 0 {
-		return reportError("trailer", trailers, nil)
-	}
-
 	h, err := srv.Header()
 	if err != nil {
 		return unexpectedError("header", err)
@@ -181,12 +171,5 @@ func TestPingList(client TestClient, getStatus func(error) (codes.Code, string))
 		ErrorCodeReturned: uint32(codes.DataLoss),
 	}
 	err = testPingListError(client, req, getStatus)
-	if err != nil {
-		return errors.WithMessage(err, "trigger return code")
-	}
-
-	req.FailureType = DROP
-	req.ErrorCodeReturned = uint32(codes.Unknown)
-	req.Value = ""
-	return errors.WithMessage(testPingListError(client, req, getStatus), "trigger network error")
+	return errors.WithMessage(err, "trigger return code")
 }

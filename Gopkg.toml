@@ -52,3 +52,7 @@ required = [
 [[constraint]]
   branch = "master"
   name = "honnef.co/go/js/dom"
+
+[[override]]
+  name = "gopkg.in/fsnotify.v1"
+  source = "gopkg.in/fsnotify/fsnotify.v1"

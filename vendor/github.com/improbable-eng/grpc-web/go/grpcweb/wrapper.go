@@ -4,9 +4,9 @@
 package grpcweb
 
 import (
+	"context"
 	"net/http"
 	"net/url"
-
 	"strings"
 	"time"
 
@@ -148,18 +148,17 @@ func (w *WrappedGrpcServer) handleWebSocket(wsConn *websocket.Conn, req *http.Re
 		return
 	}
 
+	ctx, cancelFunc := context.WithCancel(req.Context())
+	defer cancelFunc()
+
 	respWriter := newWebSocketResponseWriter(wsConn)
-	wrappedReader := newWebsocketWrappedReader(wsConn, respWriter)
+	wrappedReader := newWebsocketWrappedReader(wsConn, respWriter, cancelFunc)
 
 	req.Body = wrappedReader
 	req.Method = http.MethodPost
 	req.Header = headers
-	req.ProtoMajor = 2
-	req.ProtoMinor = 0
-	contentType := req.Header.Get("content-type")
-	req.Header.Set("content-type", strings.Replace(contentType, "application/grpc-web", "application/grpc", 1))
 
-	w.server.ServeHTTP(respWriter, req)
+	w.server.ServeHTTP(respWriter, hackIntoNormalGrpcRequest(req.WithContext(ctx)))
 }
 
 // IsGrpcWebRequest determines if a request is a gRPC-Web request by checking that the "content-type" is

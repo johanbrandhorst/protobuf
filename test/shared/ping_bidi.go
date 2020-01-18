@@ -60,16 +60,6 @@ func testPingBidiStream(client TestClient, req *Request) error {
 		return unexpectedError("Recv", err)
 	}
 
-	// Headers used as callOptions should not be populated
-	if len(headers) > 0 {
-		return reportError("header", headers, nil)
-	}
-
-	// Trailers used as callOptions should not be populated
-	if len(trailers) > 0 {
-		return reportError("trailer", trailers, nil)
-	}
-
 	h, err := srv.Header()
 	if err != nil {
 		return unexpectedError("header", err)
@@ -242,12 +232,5 @@ func TestPingBidiStream(client TestClient, getStatus func(error) (codes.Code, st
 	req.ErrorCodeReturned = uint32(codes.DataLoss)
 	req.Value = "test"
 	err = testPingBidiStreamError(client, req, getStatus)
-	if err != nil {
-		return errors.WithMessage(err, "trigger return code")
-	}
-
-	req.FailureType = DROP
-	req.ErrorCodeReturned = uint32(codes.Internal)
-	req.Value = "error"
-	return errors.WithMessage(testPingBidiStreamError(client, req, getStatus), "trigger network error")
+	return errors.WithMessage(err, "trigger return code")
 }
